@@ -65,12 +65,11 @@ function NeuralPanel({ entry, planes }: PanelProps) {
   if (trained && !trained.includes(entry.id)) {
     return (
       <div className="il-doc">
-        <Callout variant="note" title={t('Pick a trained image', 'Seleccionar una imagen entrenada')}>
+        <Callout variant="honest" title={t('Baked for the curated set', 'Precalculado para el conjunto curado')}>
           {t(
-            'Training a network per image is an offline step, so this tab is wired for a representative subset. Select one of these images to see its neural field: ',
-            'Entrenar una red por imagen es un paso offline, así que esta pestana esta conectada para un subconjunto representativo. Selecciona una de estas imagenes para ver su campo neuronal: ',
+            'Every curated image has a network trained offline for it. Training a SIREN on your uploaded image would take a minute of compute the browser cannot spend, so the neural field is shown for the curated set; your upload is reconstructed live by the transform, dictionary and primitive tabs instead.',
+            'Cada imagen curada tiene una red entrenada offline. Entrenar un SIREN sobre la imagen cargada tomaría un minuto de cómputo que el navegador no puede gastar, así que el campo neuronal se muestra para el conjunto curado; la carga se reconstruye en vivo en las pestañas de transformada, diccionario y primitivas.',
           )}
-          <strong>{trained.join(', ')}</strong>.
         </Callout>
       </div>
     );
@@ -105,13 +104,13 @@ function NeuralPanel({ entry, planes }: PanelProps) {
               <input className="range" type="range" min={0} max={0.3} step={0.005} value={perturb} onChange={(e) => setPerturb(+e.target.value)} />
             </label>
             <label className="il-ctl">
-              <div className="il-ctl-row"><span>{t('Weight precision (bits)', 'Precision de pesos (bits)')}</span><b>{bits >= 23 ? 'full' : bits}</b></div>
+              <div className="il-ctl-row"><span>{t('Weight precision (bits)', 'Precisión de pesos (bits)')}</span><b>{bits >= 23 ? 'full' : bits}</b></div>
               <input className="range" type="range" min={1} max={23} step={1} value={bits} onChange={(e) => setBits(+e.target.value)} />
             </label>
             <p className="il-panel-sub">
               {t(
                 'The whole image is these few thousand numbers. The frequency scale is a meaningful knob (it stretches the pattern), but nudge the raw weights and the image collapses into noise: the weight space is a compression code, not an edit space. That is why the modern neural field, unlike the designed bases, has no local, meaningful coordinates to edit.',
-                'La imagen entera son estos pocos miles de números. La escala de frecuencia es una perilla con sentido (estira el patron), pero mueve los pesos crudos y la imagen colapsa en ruido: el espacio de pesos es un código de compresion, no un espacio de edicion. Por eso el campo neuronal moderno, a diferencia de las bases disenadas, no tiene coordenadas locales y con sentido para editar.',
+                'La imagen entera son estos pocos miles de números. La escala de frecuencia es una perilla con sentido (estira el patrón), pero al mover los pesos crudos la imagen colapsa en ruido: el espacio de pesos es un código de compresión, no un espacio de edición. Por eso el campo neuronal moderno, a diferencia de las bases diseñadas, no tiene coordenadas locales y con sentido para editar.',
               )}
             </p>
           </div>
@@ -130,20 +129,20 @@ function NeuralPanel({ entry, planes }: PanelProps) {
     },
     {
       id: 'method',
-      label: t('Method', 'Metodo'),
+      label: t('Method', 'Método'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('A small coordinate network with periodic activations (SIREN) is overfit to one image; the stored object is the weight vector, not the pixels.', 'Una pequeña red de coordenadas con activaciones periodicas (SIREN) se sobreajusta a una imagen; el objeto almacenado es el vector de pesos, no los pixeles.')}</p>
+          <p>{t('A small coordinate network with periodic activations (SIREN) is overfit to one image; the stored object is the weight vector, not the pixels.', 'Una pequeña red de coordenadas con activaciones periódicas (SIREN) se sobreajusta a una imagen; el objeto almacenado es el vector de pesos, no los píxeles.')}</p>
           <Equation tex={String.raw`f_\theta(x,y)=\sigma\!\Big(W_L\,\sin\!\big(\omega_0(W_{L-1}\cdots\sin(\omega_0 W_0\,[x,y])\big)\Big)`} />
           <p>
             {t('the learnable descendant of hand-authored closed-form pixel art. Periodic activations and the principled initialization let it capture high frequencies; storing the quantized weights is a form of compression ',
-              'el descendiente aprendible del arte de formula por pixel escrito a mano. Las activaciones periodicas y la inicializacion principiada le permiten capturar altas frecuencias; almacenar los pesos cuantizados es una forma de compresion ')}
+              'el descendiente aprendible del arte de fórmula por pixel escrito a mano. Las activaciones periódicas y la inicialización principiada le permiten capturar altas frecuencias; almacenar los pesos cuantizados es una forma de compresión ')}
             (<Cite id="sitzmann2020siren" />, <Cite id="tancik2020fourier" />, <Cite id="dupont2021coin" />).
           </p>
           <Callout variant="honest" title={t('Weights are noise, structure needs a latent', 'Los pesos son ruido; la estructura necesita un latente')}>
             {t(
               'Perturbing the raw weights gives noise because the map from weights to image is chaotic. A meaningful, editable coordinate would require a modulation latent over a family of images (a functa), which sits at the learned-manifold pole later in the spectrum.',
-              'Perturbar los pesos crudos da ruido porque el mapa de pesos a imagen es caotico. Una coordenada editable y con sentido requeriria un latente de modulacion sobre una familia de imagenes (un functa), que esta en el polo de variedad aprendida mas adelante en el espectro.',
+              'Perturbar los pesos crudos da ruido porque el mapa de pesos a imagen es caótico. Una coordenada editable y con sentido requeriría un latente de modulación sobre una familia de imágenes (un functa), que está en el polo de variedad aprendida más adelante en el espectro.',
             )}
           </Callout>
           <Refs label={t('References', 'Referencias')} ids={['sitzmann2020siren', 'tancik2020fourier', 'dupont2021coin']} />

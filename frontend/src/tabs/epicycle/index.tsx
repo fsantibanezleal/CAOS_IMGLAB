@@ -3,20 +3,15 @@ import { SubTabs, Equation, Cite, Refs, type SubTabDef } from '@fasl-work/caos-a
 import { Pause, Play } from 'lucide-react';
 import { useT } from '../../lib/i18n';
 import type { PanelProps, TabModule } from '../registry';
-import { PRESETS, type Contour, type PresetName, epicycleChain, presetContour, reconstructPath, traceContour } from '../../engine/epicycle';
-
-type Source = PresetName | 'image';
+import { type Contour, epicycleChain, imageContour, reconstructPath } from '../../engine/epicycle';
 
 function EpicyclePanel({ planes }: PanelProps) {
   const t = useT();
-  const [source, setSource] = useState<Source>('heart');
-  const [k, setK] = useState(12);
+  const [k, setK] = useState(24);
   const [playing, setPlaying] = useState(false);
 
-  const contour: Contour | null = useMemo(() => {
-    if (source === 'image') return planes ? traceContour(planes) : null;
-    return presetContour(source);
-  }, [source, planes]);
+  // the contour is always traced from the SELECTED image (Otsu silhouette -> boundary -> Fourier descriptors)
+  const contour: Contour | null = useMemo(() => (planes ? imageContour(planes) : null), [planes]);
 
   const fullPath = useMemo(() => (contour ? reconstructPath(contour.terms, k) : null), [contour, k]);
 
@@ -122,24 +117,17 @@ function EpicyclePanel({ planes }: PanelProps) {
         <div className="il-fourier">
           <div className="il-fourier-controls il-panel">
             <div className="il-ctl">
-              <div className="il-panel-t">{t('Shape', 'Forma')}</div>
-              <div className="il-chips">
-                {PRESETS.map((p) => (
-                  <button key={p} className={`chip${source === p ? ' on' : ''}`} onClick={() => setSource(p)}>
-                    {p}
-                  </button>
-                ))}
-                <button className={`chip${source === 'image' ? ' on' : ''}`} onClick={() => setSource('image')}>
-                  {t('trace image', 'trazar imagen')}
-                </button>
+              <div className="il-panel-t">{t('Traced from the selected image', 'Trazado de la imagen seleccionada')}</div>
+              <div className="il-panel-sub" style={{ marginTop: '0.25rem' }}>
+                {t('The dominant silhouette is extracted (Otsu threshold, largest region, boundary trace) and written as rotating vectors.', 'Se extrae la silueta dominante (umbral de Otsu, región mayor, trazado del borde) y se escribe como vectores rotatorios.')}
               </div>
             </div>
             <label className="il-ctl">
               <div className="il-ctl-row">
-                <span>{t('Harmonics', 'Armonicos')}</span>
+                <span>{t('Harmonics', 'Armónicos')}</span>
                 <b>{k}</b>
               </div>
-              <input className="range" type="range" min={1} max={80} step={1} value={k} onChange={(e) => setK(+e.target.value)} />
+              <input className="range" type="range" min={1} max={128} step={1} value={k} onChange={(e) => setK(+e.target.value)} />
             </label>
             <button className="chip" onClick={() => setPlaying((p) => !p)} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', width: 'fit-content' }}>
               {playing ? <Pause size={14} /> : <Play size={14} />} {playing ? t('Pause', 'Pausar') : t('Play', 'Reproducir')}
@@ -147,7 +135,7 @@ function EpicyclePanel({ planes }: PanelProps) {
             <p className="il-panel-sub">
               {t(
                 'The outline is written exactly as a sum of rotating vectors (its Fourier descriptors). Add harmonics to refine it term by term; a couple of dozen already capture a recognizable shape because the coefficients decay fast. This is the one case where an image really does reduce to a compact, exact equation, because it is a one-dimensional curve.',
-                'El contorno se escribe exactamente como una suma de vectores rotatorios (sus descriptores de Fourier). Agrega armonicos para refinarlo termino a termino; un par de docenas ya capturan una forma reconocible porque los coeficientes decaen rápido. Este es el unico caso en que una imagen realmente se reduce a una ecuacion compacta y exacta, porque es una curva unidimensional.',
+                'El contorno se escribe exactamente como una suma de vectores rotatorios (sus descriptores de Fourier). Agregar armónicos para refinarlo término a término; un par de docenas ya capturan una forma reconocible porque los coeficientes decaen rápido. Este es el único caso en que una imagen realmente se reduce a una ecuación compacta y exacta, porque es una curva unidimensional.',
               )}
             </p>
           </div>
@@ -156,9 +144,9 @@ function EpicyclePanel({ planes }: PanelProps) {
               {contour ? (
                 <canvas ref={canvasRef} className="il-canvas" style={{ width: '100%', imageRendering: 'auto' }} />
               ) : (
-                <div className="il-panel il-panel-sub">{t('No clear contour in this image; pick a preset shape.', 'Sin contorno claro en esta imagen; elige una forma.')}</div>
+                <div className="il-panel il-panel-sub">{t('Tracing the contour of the selected image...', 'Trazando el contorno de la imagen seleccionada...')}</div>
               )}
-              <figcaption>{t('Reconstruction from', 'Reconstruccion con')} {k} {t('rotating circles', 'circulos rotatorios')}</figcaption>
+              <figcaption>{t('Reconstruction from', 'Reconstrucción con')} {k} {t('rotating circles', 'círculos rotatorios')}</figcaption>
             </figure>
           </div>
         </div>
@@ -166,14 +154,14 @@ function EpicyclePanel({ planes }: PanelProps) {
     },
     {
       id: 'method',
-      label: t('Method', 'Metodo'),
+      label: t('Method', 'Método'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('Sample the closed contour as complex points z_n and take their discrete Fourier transform; each coefficient is one rotating circle (epicycle).', 'Muestrea el contorno cerrado como puntos complejos z_n y toma su transformada discreta de Fourier; cada coeficiente es un circulo rotatorio (epiciclo).')}</p>
+          <p>{t('Sample the closed contour as complex points z_n and take their discrete Fourier transform; each coefficient is one rotating circle (epicycle).', 'Muestrear el contorno cerrado como puntos complejos z_n y tomar su transformada discreta de Fourier; cada coeficiente es un círculo rotatorio (epiciclo).')}</p>
           <Equation tex={String.raw`c_k=\frac1N\sum_{n=0}^{N-1} z_n\,e^{-i\,2\pi kn/N},\qquad z(t)\approx\sum_{|k|\le K} c_k\,e^{i k t}`} />
           <p>
             {t('The Fourier descriptors of a plane closed curve; truncating to the largest-magnitude terms gives a compact, exact-in-the-limit reconstruction ',
-              'Los descriptores de Fourier de una curva cerrada plana; truncar a los terminos de mayor magnitud da una reconstrucción compacta y exacta en el limite ')}
+              'Los descriptores de Fourier de una curva cerrada plana; truncar a los términos de mayor magnitud da una reconstrucción compacta y exacta en el límite ')}
             (<Cite id="cooley1965fft" />).
           </p>
           <Refs label={t('References', 'Referencias')} ids={['cooley1965fft', 'yeganeh2024']} />

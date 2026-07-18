@@ -12,7 +12,7 @@ export default function Introduction() {
       <p className="il-lead">
         {t(
           'A digital image is always a matrix of numbers. But that same image can be written in many different mathematical languages, and each one exposes a different set of parameters you can turn. ImageLab shows the same picture under each language, side by side, and lets you edit those parameters to answer one question: when does the image stay meaningful, and when does it fall apart into noise?',
-          'Una imagen digital siempre es una matriz de números. Pero esa misma imagen puede escribirse en muchos lenguajes matemáticos distintos, y cada uno expone un conjunto diferente de parámetros que puedes mover. ImageLab muestra la misma imagen bajo cada lenguaje, lado a lado, y te deja editar esos parámetros para responder una pregunta: cuándo la imagen sigue teniendo sentido y cuándo se deshace en ruido.',
+          'Una imagen digital siempre es una matriz de números. Pero esa misma imagen puede escribirse en muchos lenguajes matemáticos distintos, y cada uno expone un conjunto diferente de parámetros ajustables. ImageLab muestra la misma imagen bajo cada lenguaje, lado a lado, y permite editar esos parámetros para responder una pregunta: cuándo la imagen sigue teniendo sentido y cuándo se deshace en ruido.',
         )}
       </p>
 
@@ -20,7 +20,7 @@ export default function Introduction() {
       <p>
         {t(
           'Most classical representations share one shape: the image f is a weighted sum of building blocks (a basis or a dictionary), where the weights are the coefficients you can edit.',
-          'La mayoría de las representaciones clásicas comparten una forma: la imagen f es una suma ponderada de bloques constructores (una base o un diccionario), donde los pesos son los coeficientes que puedes editar.',
+          'La mayoría de las representaciones clásicas comparten una forma: la imagen f es una suma ponderada de bloques constructores (una base o un diccionario), donde los pesos son los coeficientes editables.',
         )}
       </p>
       <Equation
@@ -49,7 +49,7 @@ export default function Introduction() {
       <p>
         {t(
           'Order the languages by abstraction, from the raw pixel grid up to a generative latent. Each is a tab in the App, running the same selected image.',
-          'Ordena los lenguajes por abstracción, desde la grilla de pixeles cruda hasta un latente generativo. Cada uno es una pestaña en la App, corriendo la misma imagen seleccionada.',
+          'Los lenguajes se ordenan por abstracción, desde la grilla de píxeles cruda hasta un latente generativo. Cada uno es una pestaña en la App, que ejecuta la misma imagen seleccionada.',
         )}
       </p>
       <div className="il-spectrum">
@@ -69,13 +69,13 @@ export default function Introduction() {
       <p>
         {t(
           'A simple scene is trivially editable: a red-bordered circle on a green background, occluded by a triangle, is a few numbers, and changing them gives sensible variations. A closed-form formula that reproduces a photograph, by contrast, is so intricate that any change shatters it. Between these extremes lies a whole spectrum, and the surprising result is that editability does not fall off smoothly along it.',
-          'Una escena simple es trivialmente editable: un circulo de borde rojo sobre fondo verde, ocluido por un triangulo, son unos pocos números, y cambiarlos da variaciones con sentido. Una formula en forma cerrada que reproduce una fotografia, en cambio, es tan intrincada que cualquier cambio la destroza. Entre estos extremos hay todo un espectro, y el resultado sorprendente es que la editabilidad no decae suavemente a lo largo de el.',
+          'Una escena simple es trivialmente editable: un círculo de borde rojo sobre fondo verde, ocluido por un triángulo, son unos pocos números, y cambiarlos da variaciones con sentido. Una fórmula en forma cerrada que reproduce una fotografía, en cambio, es tan intrincada que cualquier cambio la destroza. Entre estos extremos hay todo un espectro, y el resultado sorprendente es que la editabilidad no decae suavemente a lo largo de él.',
         )}
       </p>
-      <Callout variant="strong" title={t('Editability is U-shaped, not monotone', 'La editabilidad tiene forma de U, no es monotona')}>
+      <Callout variant="strong" title={t('Editability is U-shaped, not monotone', 'La editabilidad tiene forma de U, no es monótona')}>
         {t(
           'It is high at two poles: the designed-structure pole (geometric primitives, sparse-dictionary atoms, where humans built local meaningful coordinates) and the learned-manifold pole (disentangled directions in a generative latent). It collapses toward noise in between: perturb a raw neural-field weight, or a constant of a brittle fitted formula, and the image dissolves. A parameter is both stable and meaningful only when it indexes a low-dimensional manifold of plausible images with locally disentangled coordinates.',
-          'Es alta en dos polos: el polo de estructura disenada (primitivas geometricas, atomos de diccionario disperso, donde los humanos construyeron coordenadas locales con sentido) y el polo de variedad aprendida (direcciones desenredadas en un latente generativo). Colapsa hacia el ruido en el medio: perturba un peso crudo de un campo neuronal, o una constante de una formula ajustada fragil, y la imagen se disuelve. Un parámetro es estable Y significativo solo cuando indexa una variedad de baja dimension de imagenes plausibles con coordenadas localmente desenredadas.',
+          'Es alta en dos polos: el polo de estructura diseñada (primitivas geométricas, átomos de diccionario disperso, donde los humanos construyeron coordenadas locales con sentido) y el polo de variedad aprendida (direcciones desenredadas en un latente generativo). Colapsa hacia el ruido en el medio: al perturbar un peso crudo de un campo neuronal, o una constante de una fórmula ajustada frágil, la imagen se disuelve. Un parámetro es estable y significativo solo cuando indexa una variedad de baja dimensión de imágenes plausibles con coordenadas localmente desenredadas.',
         )}
       </Callout>
       <p>
@@ -86,44 +86,44 @@ export default function Introduction() {
         (<Cite id="fer2025" />).
       </p>
 
-      <h3>{t('The four responses to a nudge', 'Las cuatro respuestas a un empujon')}</h3>
+      <h3>{t('The four responses to a nudge', 'Las cuatro respuestas a un empujón')}</h3>
       <table className="il-table">
         <thead>
           <tr>
             <th>{t('Response', 'Respuesta')}</th>
-            <th>{t('Where', 'Donde')}</th>
-            <th>{t('Perturb a parameter and ...', 'Perturba un parámetro y ...')}</th>
+            <th>{t('Where', 'Dónde')}</th>
+            <th>{t('Perturb a parameter and ...', 'Al perturbar un parámetro ...')}</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><span className="il-badge edit-global">{t('global-stable', 'global-estable')}</span></td>
             <td>{t('Fourier, cosine, wavelet coefficients', 'coeficientes de Fourier, coseno, wavelet')}</td>
-            <td>{t('a smooth global change; stable, but not semantic', 'un cambio global suave; estable, pero no semantico')}</td>
+            <td>{t('a smooth global change; stable, but not semantic', 'un cambio global suave; estable, pero no semántico')}</td>
           </tr>
           <tr>
-            <td><span className="il-badge edit-semantic">{t('semantic-local', 'semantico-local')}</span></td>
-            <td>{t('primitives, sparse atoms', 'primitivas, atomos dispersos')}</td>
-            <td>{t('a meaningful, controllable, local edit', 'una edicion local, significativa y controlable')}</td>
+            <td><span className="il-badge edit-semantic">{t('semantic-local', 'semántico-local')}</span></td>
+            <td>{t('primitives, sparse atoms', 'primitivas, átomos dispersos')}</td>
+            <td>{t('a meaningful, controllable, local edit', 'una edición local, significativa y controlable')}</td>
           </tr>
           <tr>
-            <td><span className="il-badge edit-learned">{t('semantic-entangled', 'semantico-enredado')}</span></td>
-            <td>{t('generative latents, diffusion', 'latentes generativos, difusion')}</td>
+            <td><span className="il-badge edit-learned">{t('semantic-entangled', 'semántico-enredado')}</span></td>
+            <td>{t('generative latents, diffusion', 'latentes generativos, difusión')}</td>
             <td>{t('a plausible but globally different image', 'una imagen plausible pero globalmente distinta')}</td>
           </tr>
           <tr>
             <td><span className="il-badge edit-noise">{t('unstable-noise', 'inestable-ruido')}</span></td>
-            <td>{t('raw network weights, brittle formula constants', 'pesos crudos de red, constantes de formula fragiles')}</td>
+            <td>{t('raw network weights, brittle formula constants', 'pesos crudos de red, constantes de fórmula frágiles')}</td>
             <td>{t('garbage; the parameter has no local meaning', 'basura; el parámetro no tiene sentido local')}</td>
           </tr>
         </tbody>
       </table>
 
-      <h2>{t('What this lab is, and is not', 'Que es este laboratorio, y que no es')}</h2>
+      <h2>{t('What this lab is, and is not', 'Qué es este laboratorio, y qué no es')}</h2>
       <Callout variant="honest" title={t('Honest scope', 'Alcance honesto')}>
         {t(
-          'It IS an interactive, referenced tour of image representations, with light transforms computed live in your browser and heavier representations baked offline by an open, reproducible pipeline. It is NOT a claim that arbitrary photographs reduce to compact, faithful, human-readable equations (they do not; the app shows the genuine partial results and says so). Diffusion reconstructions are labelled as generative, not faithful. The explicit-formula genre is cited and linked; every formula shown here is our own, and no third party artwork is redistributed.',
-          'ES un recorrido interactivo y referenciado por las representaciones de imagenes, con transformadas ligeras calculadas en vivo en tu navegador y representaciones mas pesadas precalculadas offline por un pipeline abierto y reproducible. NO es una afirmacion de que fotografias arbitrarias se reduzcan a ecuaciones compactas, fieles y legibles por humanos (no lo hacen; la app muestra los resultados parciales genuinos y lo dice). Las reconstrucciones por difusion se etiquetan como generativas, no fieles. El genero del arte de formula se cita y enlaza; toda formula mostrada aquí es propia, y no se redistribuye obra de terceros.',
+          'It is an interactive, referenced tour of image representations, with light transforms computed live in your browser and heavier representations baked offline by an open, reproducible pipeline. It is not a claim that arbitrary photographs reduce to compact, faithful, human-readable equations (they do not; the app shows the genuine partial results and says so). Diffusion reconstructions are labelled as generative, not faithful. The explicit-formula genre is cited and linked; every formula shown here is our own, and no third party artwork is redistributed.',
+          'Es un recorrido interactivo y referenciado por las representaciones de imágenes, con transformadas ligeras calculadas en vivo en el navegador y representaciones más pesadas precalculadas offline por un pipeline abierto y reproducible. No es una afirmación de que fotografías arbitrarias se reduzcan a ecuaciones compactas, fieles y legibles por humanos (no lo hacen; la app muestra los resultados parciales genuinos y lo dice). Las reconstrucciones por difusión se etiquetan como generativas, no fieles. El género del arte de fórmula se cita y enlaza; toda fórmula mostrada aquí es propia, y no se redistribuye obra de terceros.',
         )}
       </Callout>
 
