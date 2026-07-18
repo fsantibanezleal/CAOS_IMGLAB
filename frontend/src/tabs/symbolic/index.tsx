@@ -99,7 +99,7 @@ function SymbolicPanel() {
             <p className="il-panel-sub">
               {t(
                 'This image IS an equation: a compact network of about 72 numbers mapping (x, y) to colour, evaluated per pixel on the GPU. Nudge the weights and the pattern morphs smoothly, this is the editable pole of formula art. A dense formula hand-fitted to a photograph has no such factored structure and shatters under the same nudge.',
-                'Esta imagen ES una ecuacion: una red compacta de unos 72 numeros que mapea (x, y) a color, evaluada por pixel en la GPU. Mueve los pesos y el patron se transforma suavemente, este es el polo editable del arte de formula. Una formula densa ajustada a mano a una fotografia no tiene esa estructura factorizada y se destroza con el mismo empujon.',
+                'Esta imagen ES una ecuacion: una red compacta de unos 72 números que mapea (x, y) a color, evaluada por pixel en la GPU. Mueve los pesos y el patron se transforma suavemente, este es el polo editable del arte de formula. Una formula densa ajustada a mano a una fotografia no tiene esa estructura factorizada y se destroza con el mismo empujon.',
               )}
             </p>
           </div>
@@ -127,7 +127,7 @@ function SymbolicPanel() {
           <Callout variant="honest" title={t('The honest limit', 'El limite honesto')}>
             {t(
               'No method today turns an arbitrary photograph into a compact, faithful, human-readable equation. What is genuinely computable is the reverse direction shown here (a small formula generates a rich image) and, for a closed outline, its exact Fourier-descriptor equation (see the Epicycle tab). Fitting a photo with symbolic regression works only for low-complexity fields; that Pareto trade-off, accuracy against expression size, is the real state of the art.',
-              'Ningun metodo hoy convierte una fotografia arbitraria en una ecuacion compacta, fiel y legible por humanos. Lo genuinamente computable es la direccion inversa mostrada aqui (una formula pequena genera una imagen rica) y, para un contorno cerrado, su ecuacion exacta por descriptores de Fourier (ver la pestana Epiciclos). Ajustar una foto con regresion simbolica solo funciona para campos de baja complejidad; ese compromiso de Pareto, precision frente a tamano de la expresion, es el estado del arte real.',
+              'Ningun método hoy convierte una fotografia arbitraria en una ecuacion compacta, fiel y legible por humanos. Lo genuinamente computable es la dirección inversa mostrada aquí (una formula pequeña genera una imagen rica) y, para un contorno cerrado, su ecuacion exacta por descriptores de Fourier (ver la pestana Epiciclos). Ajustar una foto con regresion simbolica solo funciona para campos de baja complejidad; ese compromiso de Pareto, precision frente a tamaño de la expresion, es el estado del arte real.',
             )}
           </Callout>
           <Refs label={t('References', 'Referencias')} ids={['stanley2007cppn', 'cranmer2023pysr', 'fer2025', 'yeganeh2024']} />

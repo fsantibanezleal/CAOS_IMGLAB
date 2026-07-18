@@ -119,11 +119,11 @@ function DiffusionPanel() {
               {strip.kind === 'denoise'
                 ? t(
                     'The reverse diffusion process: a real diffusion model starts from pure noise and denoises step by step until an image appears. Every frame is the current latent of the model, decoded. The parameters here are a text prompt and a random seed, entangled: there is no local handle on any region.',
-                    'El proceso de difusion inverso: un modelo de difusion real parte de puro ruido y lo limpia paso a paso hasta que aparece una imagen. Cada fotograma es el latente actual del modelo, decodificado. Los parametros aqui son un prompt de texto y una semilla aleatoria, enredados: no hay control local sobre ninguna region.',
+                    'El proceso de difusion inverso: un modelo de difusion real parte de puro ruido y lo limpia paso a paso hasta que aparece una imagen. Cada fotograma es el latente actual del modelo, decodificado. Los parámetros aquí son un prompt de texto y una semilla aleatoria, enredados: no hay control local sobre ninguna region.',
                   )
                 : t(
                     'The text embeddings of two prompts are interpolated and each blend is generated. The image morphs between the two meanings along the learned manifold, so every step is a plausible picture. A prompt is a semantic but wholly entangled parameter, the far generative pole of the editability curve.',
-                    'Los embeddings de texto de dos prompts se interpolan y cada mezcla se genera. La imagen transita entre los dos significados por la variedad aprendida, asi que cada paso es una imagen plausible. Un prompt es un parametro semantico pero totalmente enredado, el polo generativo lejano de la curva de editabilidad.',
+                    'Los embeddings de texto de dos prompts se interpolan y cada mezcla se genera. La imagen transita entre los dos significados por la variedad aprendida, así que cada paso es una imagen plausible. Un prompt es un parámetro semantico pero totalmente enredado, el polo generativo lejano de la curva de editabilidad.',
                   )}
             </p>
           </div>
@@ -144,21 +144,21 @@ function DiffusionPanel() {
           <p>
             {t(
               'A diffusion model learns to reverse a gradual noising process. The forward process adds Gaussian noise to an image over many steps; the model is trained to undo one step, so sampling runs the chain backward from pure noise to an image.',
-              'Un modelo de difusion aprende a revertir un proceso de ruido gradual. El proceso directo agrega ruido gaussiano a una imagen en muchos pasos; el modelo se entrena para deshacer un paso, asi que el muestreo corre la cadena hacia atras desde puro ruido hasta una imagen.',
+              'Un modelo de difusion aprende a revertir un proceso de ruido gradual. El proceso directo agrega ruido gaussiano a una imagen en muchos pasos; el modelo se entrena para deshacer un paso, así que el muestreo corre la cadena hacia atras desde puro ruido hasta una imagen.',
             )}
           </p>
           <Equation tex={String.raw`x_t=\sqrt{\bar\alpha_t}\,x_0+\sqrt{1-\bar\alpha_t}\,\epsilon,\qquad x_{t-1}=\tfrac{1}{\sqrt{\alpha_t}}\!\left(x_t-\tfrac{1-\alpha_t}{\sqrt{1-\bar\alpha_t}}\,\epsilon_\theta(x_t,t,c)\right)+\sigma_t z` } />
           <p>
             {t(
               'Text conditioning c steers the denoiser; interpolating the embeddings of two prompts gives a smooth semantic walk, x = G(z; (1-t)c_a + t c_b). The image stays on the learned manifold, which is what makes the pole editable, but no parameter is a local handle: the whole picture changes together ',
-              'El condicionamiento de texto c guia el limpiador; interpolar los embeddings de dos prompts da una caminata semantica suave, x = G(z; (1-t)c_a + t c_b). La imagen se mantiene en la variedad aprendida, lo que hace editable el polo, pero ningun parametro es un control local: la imagen entera cambia junta ',
+              'El condicionamiento de texto c guia el limpiador; interpolar los embeddings de dos prompts da una caminata semantica suave, x = G(z; (1-t)c_a + t c_b). La imagen se mantiene en la variedad aprendida, lo que hace editable el polo, pero ningun parámetro es un control local: la imagen entera cambia junta ',
             )}
             (<Cite id="ho2020ddpm" />, <Cite id="rombach2022ldm" />, <Cite id="sauer2023add" />).
           </p>
-          <Callout variant="honest" title={t('Baked, not live', 'Horneado, no en vivo')}>
+          <Callout variant="honest" title={t('Baked, not live', 'Precalculado, no en vivo')}>
             {t(
               'A diffusion UNet is far too heavy for the browser, so these strips are generated offline by the open pipeline with a real small model (SD-Turbo) and replayed here. They are model samples for a fixed prompt and seed, shown to illustrate the process and the entangled generative pole, not an edit of your selected image.',
-              'Una UNet de difusion es demasiado pesada para el navegador, asi que estas tiras se generan offline con el pipeline abierto y un modelo pequeno real (SD-Turbo) y se reproducen aqui. Son muestras del modelo para un prompt y semilla fijos, mostradas para ilustrar el proceso y el polo generativo enredado, no una edicion de tu imagen seleccionada.',
+              'Una UNet de difusion es demasiado pesada para el navegador, así que estas tiras se generan offline con el pipeline abierto y un modelo pequeño real (SD-Turbo) y se reproducen aquí. Son muestras del modelo para un prompt y semilla fijos, mostradas para ilustrar el proceso y el polo generativo enredado, no una edicion de tu imagen seleccionada.',
             )}
           </Callout>
           <Refs label={t('References', 'Referencias')} ids={['ho2020ddpm', 'rombach2022ldm', 'sauer2023add']} />

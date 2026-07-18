@@ -209,7 +209,7 @@ function ImageTab({ entry, planes }: { entry: ImageEntry; planes: ImagePlanes | 
         <p style={{ color: 'var(--color-fg-subtle)', lineHeight: 1.6, marginTop: 0 }}>
           {t(
             'This is the raw image: a matrix of pixels, the representation with no compression and no structure. Every other tab re-expresses this same picture as mathematics and lets you edit it.',
-            'Esta es la imagen cruda: una matriz de pixeles, la representacion sin compresion ni estructura. Cada otra pestana re-expresa esta misma imagen como matematica y te deja editarla.',
+            'Esta es la imagen cruda: una matriz de pixeles, la representacion sin compresion ni estructura. Cada otra pestana re-expresa esta misma imagen como matemática y te deja editarla.',
           )}
         </p>
         <table className="il-table" style={{ marginTop: '0.6rem' }}>

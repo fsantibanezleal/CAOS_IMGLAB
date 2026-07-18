@@ -32,7 +32,7 @@ export default function Benchmark() {
       <p className="il-lead">
         {t(
           'How faithfully does each representation reconstruct the image, and at what cost in parameters? Every number here is baked from a real run over a six-image subset spanning domains (photograph, fine art, math art, astronomy, texture, synthetic), measured on luma with the standard metrics.',
-          'Con que fidelidad reconstruye cada representacion la imagen, y a que costo en parametros? Cada numero aqui se hornea de una corrida real sobre un subconjunto de seis imagenes que abarca dominios (fotografia, arte, arte matematico, astronomia, textura, sintetico), medido sobre luma con las metricas estandar.',
+          'Con que fidelidad reconstruye cada representacion la imagen, y a que costo en parámetros? Cada número aquí se hornea de una corrida real sobre un subconjunto de seis imagenes que abarca dominios (fotografia, arte, arte matematico, astronomia, textura, sintético), medido sobre luma con las metricas estandar.',
         )}
       </p>
 
@@ -40,7 +40,7 @@ export default function Benchmark() {
       <p>
         {t(
           'Keep only the largest coefficients and reconstruct: PSNR as a function of the kept-coefficient fraction. Wavelets, with their space-frequency localization, lead at every rate; the patch KLT is the data-optimal basis but its per-patch support caps it below the global bases here.',
-          'Conserva solo los coeficientes mas grandes y reconstruye: PSNR en funcion de la fraccion de coeficientes conservados. Las wavelets, con su localizacion espacio-frecuencia, lideran en cada tasa; el KLT por parches es la base optima en datos pero su soporte por parche lo limita por debajo de las bases globales aqui.',
+          'Conserva solo los coeficientes mas grandes y reconstruye: PSNR en funcion de la fraccion de coeficientes conservados. Las wavelets, con su localizacion espacio-frecuencia, lideran en cada tasa; el KLT por parches es la base optima en datos pero su soporte por parche lo limita por debajo de las bases globales aquí.',
         )}
       </p>
       {err && <Callout variant="honest" title={t('Benchmark unavailable', 'Benchmark no disponible')}>{err}</Callout>}
@@ -58,7 +58,7 @@ export default function Benchmark() {
       <p>
         {t(
           'The transforms at five percent of their coefficients, next to the learned families read from their committed bakes. Read fidelity against the parameter cost: the neural field rivals the transforms from a few thousand weights; the primitive fit and the VAE latent sit lowest in PSNR because they buy semantics and editability, not pixel fidelity.',
-          'Las transformadas al cinco por ciento de sus coeficientes, junto a las familias aprendidas leidas de sus horneados versionados. Lee la fidelidad contra el costo en parametros: el campo neuronal rivaliza con las transformadas desde unos pocos miles de pesos; el ajuste de primitivas y el latente VAE quedan mas bajos en PSNR porque compran semantica y editabilidad, no fidelidad de pixel.',
+          'Las transformadas al cinco por ciento de sus coeficientes, junto a las familias aprendidas leidas de sus precalculados versionados. Lee la fidelidad contra el costo en parámetros: el campo neuronal rivaliza con las transformadas desde unos pocos miles de pesos; el ajuste de primitivas y el latente VAE quedan mas bajos en PSNR porque compran semantica y editabilidad, no fidelidad de pixel.',
         )}
       </p>
       {bench && (
@@ -93,7 +93,7 @@ export default function Benchmark() {
       <p>
         {t('Structural similarity ', 'La similitud estructural ')}(<Cite id="wang2004ssim" />)
         {t(' is reported alongside PSNR because a high PSNR can still look wrong, and a low PSNR can still look right. The same PSNR/SSIM code runs here and in the browser, so a baked number and its live twin agree.',
-          ' se reporta junto a PSNR porque un PSNR alto puede verse mal, y un PSNR bajo puede verse bien. El mismo codigo PSNR/SSIM corre aqui y en el navegador, asi que un numero horneado y su gemelo en vivo coinciden.')}
+          ' se reporta junto a PSNR porque un PSNR alto puede verse mal, y un PSNR bajo puede verse bien. El mismo código PSNR/SSIM corre aquí y en el navegador, así que un número precalculado y su gemelo en vivo coinciden.')}
       </p>
     </div>
   );
