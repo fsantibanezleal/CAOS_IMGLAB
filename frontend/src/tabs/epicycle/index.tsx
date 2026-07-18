@@ -119,12 +119,12 @@ function EpicyclePanel({ planes }: PanelProps) {
             <div className="il-ctl">
               <div className="il-panel-t">{t('Traced from the selected image', 'Trazado de la imagen seleccionada')}</div>
               <div className="il-panel-sub" style={{ marginTop: '0.25rem' }}>
-                {t('The dominant silhouette is extracted (Otsu threshold, largest region, boundary trace) and written as rotating vectors.', 'Se extrae la silueta dominante (umbral de Otsu, region mayor, trazado del borde) y se escribe como vectores rotatorios.')}
+                {t('The dominant silhouette is extracted (Otsu threshold, largest region, boundary trace) and written as rotating vectors.', 'Se extrae la silueta dominante (umbral de Otsu, región mayor, trazado del borde) y se escribe como vectores rotatorios.')}
               </div>
             </div>
             <label className="il-ctl">
               <div className="il-ctl-row">
-                <span>{t('Harmonics', 'Armonicos')}</span>
+                <span>{t('Harmonics', 'Armónicos')}</span>
                 <b>{k}</b>
               </div>
               <input className="range" type="range" min={1} max={128} step={1} value={k} onChange={(e) => setK(+e.target.value)} />
@@ -135,7 +135,7 @@ function EpicyclePanel({ planes }: PanelProps) {
             <p className="il-panel-sub">
               {t(
                 'The outline is written exactly as a sum of rotating vectors (its Fourier descriptors). Add harmonics to refine it term by term; a couple of dozen already capture a recognizable shape because the coefficients decay fast. This is the one case where an image really does reduce to a compact, exact equation, because it is a one-dimensional curve.',
-                'El contorno se escribe exactamente como una suma de vectores rotatorios (sus descriptores de Fourier). Agrega armonicos para refinarlo termino a termino; un par de docenas ya capturan una forma reconocible porque los coeficientes decaen rápido. Este es el unico caso en que una imagen realmente se reduce a una ecuacion compacta y exacta, porque es una curva unidimensional.',
+                'El contorno se escribe exactamente como una suma de vectores rotatorios (sus descriptores de Fourier). Agregar armónicos para refinarlo término a término; un par de docenas ya capturan una forma reconocible porque los coeficientes decaen rápido. Este es el único caso en que una imagen realmente se reduce a una ecuación compacta y exacta, porque es una curva unidimensional.',
               )}
             </p>
           </div>
@@ -146,7 +146,7 @@ function EpicyclePanel({ planes }: PanelProps) {
               ) : (
                 <div className="il-panel il-panel-sub">{t('Tracing the contour of the selected image...', 'Trazando el contorno de la imagen seleccionada...')}</div>
               )}
-              <figcaption>{t('Reconstruction from', 'Reconstruccion con')} {k} {t('rotating circles', 'circulos rotatorios')}</figcaption>
+              <figcaption>{t('Reconstruction from', 'Reconstrucción con')} {k} {t('rotating circles', 'círculos rotatorios')}</figcaption>
             </figure>
           </div>
         </div>
@@ -154,14 +154,14 @@ function EpicyclePanel({ planes }: PanelProps) {
     },
     {
       id: 'method',
-      label: t('Method', 'Metodo'),
+      label: t('Method', 'Método'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('Sample the closed contour as complex points z_n and take their discrete Fourier transform; each coefficient is one rotating circle (epicycle).', 'Muestrea el contorno cerrado como puntos complejos z_n y toma su transformada discreta de Fourier; cada coeficiente es un circulo rotatorio (epiciclo).')}</p>
+          <p>{t('Sample the closed contour as complex points z_n and take their discrete Fourier transform; each coefficient is one rotating circle (epicycle).', 'Muestrear el contorno cerrado como puntos complejos z_n y tomar su transformada discreta de Fourier; cada coeficiente es un círculo rotatorio (epiciclo).')}</p>
           <Equation tex={String.raw`c_k=\frac1N\sum_{n=0}^{N-1} z_n\,e^{-i\,2\pi kn/N},\qquad z(t)\approx\sum_{|k|\le K} c_k\,e^{i k t}`} />
           <p>
             {t('The Fourier descriptors of a plane closed curve; truncating to the largest-magnitude terms gives a compact, exact-in-the-limit reconstruction ',
-              'Los descriptores de Fourier de una curva cerrada plana; truncar a los terminos de mayor magnitud da una reconstrucción compacta y exacta en el limite ')}
+              'Los descriptores de Fourier de una curva cerrada plana; truncar a los términos de mayor magnitud da una reconstrucción compacta y exacta en el límite ')}
             (<Cite id="cooley1965fft" />).
           </p>
           <Refs label={t('References', 'Referencias')} ids={['cooley1965fft', 'yeganeh2024']} />

@@ -67,23 +67,23 @@ function SymbolicPanel({ entry, planes }: PanelProps) {
         <Callout variant="honest" title={t('Fitted for the curated set', 'Ajustado para el conjunto curado')}>
           {t(
             'Fitting the closed-form equation is an offline least-squares step baked for every curated image; your uploaded image is handled by the live transform and dictionary tabs.',
-            'Ajustar la ecuacion de forma cerrada es un paso de minimos cuadrados offline horneado para cada imagen curada; tu imagen cargada se maneja en las pestanas en vivo de transformada y diccionario.',
+            'Ajustar la ecuación de forma cerrada es un paso de mínimos cuadrados offline precalculado para cada imagen curada; la imagen cargada se maneja en las pestañas en vivo de transformada y diccionario.',
           )}
         </Callout>
       </div>
     );
   }
   if (err) return <div className="il-panel il-panel-sub">{t('Renderer error: ', 'Error del renderizador: ')}<code>{err}</code></div>;
-  if (!doc || !planes) return <div className="il-panel il-panel-sub">{t('Loading the equation...', 'Cargando la ecuacion...')}</div>;
+  if (!doc || !planes) return <div className="il-panel il-panel-sub">{t('Loading the equation...', 'Cargando la ecuación...')}</div>;
 
   const tabs: SubTabDef[] = [
     {
       id: 'equation',
-      label: t('The equation', 'La ecuacion'),
+      label: t('The equation', 'La ecuación'),
       content: (
         <div className="il-fourier">
           <div className="il-fourier-controls il-panel">
-            <div className="il-panel-t">{t('One image, one formula', 'Una imagen, una formula')}</div>
+            <div className="il-panel-t">{t('One image, one formula', 'Una imagen, una fórmula')}</div>
             <div className="il-kpis">
               <div className="il-kpi">
                 <div className="il-kpi-v">{doc.psnr.toFixed(1)}</div>
@@ -91,7 +91,7 @@ function SymbolicPanel({ entry, planes }: PanelProps) {
               </div>
               <div className="il-kpi">
                 <div className="il-kpi-v">{doc.d}</div>
-                <div className="il-kpi-l">{t('terms', 'terminos')}</div>
+                <div className="il-kpi-l">{t('terms', 'términos')}</div>
               </div>
             </div>
             <label className="il-ctl">
@@ -111,7 +111,7 @@ function SymbolicPanel({ entry, planes }: PanelProps) {
             <p className="il-panel-sub">
               {t(
                 'The whole image is written as one closed-form equation: a sum of hundreds of cosine and sine waves at fitted amplitudes. Nudge the coefficients and the picture morphs smoothly (a legible, editable parameter); stretch the frequency scale and the pattern breathes. The fidelity is honest: a smooth field collapses to a compact formula, a sharp photo needs far more terms.',
-                'La imagen entera se escribe como una ecuacion de forma cerrada: una suma de cientos de ondas coseno y seno con amplitudes ajustadas. Empuja los coeficientes y la imagen se transforma suavemente (un parametro legible y editable); estira la escala de frecuencia y el patron respira. La fidelidad es honesta: un campo suave colapsa a una formula compacta, una foto nitida necesita muchos mas terminos.',
+                'La imagen entera se escribe como una ecuación de forma cerrada: una suma de cientos de ondas coseno y seno con amplitudes ajustadas. Al mover los coeficientes la imagen se transforma suavemente (un parámetro legible y editable); al estirar la escala de frecuencia el patrón respira. La fidelidad es honesta: un campo suave colapsa a una fórmula compacta, una foto nítida necesita muchos más términos.',
               )}
             </p>
           </div>
@@ -122,7 +122,7 @@ function SymbolicPanel({ entry, planes }: PanelProps) {
             </figure>
             <figure className="il-fig">
               <canvas ref={canvasRef} className="il-canvas" style={{ width: '100%', imageRendering: 'auto' }} />
-              <figcaption>{t('The equation, evaluated per pixel', 'La ecuacion, evaluada por pixel')}</figcaption>
+              <figcaption>{t('The equation, evaluated per pixel', 'La ecuación, evaluada por pixel')}</figcaption>
             </figure>
           </div>
         </div>
@@ -130,21 +130,21 @@ function SymbolicPanel({ entry, planes }: PanelProps) {
     },
     {
       id: 'method',
-      label: t('Method', 'Metodo'),
+      label: t('Method', 'Método'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('Each colour channel of the image is fitted as a sum of random sinusoids (random Fourier features), a genuine closed-form formula recovered from the pixels by ridge regression.', 'Cada canal de color de la imagen se ajusta como una suma de sinusoides aleatorias (caracteristicas de Fourier aleatorias), una formula de forma cerrada genuina recuperada de los pixeles por regresion ridge.')}</p>
+          <p>{t('Each colour channel of the image is fitted as a sum of random sinusoids (random Fourier features), a genuine closed-form formula recovered from the pixels by ridge regression.', 'Cada canal de color de la imagen se ajusta como una suma de sinusoides aleatorias (características de Fourier aleatorias), una fórmula de forma cerrada genuina recuperada de los píxeles por regresión ridge.')}</p>
           <Equation tex={String.raw`\mathrm{ch}(x,y)=a_0+\sum_{k=1}^{D}\Big[a_k\cos(\boldsymbol{\omega}_k\!\cdot\!(x,y))+b_k\sin(\boldsymbol{\omega}_k\!\cdot\!(x,y))\Big],\quad \boldsymbol{\omega}_k\sim\mathcal N(0,\sigma^2 I)`} />
           <p>
             {t('Random Fourier features approximate a smooth function as a short trigonometric sum, so the image becomes a compact analytic expression rather than a black box ',
-              'Las caracteristicas de Fourier aleatorias aproximan una funcion suave como una suma trigonometrica corta, asi que la imagen se vuelve una expresion analitica compacta en vez de una caja negra ')}
-            (<Cite id="tancik2020fourier" />, <Cite id="yeganeh2024" />). {t('Unlike the fixed-basis transforms the frequencies are random, and unlike the neural field the model is linear in the basis, so it can be written down and read as an equation ', 'A diferencia de las transformadas de base fija las frecuencias son aleatorias, y a diferencia del campo neuronal el modelo es lineal en la base, asi que puede escribirse y leerse como una ecuacion ')}
+              'Las características de Fourier aleatorias aproximan una función suave como una suma trigonométrica corta, así que la imagen se vuelve una expresión analítica compacta en vez de una caja negra ')}
+            (<Cite id="tancik2020fourier" />, <Cite id="yeganeh2024" />). {t('Unlike the fixed-basis transforms the frequencies are random, and unlike the neural field the model is linear in the basis, so it can be written down and read as an equation ', 'A diferencia de las transformadas de base fija las frecuencias son aleatorias, y a diferencia del campo neuronal el modelo es lineal en la base, así que puede escribirse y leerse como una ecuación ')}
             (<Cite id="stanley2007cppn" />, <Cite id="fer2025" />).
           </p>
           <Callout variant="honest" title={t('The honest limit', 'El límite honesto')}>
             {t(
               'This really does turn each image into a closed-form equation, but the fidelity is bounded: a smooth gradient reaches about 57 dB from the same 512 terms, a sharp checkerboard only about 14, because a finite trigonometric sum cannot render a hard edge. That accuracy-versus-expression-size trade-off is exactly the point of the symbolic pole.',
-              'Esto realmente convierte cada imagen en una ecuacion de forma cerrada, pero la fidelidad esta acotada: un gradiente suave alcanza unos 57 dB con los mismos 512 terminos, un tablero nitido solo unos 14, porque una suma trigonometrica finita no puede representar un borde duro. Ese compromiso entre precision y tamano de la expresion es justo el punto del polo simbolico.',
+              'Esto realmente convierte cada imagen en una ecuación de forma cerrada, pero la fidelidad está acotada: un gradiente suave alcanza unos 57 dB con los mismos 512 términos, un tablero nítido solo unos 14, porque una suma trigonométrica finita no puede representar un borde duro. Ese compromiso entre precisión y tamaño de la expresión es justo el punto del polo simbólico.',
             )}
           </Callout>
           <Refs label={t('References', 'Referencias')} ids={['tancik2020fourier', 'yeganeh2024', 'stanley2007cppn', 'fer2025']} />
