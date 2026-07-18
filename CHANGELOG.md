@@ -5,6 +5,23 @@ the lab is under construction. Tag every release.
 
 ## [Unreleased]
 
+## [0.02.000] - 2026-07-18
+
+Every representation now operates on the selected image, across the whole 18-image set (was a hand-picked
+subset or canned demos). Selecting an image in the left column drives every tab.
+
+### Changed
+- Primitives: bounding-box greedy search, 1200 ellipses per image, fitted for all 18 (mean PSNR 21.9 -> 30.0).
+- Neural field (SIREN): trained for all 18 images (was 6).
+- Epicycles: trace the selected image's own contour (Otsu silhouette -> largest component -> boundary trace ->
+  Fourier descriptors) instead of hardcoded preset shapes; the math-art figures are selectable in the left column.
+- Symbolic/CPPN: replaced the random-formula generator with a genuine per-image fit, each image written as a
+  closed-form trigonometric equation (random-Fourier-feature ridge regression, 512 terms), evaluated live in a
+  WebGL2 shader, for all 18.
+- Learned latents (VAE): per-image reconstruction + latent-perturbation strip (was fixed image pairs).
+- Diffusion: per-image SD-Turbo image-to-image regeneration at increasing strength (was fixed text prompts).
+- Benchmark refreshed: Primitives 32.0 dB (1200 shapes), plus the Symbolic-equation and per-image VAE rows.
+
 ## [0.01.000] - 2026-07-18
 
 First full build: one image written across the spectrum of mathematical representations, deployed to
