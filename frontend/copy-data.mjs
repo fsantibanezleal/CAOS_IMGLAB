@@ -9,7 +9,17 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
 const PUB = join(HERE, 'public');
 
-// 1) data/derived -> public/data (per-artifact subdirs + manifests/ incl. index.json)
+// 1) data/images -> public/images (the curated set PNGs + index.json the workbench selector reads)
+const images = join(ROOT, 'data', 'images');
+if (existsSync(images)) {
+  mkdirSync(join(PUB, 'images'), { recursive: true });
+  cpSync(images, join(PUB, 'images'), { recursive: true });
+  console.log('[copy-data] data/images -> public/images');
+} else {
+  console.warn('[copy-data] no data/images yet, run python -m imglab.imageset build');
+}
+
+// 2) data/derived -> public/data (per-artifact subdirs + manifests/ incl. index.json)
 const derived = join(ROOT, 'data', 'derived');
 if (existsSync(derived)) {
   mkdirSync(join(PUB, 'data'), { recursive: true });

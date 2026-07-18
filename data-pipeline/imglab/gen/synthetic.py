@@ -142,12 +142,98 @@ def rose_epicycle(size: int = 256, k: int = 5) -> np.ndarray:
     return _supersample_draw(size, draw, bg=(252, 250, 250), ss=3)
 
 
-# id -> (generator, category, title, titleEs, illustrates)
+def warpnoise(size: int = 256, seed: int = 0, warp: float = 0.35, freq: float = 3.0) -> np.ndarray:
+    """Domain-warped band-limited noise: a smooth-regime field. Nudging warp or freq morphs the whole field
+    continuously (no chaos), the opposite of the Julia set, so the two math-art images bracket the symbolic
+    family's editability."""
+    rng = np.random.default_rng(seed)
+
+    def smooth_field(f: float) -> np.ndarray:
+        gsz = int(f) + 2
+        g = rng.standard_normal((gsz, gsz))
+        yi = np.linspace(0, gsz - 1.001, size)
+        xi = np.linspace(0, gsz - 1.001, size)
+        y0 = np.floor(yi).astype(int)
+        x0 = np.floor(xi).astype(int)
+        fy = (yi - y0)[:, None]
+        fx = (xi - x0)[None, :]
+        g00 = g[np.ix_(y0, x0)]
+        g01 = g[np.ix_(y0, x0 + 1)]
+        g10 = g[np.ix_(y0 + 1, x0)]
+        g11 = g[np.ix_(y0 + 1, x0 + 1)]
+        top = g00 * (1 - fx) + g01 * fx
+        bot = g10 * (1 - fx) + g11 * fx
+        return top * (1 - fy) + bot * fy
+
+    base = smooth_field(freq)
+    wx = smooth_field(freq * 0.6)
+    wy = smooth_field(freq * 0.6)
+    field = base + warp * (np.roll(base, 8, 0) * wy + np.roll(base, 8, 1) * wx)
+    t = (field - field.min()) / (np.ptp(field) + 1e-9)
+    return _palette(t)
+
+
+def _heart_contour(m: int = 2048) -> np.ndarray:
+    t = np.linspace(0, 2 * np.pi, m, endpoint=False)
+    x = 16 * np.sin(t) ** 3
+    y = 13 * np.cos(t) - 5 * np.cos(2 * t) - 2 * np.cos(3 * t) - np.cos(4 * t)
+    return x + 1j * y
+
+
+def epicycle(size: int = 256, harmonics: int = 20) -> np.ndarray:
+    """A closed contour (heart) rebuilt from the largest coefficients of its own Fourier descriptor, drawn
+    with the nested epicycle circles at one phase: the exactly-computable image-to-equation case (Zahn and
+    Roskies 1972, DOI 10.1109/TC.1972.5008949)."""
+    z = _heart_contour(2048)
+    n = z.size
+    coeff = np.fft.fft(z) / n
+    freqs = np.fft.fftfreq(n, d=1.0 / n).astype(int)
+    order = np.argsort(-np.abs(coeff))
+    keep = order[: 2 * harmonics + 1]
+    tt = np.linspace(0, 2 * np.pi, 1600)
+    recon = np.zeros(tt.shape, dtype=complex)
+    for k in keep:
+        recon += coeff[k] * np.exp(1j * freqs[k] * tt)
+    mx = np.abs(z).max() * 2.6  # normalization so the figure fits with margin
+
+    def nx(c):
+        return (c.real / mx + 0.5)
+
+    def ny(c):
+        return (-c.imag / mx + 0.5)
+
+    def draw(d_, s: int):
+        # faint epicycle circles at phase tt[0], skipping the DC (constant) term
+        tip = coeff[keep[0]] if freqs[keep[0]] == 0 else 0 + 0j
+        for k in sorted(keep, key=lambda kk: -abs(coeff[kk])):
+            if freqs[k] == 0:
+                continue
+            r = abs(coeff[k]) / mx * s
+            cx, cy = nx(tip) * s, ny(tip) * s
+            d_.ellipse([cx - r, cy - r, cx + r, cy + r], outline=(170, 170, 180))
+            tip += coeff[k] * np.exp(1j * freqs[k] * tt[0])
+        pts = list(zip([nx(c) * s for c in recon], [ny(c) * s for c in recon]))
+        d_.line(pts, fill=(190, 40, 60), width=max(1, int(round(s / 200))), joint="curve")
+
+    return _supersample_draw(size, draw, bg=(250, 250, 248), ss=2)
+
+
+# id -> { fn, params, category, kind, family_hints, title, titleEs }
 GENERATORS = {
-    "synthetic-checkerboard": (checkerboard, "synthetic", "Checkerboard", "Tablero", ["transforms"]),
-    "synthetic-gradient": (radial_gradient, "synthetic", "Radial gradient", "Gradiente radial", ["transforms", "neural-field"]),
-    "synthetic-polygons": (occluded_polygons, "synthetic", "Occluded primitives", "Primitivas ocluidas", ["primitives"]),
-    "mathart-julia": (julia, "math-art", "Julia set", "Conjunto de Julia", ["transforms", "neural-field", "symbolic"]),
-    "mathart-harmonograph": (harmonograph, "math-art", "Harmonograph", "Armonografo", ["symbolic", "primitives"]),
-    "mathart-rose": (rose_epicycle, "math-art", "Rose (epicycles)", "Rosa (epiciclos)", ["symbolic", "primitives"]),
+    "synthetic-checkerboard": {"fn": checkerboard, "params": {}, "category": "synthetic", "kind": "synthetic",
+                               "family_hints": [1, 3, 0], "title": "Checkerboard", "titleEs": "Tablero"},
+    "synthetic-gradient": {"fn": radial_gradient, "params": {}, "category": "synthetic", "kind": "synthetic",
+                           "family_hints": [1, 4, 0], "title": "Radial gradient", "titleEs": "Gradiente radial"},
+    "synthetic-polygons": {"fn": occluded_polygons, "params": {}, "category": "synthetic", "kind": "synthetic",
+                           "family_hints": [3, 1, 0], "title": "Occluded primitives", "titleEs": "Primitivas ocluidas"},
+    "mathart-julia": {"fn": julia, "params": {}, "category": "math-art", "kind": "math-art",
+                      "family_hints": [5, 4, 1], "title": "Julia set", "titleEs": "Conjunto de Julia"},
+    "mathart-warpnoise": {"fn": warpnoise, "params": {"seed": 0}, "category": "math-art", "kind": "math-art",
+                          "family_hints": [5, 1, 4], "title": "Domain-warped noise", "titleEs": "Ruido deformado"},
+    "mathart-harmonograph": {"fn": harmonograph, "params": {"seed": 7}, "category": "math-art", "kind": "math-art",
+                             "family_hints": [5, 3], "title": "Harmonograph", "titleEs": "Armonografo"},
+    "mathart-rose": {"fn": rose_epicycle, "params": {}, "category": "math-art", "kind": "math-art",
+                     "family_hints": [5, 3, 1], "title": "Rose (rhodonea)", "titleEs": "Rosa (rodonea)"},
+    "mathart-epicycle": {"fn": epicycle, "params": {}, "category": "math-art", "kind": "math-art",
+                         "family_hints": [1, 3], "title": "Fourier epicycle", "titleEs": "Epiciclo de Fourier"},
 }

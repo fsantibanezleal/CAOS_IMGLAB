@@ -14,27 +14,46 @@ export type ImageCategory =
   | 'texture'
   | 'synthetic';
 
-/** One entry of data/images/index.json (Contract 1). */
+export type ImageKind = 'real' | 'math-art' | 'synthetic';
+
+export interface GeneratorSpec {
+  name: string;
+  params: Record<string, number | number[] | string>;
+}
+
+/** One entry of data/images/index.json (Contract 1, schema imglab.imageset/v1). */
 export interface ImageEntry {
+  // eight core fields
   id: string;
   category: ImageCategory;
   title: string;
   titleEs?: string;
-  /** SPDX-style license id or short label, e.g. "CC0-1.0", "CC-BY-4.0", "public-domain", "Kodak", "MIT". */
+  /** SPDX-style license id or short label, e.g. "CC0-1.0", "CC-BY-4.0", "LicenseRef-Kodak-Unrestricted". */
   license: string;
-  /** Human source, e.g. "NASA/STScI (Hubble)". */
+  /** Human source, e.g. "The Metropolitan Museum of Art, Open Access". */
   source: string;
-  /** Attribution string for the footer/credits. */
+  /** Attribution string for the credits and footer. */
   attribution: string;
-  /** Original source URL (empty for in-repo procedural images). */
-  sourceUrl?: string;
   width: number;
   height: number;
-  /** Representation families this image best illustrates (family ids from lib/spectrum). */
-  illustrates?: string[];
+  // additive fields
+  kind: ImageKind;
+  spdx: string;
+  source_url: string | null;
+  sha256: string;
+  /** Representation-family indices this image best illustrates (0..6, see lib/spectrum). */
+  family_hints: number[];
+  has_hires: boolean;
+  generator: GeneratorSpec | null;
+  added: string;
 }
 
-export type ImageIndex = ImageEntry[];
+export interface ImageSetIndex {
+  schema: 'imglab.imageset/v1';
+  version: string;
+  count: number;
+  images: ImageEntry[];
+}
 
 export type Lane = 'live' | 'replay' | 'mixed';
 

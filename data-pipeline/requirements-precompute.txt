@@ -1,0 +1,11 @@
+# The offline pipeline environment (.venv-pipeline, local-only, never shipped). Bakes the image set and the
+# per-representation artifacts. The live/thin frontend needs none of this. Heavier per-representation engines
+# (torch for the neural field, diffusers for the diffusion strips) are added by their own units.
+numpy>=2.0,<3
+scipy>=1.13
+scikit-image>=0.24
+scikit-learn>=1.5
+Pillow>=10.4
+PyWavelets>=1.6
+requests>=2.32
+PyYAML>=6.0
