@@ -89,7 +89,7 @@ function FramesPanel({ planes }: PanelProps) {
             <p className="il-panel-sub">
               {t(
                 'An overcomplete dictionary has 144 atoms for 64-dimensional patches, so each patch is written as a sparse mix of just a few. Swap the alphabet between the learned dictionary and the overcomplete cosine dictionary: the same image, re-expressed. This is the interpretable middle of the spectrum, atom edits are local and meaningful.',
-                'Un diccionario sobrecompleto tiene 144 atomos para parches de 64 dimensiones, asi que cada parche se escribe como una mezcla dispersa de solo unos pocos. Cambia el alfabeto entre el diccionario aprendido y el diccionario coseno sobrecompleto: la misma imagen, re-expresada. Este es el medio interpretable del espectro, las ediciones de atomos son locales y con sentido.',
+                'Un diccionario sobrecompleto tiene 144 atomos para parches de 64 dimensiones, así que cada parche se escribe como una mezcla dispersa de solo unos pocos. Cambia el alfabeto entre el diccionario aprendido y el diccionario coseno sobrecompleto: la misma imagen, re-expresada. Este es el medio interpretable del espectro, las ediciones de atomos son locales y con sentido.',
               )}
             </p>
           </div>

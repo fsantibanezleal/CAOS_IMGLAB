@@ -14,7 +14,7 @@ export default function Methodology() {
           <p>
             {t(
               'The image is projected onto a fixed orthonormal basis. The coefficient of each basis function is an inner product, and the reconstruction is their weighted sum. Keeping only the largest coefficients (nonlinear approximation) or quantizing them is exactly transform compression.',
-              'La imagen se proyecta sobre una base ortonormal fija. El coeficiente de cada funcion base es un producto interno, y la reconstruccion es su suma ponderada. Quedarse solo con los mayores coeficientes (aproximacion no lineal) o cuantizarlos es exactamente la compresion por transformada.',
+              'La imagen se proyecta sobre una base ortonormal fija. El coeficiente de cada funcion base es un producto interno, y la reconstrucción es su suma ponderada. Quedarse solo con los mayores coeficientes (aproximación no lineal) o cuantizarlos es exactamente la compresion por transformada.',
             )}
           </p>
           <Equation tex={String.raw`c_k=\langle f,\varphi_k\rangle,\qquad \hat f=\sum_{k\in S} c_k\,\varphi_k`} />
@@ -37,7 +37,7 @@ export default function Methodology() {
           <p>
             {t(
               'An overcomplete dictionary has more atoms than dimensions, so an image can be written as a sparse combination: few atoms, each meaningful. The dictionary can be fixed (curvelets, shearlets) or learned from image patches. The image is the pair (dictionary, sparse code).',
-              'Un diccionario sobrecompleto tiene mas atomos que dimensiones, asi que una imagen puede escribirse como combinacion dispersa: pocos atomos, cada uno con sentido. El diccionario puede ser fijo (curvelets, shearlets) o aprendido de parches de imagen. La imagen es el par (diccionario, codigo disperso).',
+              'Un diccionario sobrecompleto tiene mas atomos que dimensiones, así que una imagen puede escribirse como combinacion dispersa: pocos atomos, cada uno con sentido. El diccionario puede ser fijo (curvelets, shearlets) o aprendido de parches de imagen. La imagen es el par (diccionario, código disperso).',
             )}
           </p>
           <Equation tex={String.raw`\min_{a}\;\|f - D\,a\|_2^2 \quad \text{s.t.}\quad \|a\|_0 \le T`} />
@@ -58,13 +58,13 @@ export default function Methodology() {
           <h3>{t('Implicit neural representations', 'Representaciones neuronales implicitas')}</h3>
           <p>
             {t('A small multilayer perceptron is overfit to one image, mapping a coordinate to a colour. With a Fourier feature encoding or periodic activations it captures high frequencies; the stored object is the weight vector, a learned descendant of closed-form pixel art ',
-              'Un pequeno perceptron multicapa se sobreajusta a una imagen, mapeando una coordenada a un color. Con una codificacion de rasgos de Fourier o activaciones periodicas captura altas frecuencias; el objeto almacenado es el vector de pesos, un descendiente aprendido del arte de fórmula por pixel ')}
+              'Un pequeño perceptron multicapa se sobreajusta a una imagen, mapeando una coordenada a un color. Con una codificacion de rasgos de Fourier o activaciones periodicas captura altas frecuencias; el objeto almacenado es el vector de pesos, un descendiente aprendido del arte de fórmula por pixel ')}
             (<Cite id="tancik2020fourier" />, <Cite id="sitzmann2020siren" />).
           </p>
           <Equation tex={String.raw`f_\theta(x,y)=W_L\,\sigma(\cdots\sigma(W_1\,\gamma(x,y)))\to(R,G,B)`} />
           <p>
             {t('Perturbing a raw weight yields noise (the weight space is a compression code, not an edit space); a modulation latent, or a frequency knob, gives meaningful control. Storing the quantized weights is a form of compression ',
-              'Perturbar un peso crudo da ruido (el espacio de pesos es un codigo de compresion, no un espacio de edicion); un latente de modulacion, o una perilla de frecuencia, da control con sentido. Almacenar los pesos cuantizados es una forma de compresion ')}
+              'Perturbar un peso crudo da ruido (el espacio de pesos es un código de compresion, no un espacio de edicion); un latente de modulacion, o una perilla de frecuencia, da control con sentido. Almacenar los pesos cuantizados es una forma de compresion ')}
             (<Cite id="dupont2021coin" />).
           </p>
           <Refs label={t('References', 'Referencias')} ids={['tancik2020fourier', 'sitzmann2020siren', 'dupont2021coin']} />
@@ -101,13 +101,13 @@ export default function Methodology() {
           <h3>{t('Generative latents and diffusion', 'Latentes generativos y difusion')}</h3>
           <p>
             {t('A variational or adversarial model gives the image a low-dimensional latent code whose disentangled directions correspond to human-meaningful attributes: this is the most editable representation. A diffusion model turns a sketch, stroke or text description into a plausible image ',
-              'Un modelo variacional o adversarial da a la imagen un codigo latente de baja dimension cuyas direcciones desenredadas corresponden a atributos con sentido humano: es la representacion mas editable. Un modelo de difusion convierte un boceto, trazo o descripcion de texto en una imagen plausible ')}
+              'Un modelo variacional o adversarial da a la imagen un código latente de baja dimension cuyas direcciones desenredadas corresponden a atributos con sentido humano: es la representacion mas editable. Un modelo de difusion convierte un boceto, trazo o descripcion de texto en una imagen plausible ')}
             (<Cite id="karras2019stylegan" />, <Cite id="harkonen2020ganspace" />, <Cite id="rombach2022ldm" />).
           </p>
           <Equation tex={String.raw`x = \mathcal{D}(z),\qquad z' = z + \alpha\,\mathbf{d}\;\;(\text{a semantic direction})`} />
           <p>
             {t('Moving along a direction is a smooth, semantic edit; a prompt or noise change gives a plausible but globally different image (semantic but entangled), not a faithful local edit.',
-              'Moverse a lo largo de una direccion es una edicion suave y semantica; un cambio de prompt o de ruido da una imagen plausible pero globalmente distinta (semantica pero enredada), no una edicion local fiel.')}
+              'Moverse a lo largo de una dirección es una edicion suave y semantica; un cambio de prompt o de ruido da una imagen plausible pero globalmente distinta (semantica pero enredada), no una edicion local fiel.')}
           </p>
           <Refs label={t('References', 'Referencias')} ids={['kingma2013vae', 'karras2019stylegan', 'harkonen2020ganspace', 'ho2020ddpm', 'rombach2022ldm', 'cheng2023diss']} />
         </div>
@@ -122,7 +122,7 @@ export default function Methodology() {
       <p className="il-lead">
         {t(
           'Each representation family, its core mathematics, the parameters it exposes, and how those parameters behave under a nudge. The tabs below track the App workbench families; the exact per-tab definitions and their live controls are filled in as each tab lands.',
-          'Cada familia de representacion, su matematica central, los parametros que expone, y como se comportan esos parametros ante un empujon. Las pestanas de abajo siguen las familias del banco de la App; las definiciones exactas por pestana y sus controles en vivo se completan a medida que cada pestana aterriza.',
+          'Cada familia de representacion, su matemática central, los parámetros que expone, y como se comportan esos parámetros ante un empujon. Las pestanas de abajo siguen las familias del banco de la App; las definiciones exactas por pestana y sus controles en vivo se completan a medida que cada pestana aterriza.',
         )}
       </p>
       <SubTabs tabs={tabs} ariaLabel={t('Representation families', 'Familias de representacion')} />

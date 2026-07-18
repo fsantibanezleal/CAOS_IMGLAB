@@ -110,11 +110,11 @@ function LatentsPanel() {
               {walk.kind === 'interpolate'
                 ? t(
                     'Two images are encoded into the VAE latent code and the code is interpolated; every step decodes to a plausible image. The path stays on the learned manifold, so the blend is smooth, not a pixel cross-fade. This is the editable generative pole, but it is entangled: the whole image changes together.',
-                    'Dos imagenes se codifican en el codigo latente del VAE y el codigo se interpola; cada paso decodifica a una imagen plausible. El camino se mantiene en la variedad aprendida, asi que la mezcla es suave, no un fundido de pixeles. Este es el polo generativo editable, pero esta enredado: la imagen entera cambia junta.',
+                    'Dos imagenes se codifican en el código latente del VAE y el código se interpola; cada paso decodifica a una imagen plausible. El camino se mantiene en la variedad aprendida, así que la mezcla es suave, no un fundido de pixeles. Este es el polo generativo editable, pero esta enredado: la imagen entera cambia junta.',
                   )
                 : t(
                     'Add increasing noise to a single latent code and decode: the image drifts to plausible but globally different pictures. A latent nudge is semantic but entangled, the opposite of the local, exact edits of the transform and dictionary tabs.',
-                    'Agrega ruido creciente a un unico codigo latente y decodifica: la imagen deriva a imagenes plausibles pero globalmente distintas. Un empujon latente es semantico pero enredado, lo opuesto a las ediciones locales y exactas de las pestanas de transformada y diccionario.',
+                    'Agrega ruido creciente a un unico código latente y decodifica: la imagen deriva a imagenes plausibles pero globalmente distintas. Un empujon latente es semantico pero enredado, lo opuesto a las ediciones locales y exactas de las pestanas de transformada y diccionario.',
                   )}
             </p>
           </div>
@@ -132,17 +132,17 @@ function LatentsPanel() {
       label: t('Method', 'Metodo'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('A variational autoencoder maps an image to a low-dimensional latent code and back; the latent is a learned, continuous representation.', 'Un autoencoder variacional mapea una imagen a un codigo latente de baja dimension y de vuelta; el latente es una representacion aprendida y continua.')}</p>
+          <p>{t('A variational autoencoder maps an image to a low-dimensional latent code and back; the latent is a learned, continuous representation.', 'Un autoencoder variacional mapea una imagen a un código latente de baja dimension y de vuelta; el latente es una representacion aprendida y continua.')}</p>
           <Equation tex={String.raw`z=\mathcal{E}(x),\qquad \hat x=\mathcal{D}(z),\qquad z_t=(1-t)\,z_a+t\,z_b`} />
           <p>
             {t('Interpolating in the latent gives a smooth path of plausible images; disentangled generative directions (in GAN W-space, or a diffusion latent) are the most editable representation of all, though the edits here are entangled because the VAE latent is not disentangled ',
-              'Interpolar en el latente da un camino suave de imagenes plausibles; las direcciones generativas desenredadas (en el espacio W de un GAN, o un latente de difusion) son la representacion mas editable de todas, aunque las ediciones aqui estan enredadas porque el latente del VAE no esta desenredado ')}
+              'Interpolar en el latente da un camino suave de imagenes plausibles; las direcciones generativas desenredadas (en el espacio W de un GAN, o un latente de difusion) son la representacion mas editable de todas, aunque las ediciones aquí estan enredadas porque el latente del VAE no esta desenredado ')}
             (<Cite id="kingma2013vae" />, <Cite id="karras2019stylegan" />, <Cite id="harkonen2020ganspace" />, <Cite id="rombach2022ldm" />).
           </p>
-          <Callout variant="honest" title={t('Baked, not live', 'Horneado, no en vivo')}>
+          <Callout variant="honest" title={t('Baked, not live', 'Precalculado, no en vivo')}>
             {t(
               'Encoding and decoding a VAE is too heavy for the browser, so these walks are decoded offline by the open pipeline and replayed here. They are reconstructions through a compression autoencoder, labelled as generative interpolation, not a faithful edit of your exact image.',
-              'Codificar y decodificar un VAE es demasiado pesado para el navegador, asi que estas caminatas se decodifican offline con el pipeline abierto y se reproducen aqui. Son reconstrucciones a traves de un autoencoder de compresion, etiquetadas como interpolacion generativa, no una edicion fiel de tu imagen exacta.',
+              'Codificar y decodificar un VAE es demasiado pesado para el navegador, así que estas caminatas se decodifican offline con el pipeline abierto y se reproducen aquí. Son reconstrucciones a traves de un autoencoder de compresion, etiquetadas como interpolación generativa, no una edicion fiel de tu imagen exacta.',
             )}
           </Callout>
           <Refs label={t('References', 'Referencias')} ids={['kingma2013vae', 'karras2019stylegan', 'harkonen2020ganspace', 'rombach2022ldm']} />

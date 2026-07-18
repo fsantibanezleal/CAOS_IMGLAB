@@ -206,7 +206,7 @@ function DctRD({ planes, block }: { planes: ImagePlanes; block: number }) {
   return (
     <div>
       <p className="il-panel-sub" style={{ marginBottom: '0.6rem' }}>
-        {t('Fidelity against the JPEG quality factor: the operational rate-distortion curve of block DCT coding.', 'Fidelidad frente al factor de calidad JPEG: la curva tasa-distorsion operacional del codigo DCT por bloques.')}
+        {t('Fidelity against the JPEG quality factor: the operational rate-distortion curve of block DCT coding.', 'Fidelidad frente al factor de calidad JPEG: la curva tasa-distorsion operacional del código DCT por bloques.')}
       </p>
       <UPlotChart
         data={data}
