@@ -1,40 +1,46 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { SubTabs, Equation, Callout, Cite, Refs, type SubTabDef } from '@fasl-work/caos-app-shell';
-import { Shuffle } from 'lucide-react';
 import { useT } from '../../lib/i18n';
-import type { TabModule } from '../registry';
-import { ACTIVATIONS, CppnRenderer, randomCppn, type Activation, type CppnWeights } from '../../engine/cppn';
+import type { PanelProps, TabModule } from '../registry';
+import { paintPlanes, type ImagePlanes } from '../../engine/image';
+import { loadSym, loadSymIndex, packSym, perturbSym, SymRenderer, type SymDoc } from '../../engine/symbolic';
 
-const PRESETS: { seed: number; freq: number; act: Activation; en: string; es: string }[] = [
-  { seed: 7, freq: 4.5, act: 'sin', en: 'Interference', es: 'Interferencia' },
-  { seed: 42, freq: 3.0, act: 'gauss', en: 'Cells', es: 'Celulas' },
-  { seed: 128, freq: 6.0, act: 'sin', en: 'Weave', es: 'Trama' },
-  { seed: 2024, freq: 2.2, act: 'tanh', en: 'Flow', es: 'Flujo' },
-  { seed: 99, freq: 8.0, act: 'abs', en: 'Fracture', es: 'Fractura' },
-];
+const RENDER = 288;
 
-function perturb(w: CppnWeights, amount: number, seed: number): CppnWeights {
-  if (amount <= 0) return w;
-  let s = (seed * 2654435761) & 0x7fffffff || 1;
-  const rnd = () => {
-    s = (s * 1103515245 + 12345) & 0x7fffffff;
-    return (s / 0x7fffffff) * 2 - 1;
-  };
-  const w1 = w.w1.slice();
-  const w2 = w.w2.slice();
-  for (let i = 0; i < w1.length; i++) w1[i] += rnd() * amount;
-  for (let i = 0; i < w2.length; i++) w2[i] += rnd() * amount;
-  return { w1, w2 };
+function OriginalCanvas({ planes }: { planes: ImagePlanes | null }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    if (planes && ref.current) paintPlanes(ref.current, planes);
+  }, [planes]);
+  return <canvas ref={ref} className="il-canvas" style={{ width: '100%', imageRendering: 'auto' }} />;
 }
 
-function CppnCanvas({ weights, act, freq, size = 320 }: { weights: CppnWeights; act: Activation; freq: number; size?: number }) {
-  const ref = useRef<HTMLCanvasElement>(null);
-  const rendererRef = useRef<CppnRenderer | null>(null);
+function SymbolicPanel({ entry, planes }: PanelProps) {
+  const t = useT();
+  const [fitted, setFitted] = useState<string[] | null>(null);
+  const [doc, setDoc] = useState<SymDoc | null>(null);
+  const [perturb, setPerturb] = useState(0);
+  const [scale, setScale] = useState(1);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rendererRef = useRef<SymRenderer | null>(null);
   const [err, setErr] = useState<string | null>(null);
+
   useEffect(() => {
-    if (!ref.current) return;
+    loadSymIndex().then((i) => setFitted(i.fitted)).catch(() => setFitted([]));
+  }, []);
+  useEffect(() => {
+    setDoc(null);
+    if (fitted && fitted.includes(entry.id)) loadSym(entry.id).then(setDoc).catch(() => setDoc(null));
+  }, [entry.id, fitted]);
+
+  const flat = useMemo(() => (doc ? packSym(doc) : null), [doc]);
+
+  // (re)create the renderer when the equation size (D) changes
+  useEffect(() => {
+    if (!canvasRef.current || !doc) return;
     try {
-      rendererRef.current = new CppnRenderer(ref.current);
+      rendererRef.current?.dispose();
+      rendererRef.current = new SymRenderer(canvasRef.current, doc.d);
     } catch (e) {
       setErr(String(e));
     }
@@ -42,71 +48,81 @@ function CppnCanvas({ weights, act, freq, size = 320 }: { weights: CppnWeights; 
       rendererRef.current?.dispose();
       rendererRef.current = null;
     };
-  }, []);
+  }, [doc]);
+
+  // render on selection / perturb / scale change (one-shot, never animated)
   useEffect(() => {
-    if (rendererRef.current && !err) rendererRef.current.render(weights, act, freq, size);
-  }, [weights, act, freq, size, err]);
-  if (err) return <div className="il-panel il-panel-sub">{err}</div>;
-  return <canvas ref={ref} className="il-canvas" style={{ width: '100%', imageRendering: 'auto' }} />;
-}
+    if (!rendererRef.current || !flat || !doc) return;
+    const f = perturb > 0 ? perturbSym(flat, doc.d, perturb) : flat;
+    try {
+      rendererRef.current.render(f, scale, RENDER);
+    } catch (e) {
+      setErr(String(e));
+    }
+  }, [flat, doc, perturb, scale]);
 
-function SymbolicPanel() {
-  const t = useT();
-  const [seed, setSeed] = useState(7);
-  const [freq, setFreq] = useState(4.5);
-  const [act, setAct] = useState<Activation>('sin');
-  const [morph, setMorph] = useState(0);
-
-  const base = useMemo(() => randomCppn(seed), [seed]);
-  const weights = useMemo(() => perturb(base, morph, seed + 1), [base, morph, seed]);
+  if (fitted && !fitted.includes(entry.id)) {
+    return (
+      <div className="il-doc">
+        <Callout variant="honest" title={t('Fitted for the curated set', 'Ajustado para el conjunto curado')}>
+          {t(
+            'Fitting the closed-form equation is an offline least-squares step baked for every curated image; your uploaded image is handled by the live transform and dictionary tabs.',
+            'Ajustar la ecuacion de forma cerrada es un paso de minimos cuadrados offline horneado para cada imagen curada; tu imagen cargada se maneja en las pestanas en vivo de transformada y diccionario.',
+          )}
+        </Callout>
+      </div>
+    );
+  }
+  if (err) return <div className="il-panel il-panel-sub">{t('Renderer error: ', 'Error del renderizador: ')}<code>{err}</code></div>;
+  if (!doc || !planes) return <div className="il-panel il-panel-sub">{t('Loading the equation...', 'Cargando la ecuacion...')}</div>;
 
   const tabs: SubTabDef[] = [
     {
-      id: 'explore',
-      label: t('Explore', 'Explorar'),
+      id: 'equation',
+      label: t('The equation', 'La ecuacion'),
       content: (
         <div className="il-fourier">
           <div className="il-fourier-controls il-panel">
-            <button className="chip" onClick={() => setSeed((s) => (s * 7 + 13) % 100000)} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Shuffle size={14} aria-hidden="true" /> {t('Randomize', 'Aleatorizar')}
-            </button>
-            <div className="il-ctl">
-              <div className="il-panel-t" style={{ marginTop: '0.3rem' }}>{t('Presets', 'Ejemplos')}</div>
-              <div className="il-chips">
-                {PRESETS.map((p) => (
-                  <button key={p.seed} className="chip" onClick={() => { setSeed(p.seed); setFreq(p.freq); setAct(p.act); setMorph(0); }}>
-                    {t(p.en, p.es)}
-                  </button>
-                ))}
+            <div className="il-panel-t">{t('One image, one formula', 'Una imagen, una formula')}</div>
+            <div className="il-kpis">
+              <div className="il-kpi">
+                <div className="il-kpi-v">{doc.psnr.toFixed(1)}</div>
+                <div className="il-kpi-l">PSNR (dB)</div>
+              </div>
+              <div className="il-kpi">
+                <div className="il-kpi-v">{doc.d}</div>
+                <div className="il-kpi-l">{t('terms', 'terminos')}</div>
               </div>
             </div>
             <label className="il-ctl">
-              <div className="il-ctl-row"><span>{t('Frequency', 'Frecuencia')}</span><b>{freq.toFixed(1)}</b></div>
-              <input className="range" type="range" min={0.5} max={12} step={0.1} value={freq} onChange={(e) => setFreq(+e.target.value)} />
-            </label>
-            <label className="il-ctl">
-              <div className="il-ctl-row"><span>{t('Activation', 'Activacion')}</span><b>{act}</b></div>
-              <div className="il-seg">
-                {ACTIVATIONS.map((a) => (
-                  <button key={a} className={act === a ? 'on' : ''} onClick={() => setAct(a)}>{a}</button>
-                ))}
+              <div className="il-ctl-row">
+                <span>{t('Perturb coefficients', 'Perturbar coeficientes')}</span>
+                <b>{perturb.toFixed(3)}</b>
               </div>
+              <input className="range" type="range" min={0} max={0.05} step={0.002} value={perturb} onChange={(e) => setPerturb(+e.target.value)} />
             </label>
             <label className="il-ctl">
-              <div className="il-ctl-row"><span>{t('Perturb weights', 'Perturbar pesos')}</span><b>{morph.toFixed(2)}</b></div>
-              <input className="range" type="range" min={0} max={1.5} step={0.02} value={morph} onChange={(e) => setMorph(+e.target.value)} />
+              <div className="il-ctl-row">
+                <span>{t('Frequency scale', 'Escala de frecuencia')}</span>
+                <b>{scale.toFixed(2)}x</b>
+              </div>
+              <input className="range" type="range" min={0.5} max={2} step={0.02} value={scale} onChange={(e) => setScale(+e.target.value)} />
             </label>
             <p className="il-panel-sub">
               {t(
-                'This image IS an equation: a compact network of about 72 numbers mapping (x, y) to colour, evaluated per pixel on the GPU. Nudge the weights and the pattern morphs smoothly, this is the editable pole of formula art. A dense formula hand-fitted to a photograph has no such factored structure and shatters under the same nudge.',
-                'Esta imagen ES una ecuacion: una red compacta de unos 72 números que mapea (x, y) a color, evaluada por pixel en la GPU. Mueve los pesos y el patron se transforma suavemente, este es el polo editable del arte de formula. Una formula densa ajustada a mano a una fotografia no tiene esa estructura factorizada y se destroza con el mismo empujon.',
+                'The whole image is written as one closed-form equation: a sum of hundreds of cosine and sine waves at fitted amplitudes. Nudge the coefficients and the picture morphs smoothly (a legible, editable parameter); stretch the frequency scale and the pattern breathes. The fidelity is honest: a smooth field collapses to a compact formula, a sharp photo needs far more terms.',
+                'La imagen entera se escribe como una ecuacion de forma cerrada: una suma de cientos de ondas coseno y seno con amplitudes ajustadas. Empuja los coeficientes y la imagen se transforma suavemente (un parametro legible y editable); estira la escala de frecuencia y el patron respira. La fidelidad es honesta: un campo suave colapsa a una formula compacta, una foto nitida necesita muchos mas terminos.',
               )}
             </p>
           </div>
-          <div className="il-fourier-views" style={{ gridTemplateColumns: '1fr' }}>
+          <div className="il-fourier-views">
             <figure className="il-fig">
-              <CppnCanvas weights={weights} act={act} freq={freq} />
-              <figcaption>{t('CPPN render (seed', 'Render CPPN (semilla')} {seed})</figcaption>
+              <OriginalCanvas planes={planes} />
+              <figcaption>{t('Original', 'Original')}</figcaption>
+            </figure>
+            <figure className="il-fig">
+              <canvas ref={canvasRef} className="il-canvas" style={{ width: '100%', imageRendering: 'auto' }} />
+              <figcaption>{t('The equation, evaluated per pixel', 'La ecuacion, evaluada por pixel')}</figcaption>
             </figure>
           </div>
         </div>
@@ -117,33 +133,34 @@ function SymbolicPanel() {
       label: t('Method', 'Metodo'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('A compositional pattern producing network composes interpretable primitives of the coordinates into colour.', 'Una red productora de patrones composicionales compone primitivas interpretables de las coordenadas en color.')}</p>
-          <Equation tex={String.raw`h_j=\phi\!\Big(\sum_i W^{(1)}_{ji}\,g_i(x,y)\Big),\qquad c_k=\tfrac12+\tfrac12\sin\!\Big(\sum_j W^{(2)}_{kj}\,h_j\Big)`} />
+          <p>{t('Each colour channel of the image is fitted as a sum of random sinusoids (random Fourier features), a genuine closed-form formula recovered from the pixels by ridge regression.', 'Cada canal de color de la imagen se ajusta como una suma de sinusoides aleatorias (caracteristicas de Fourier aleatorias), una formula de forma cerrada genuina recuperada de los pixeles por regresion ridge.')}</p>
+          <Equation tex={String.raw`\mathrm{ch}(x,y)=a_0+\sum_{k=1}^{D}\Big[a_k\cos(\boldsymbol{\omega}_k\!\cdot\!(x,y))+b_k\sin(\boldsymbol{\omega}_k\!\cdot\!(x,y))\Big],\quad \boldsymbol{\omega}_k\sim\mathcal N(0,\sigma^2 I)`} />
           <p>
-            {t('with inputs g = (x, y, r, sin x, sin y, 1) and an activation phi in {sin, tanh, gauss, abs}. Evolved compositional representations stay factored and editable, whereas gradient-fit networks that produce the same image become entangled ',
-              'con entradas g = (x, y, r, sin x, sin y, 1) y activacion phi en {sin, tanh, gauss, abs}. Las representaciones composicionales evolucionadas permanecen factorizadas y editables, mientras que las redes ajustadas por gradiente que producen la misma imagen se enredan ')}
+            {t('Random Fourier features approximate a smooth function as a short trigonometric sum, so the image becomes a compact analytic expression rather than a black box ',
+              'Las caracteristicas de Fourier aleatorias aproximan una funcion suave como una suma trigonometrica corta, asi que la imagen se vuelve una expresion analitica compacta en vez de una caja negra ')}
+            (<Cite id="tancik2020fourier" />, <Cite id="yeganeh2024" />). {t('Unlike the fixed-basis transforms the frequencies are random, and unlike the neural field the model is linear in the basis, so it can be written down and read as an equation ', 'A diferencia de las transformadas de base fija las frecuencias son aleatorias, y a diferencia del campo neuronal el modelo es lineal en la base, asi que puede escribirse y leerse como una ecuacion ')}
             (<Cite id="stanley2007cppn" />, <Cite id="fer2025" />).
           </p>
-          <Callout variant="honest" title={t('The honest limit', 'El limite honesto')}>
+          <Callout variant="honest" title={t('The honest limit', 'El límite honesto')}>
             {t(
-              'No method today turns an arbitrary photograph into a compact, faithful, human-readable equation. What is genuinely computable is the reverse direction shown here (a small formula generates a rich image) and, for a closed outline, its exact Fourier-descriptor equation (see the Epicycle tab). Fitting a photo with symbolic regression works only for low-complexity fields; that Pareto trade-off, accuracy against expression size, is the real state of the art.',
-              'Ningun método hoy convierte una fotografia arbitraria en una ecuacion compacta, fiel y legible por humanos. Lo genuinamente computable es la dirección inversa mostrada aquí (una formula pequeña genera una imagen rica) y, para un contorno cerrado, su ecuacion exacta por descriptores de Fourier (ver la pestana Epiciclos). Ajustar una foto con regresion simbolica solo funciona para campos de baja complejidad; ese compromiso de Pareto, precision frente a tamaño de la expresion, es el estado del arte real.',
+              'This really does turn each image into a closed-form equation, but the fidelity is bounded: a smooth gradient reaches about 57 dB from the same 512 terms, a sharp checkerboard only about 14, because a finite trigonometric sum cannot render a hard edge. That accuracy-versus-expression-size trade-off is exactly the point of the symbolic pole.',
+              'Esto realmente convierte cada imagen en una ecuacion de forma cerrada, pero la fidelidad esta acotada: un gradiente suave alcanza unos 57 dB con los mismos 512 terminos, un tablero nitido solo unos 14, porque una suma trigonometrica finita no puede representar un borde duro. Ese compromiso entre precision y tamano de la expresion es justo el punto del polo simbolico.',
             )}
           </Callout>
-          <Refs label={t('References', 'Referencias')} ids={['stanley2007cppn', 'cranmer2023pysr', 'fer2025', 'yeganeh2024']} />
+          <Refs label={t('References', 'Referencias')} ids={['tancik2020fourier', 'yeganeh2024', 'stanley2007cppn', 'fer2025']} />
         </div>
       ),
     },
   ];
 
-  return <SubTabs tabs={tabs} ariaLabel={t('Symbolic views', 'Vistas simbolicas')} />;
+  return <SubTabs tabs={tabs} ariaLabel={t('Symbolic views', 'Vistas simbólicas')} />;
 }
 
 export const symbolicTab: TabModule = {
   id: 'symbolic',
   family: 'symbolic',
   labelEn: 'Symbolic / CPPN',
-  labelEs: 'Simbolico / CPPN',
+  labelEs: 'Simbólico / CPPN',
   lane: 'live',
   Panel: SymbolicPanel,
 };

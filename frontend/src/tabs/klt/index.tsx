@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { SubTabs, Equation, Cite, Refs, type SubTabDef } from '@fasl-work/caos-app-shell';
+import { SubTabs, Equation, Refs, type SubTabDef } from '@fasl-work/caos-app-shell';
 import { useT } from '../../lib/i18n';
 import type { PanelProps, TabModule } from '../registry';
 import { paintPlanes, withChannels, type ImagePlanes } from '../../engine/image';
@@ -70,8 +70,8 @@ function KltPanel({ planes }: PanelProps) {
             </div>
             <p className="il-panel-sub">
               {t(
-                'The KLT is the optimal linear basis for THIS ensemble: it decorrelates and packs the most energy into the fewest components. Reconstruct each 8x8 block from the top m eigen-patches. Unlike Fourier or DCT, this basis is data-adaptive, so it is quasi-semantic, but only for images like the ones it was fit on.',
-                'La KLT es la base lineal optima para ESTE conjunto: decorrelaciona y concentra la mayor energía en los menos componentes. Reconstruye cada bloque 8x8 con los m primeros parches propios. A diferencia de Fourier o DCT, esta base es adaptada a los datos, así que es cuasi-semantica, pero solo para imagenes como las que la ajustaron.',
+                'The KLT is the optimal linear basis for this ensemble: it decorrelates and packs the most energy into the fewest components. Reconstruct each 8x8 block from the top m eigen-patches. Unlike Fourier or DCT, this basis is data-adaptive, so it is quasi-semantic, but only for images like the ones it was fit on.',
+                'La KLT es la base lineal óptima para este conjunto: decorrelaciona y concentra la mayor energía en los menos componentes. Reconstruir cada bloque 8x8 con los m primeros parches propios. A diferencia de Fourier o DCT, esta base es adaptada a los datos, así que es cuasi-semántica, pero solo para imágenes como las que la ajustaron.',
               )}
             </p>
             <div className="il-panel-sub">{t('Kept', 'Conservado')}: {keptRate}%</div>
@@ -83,24 +83,23 @@ function KltPanel({ planes }: PanelProps) {
             </figure>
             <figure className="il-fig">
               <PlanesCanvas planes={result?.recon ?? null} />
-              <figcaption>{t('KLT reconstruction', 'Reconstruccion KLT')}</figcaption>
+              <figcaption>{t('KLT reconstruction', 'Reconstrucción KLT')}</figcaption>
             </figure>
           </div>
         </div>
       ),
     },
-    { id: 'eigen', label: t('Eigenimages', 'Imagenes propias'), content: <EigenView basis={basis} m={m} /> },
+    { id: 'eigen', label: t('Eigenimages', 'Imágenes propias'), content: <EigenView basis={basis} m={m} /> },
     {
       id: 'method',
-      label: t('Method', 'Metodo'),
+      label: t('Method', 'Método'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('Diagonalize the patch covariance; the eigenvectors are the eigenimages, the optimal linear basis for the ensemble.', 'Diagonaliza la covarianza de parches; los vectores propios son las imagenes propias, la base lineal optima para el conjunto.')}</p>
+          <p>{t('Diagonalize the patch covariance; the eigenvectors are the eigenimages, the optimal linear basis for the ensemble.', 'Diagonalizar la covarianza de parches; los vectores propios son las imágenes propias, la base lineal óptima para el conjunto.')}</p>
           <Equation tex={String.raw`\Sigma=U\Lambda U^{\!\top},\qquad y=U^{\!\top}(x-\mu),\qquad \hat x=\mu+U_{:m}\,y_{:m}`} />
           <p>
-            {t('Among linear orthonormal transforms the KLT uniquely decorrelates, maximizes energy compaction, and minimizes truncated error (Hotelling 1933); for aligned faces the eigenimages are eigenfaces ',
-              'Entre las transformadas ortonormales lineales la KLT unicamente decorrelaciona, maximiza la compactacion de energía y minimiza el error truncado (Hotelling 1933); para rostros alineados las imagenes propias son eigenfaces ')}
-            (<Cite id="wang2004ssim" />).
+            {t('Among linear orthonormal transforms the KLT uniquely decorrelates, maximizes energy compaction, and minimizes truncated error (Hotelling 1933); for aligned faces the eigenimages are eigenfaces.',
+              'Entre las transformadas ortonormales lineales la KLT únicamente decorrelaciona, maximiza la compactación de energía y minimiza el error truncado (Hotelling 1933); para rostros alineados las imágenes propias son eigenfaces.')}
           </p>
           <Refs label={t('References', 'Referencias')} ids={['wang2004ssim']} />
         </div>
@@ -167,7 +166,7 @@ function EigenView({ basis, m }: { basis: PatchBasis; m: number }) {
   return (
     <div>
       <p className="il-panel-sub" style={{ marginBottom: '0.6rem' }}>
-        {t('The mean patch (top-left) and the eigen-patches, ordered by energy; the kept components are highlighted. Below, the eigenvalue spectrum shows how quickly energy compacts.', 'El parche medio (arriba-izquierda) y los parches propios, ordenados por energía; los componentes conservados estan resaltados. Abajo, el espectro de valores propios muestra cuan rápido se compacta la energía.')}
+        {t('The mean patch (top-left) and the eigen-patches, ordered by energy; the kept components are highlighted. Below, the eigenvalue spectrum shows how quickly energy compacts.', 'El parche medio (arriba-izquierda) y los parches propios, ordenados por energía; los componentes conservados están resaltados. Abajo, el espectro de valores propios muestra cuán rápido se compacta la energía.')}
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '1.2rem', alignItems: 'start' }}>
         <canvas ref={galRef} className="il-canvas" style={{ imageRendering: 'pixelated', maxWidth: 280 }} />
@@ -176,7 +175,7 @@ function EigenView({ basis, m }: { basis: PatchBasis; m: number }) {
           series={series}
           height={260}
           scales={{ x: { time: false }, ev: { distr: 3 }, var: { range: [0, 100] } }}
-          axes={[{ label: t('component index', 'indice de componente') }, { scale: 'ev', label: t('eigenvalue (log)', 'valor propio (log)') }, { side: 1, scale: 'var', label: '% var' }]}
+          axes={[{ label: t('component index', 'índice de componente') }, { scale: 'ev', label: t('eigenvalue (log)', 'valor propio (log)') }, { side: 1, scale: 'var', label: '% var' }]}
         />
       </div>
     </div>
