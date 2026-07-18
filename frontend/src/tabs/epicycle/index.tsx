@@ -3,20 +3,15 @@ import { SubTabs, Equation, Cite, Refs, type SubTabDef } from '@fasl-work/caos-a
 import { Pause, Play } from 'lucide-react';
 import { useT } from '../../lib/i18n';
 import type { PanelProps, TabModule } from '../registry';
-import { PRESETS, type Contour, type PresetName, epicycleChain, presetContour, reconstructPath, traceContour } from '../../engine/epicycle';
-
-type Source = PresetName | 'image';
+import { type Contour, epicycleChain, imageContour, reconstructPath } from '../../engine/epicycle';
 
 function EpicyclePanel({ planes }: PanelProps) {
   const t = useT();
-  const [source, setSource] = useState<Source>('heart');
-  const [k, setK] = useState(12);
+  const [k, setK] = useState(24);
   const [playing, setPlaying] = useState(false);
 
-  const contour: Contour | null = useMemo(() => {
-    if (source === 'image') return planes ? traceContour(planes) : null;
-    return presetContour(source);
-  }, [source, planes]);
+  // the contour is always traced from the SELECTED image (Otsu silhouette -> boundary -> Fourier descriptors)
+  const contour: Contour | null = useMemo(() => (planes ? imageContour(planes) : null), [planes]);
 
   const fullPath = useMemo(() => (contour ? reconstructPath(contour.terms, k) : null), [contour, k]);
 
@@ -122,16 +117,9 @@ function EpicyclePanel({ planes }: PanelProps) {
         <div className="il-fourier">
           <div className="il-fourier-controls il-panel">
             <div className="il-ctl">
-              <div className="il-panel-t">{t('Shape', 'Forma')}</div>
-              <div className="il-chips">
-                {PRESETS.map((p) => (
-                  <button key={p} className={`chip${source === p ? ' on' : ''}`} onClick={() => setSource(p)}>
-                    {p}
-                  </button>
-                ))}
-                <button className={`chip${source === 'image' ? ' on' : ''}`} onClick={() => setSource('image')}>
-                  {t('trace image', 'trazar imagen')}
-                </button>
+              <div className="il-panel-t">{t('Traced from the selected image', 'Trazado de la imagen seleccionada')}</div>
+              <div className="il-panel-sub" style={{ marginTop: '0.25rem' }}>
+                {t('The dominant silhouette is extracted (Otsu threshold, largest region, boundary trace) and written as rotating vectors.', 'Se extrae la silueta dominante (umbral de Otsu, region mayor, trazado del borde) y se escribe como vectores rotatorios.')}
               </div>
             </div>
             <label className="il-ctl">
@@ -139,7 +127,7 @@ function EpicyclePanel({ planes }: PanelProps) {
                 <span>{t('Harmonics', 'Armonicos')}</span>
                 <b>{k}</b>
               </div>
-              <input className="range" type="range" min={1} max={80} step={1} value={k} onChange={(e) => setK(+e.target.value)} />
+              <input className="range" type="range" min={1} max={128} step={1} value={k} onChange={(e) => setK(+e.target.value)} />
             </label>
             <button className="chip" onClick={() => setPlaying((p) => !p)} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', width: 'fit-content' }}>
               {playing ? <Pause size={14} /> : <Play size={14} />} {playing ? t('Pause', 'Pausar') : t('Play', 'Reproducir')}
@@ -156,7 +144,7 @@ function EpicyclePanel({ planes }: PanelProps) {
               {contour ? (
                 <canvas ref={canvasRef} className="il-canvas" style={{ width: '100%', imageRendering: 'auto' }} />
               ) : (
-                <div className="il-panel il-panel-sub">{t('No clear contour in this image; pick a preset shape.', 'Sin contorno claro en esta imagen; elige una forma.')}</div>
+                <div className="il-panel il-panel-sub">{t('Tracing the contour of the selected image...', 'Trazando el contorno de la imagen seleccionada...')}</div>
               )}
               <figcaption>{t('Reconstruction from', 'Reconstruccion con')} {k} {t('rotating circles', 'circulos rotatorios')}</figcaption>
             </figure>

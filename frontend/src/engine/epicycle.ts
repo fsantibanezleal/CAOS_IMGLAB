@@ -1,6 +1,8 @@
-// Fourier descriptors of a closed contour: sample the boundary as complex points z_n, take their DFT
-// c_k = (1/N) sum_n z_n e^{-i 2 pi k n / N}, and redraw the truncated partial sum as a chain of rotating
-// circles (epicycles). This is the one genuinely exact "outline to equation" case (Zahn-Roskies 1972).
+// Fourier descriptors of the SELECTED image's own contour. The image is reduced to an edge/silhouette,
+// its dominant closed boundary is traced (Otsu threshold -> largest connected component -> Moore-neighbour
+// boundary following), sampled as complex points z_n, and transformed: c_k = (1/N) sum_n z_n e^{-i 2 pi k n / N}.
+// The truncated partial sum is redrawn as a chain of rotating circles (epicycles). This is the one genuinely
+// exact "outline to equation" case (Zahn-Roskies 1972), applied to whatever image is selected, not a canned shape.
 import FFT from 'fft.js';
 import type { ImagePlanes } from './image';
 import { luma } from './image';
@@ -17,36 +19,10 @@ export interface Term {
 export interface Contour {
   pts: Float32Array; // interleaved [x0,y0,x1,y1,...] in [-1,1], length 2N
   terms: Term[]; // Fourier descriptors, sorted by descending magnitude
-}
-
-// --- preset parametric contours (the classic epicycle demo shapes) ---
-export type PresetName = 'heart' | 'star' | 'flower' | 'spiralish' | 'infinity';
-export const PRESETS: PresetName[] = ['heart', 'star', 'flower', 'spiralish', 'infinity'];
-
-function presetPoint(name: PresetName, t: number): [number, number] {
-  switch (name) {
-    case 'heart':
-      return [16 * Math.sin(t) ** 3, 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)];
-    case 'star': {
-      const k = 5;
-      const r = 1 + 0.5 * Math.cos(k * t);
-      return [r * Math.cos(t), r * Math.sin(t)];
-    }
-    case 'flower': {
-      const r = Math.cos(3 * t);
-      return [r * Math.cos(t), r * Math.sin(t)];
-    }
-    case 'spiralish': {
-      const r = 0.3 + 0.7 * (t / (2 * Math.PI));
-      return [r * Math.cos(3 * t), r * Math.sin(3 * t)];
-    }
-    case 'infinity':
-      return [Math.cos(t), Math.sin(2 * t) / 2];
-  }
+  fill: number; // fraction of the frame the traced silhouette covers (diagnostic)
 }
 
 function normalizePoints(raw: number[]): Float32Array {
-  // center + scale to [-1,1]
   let cx = 0;
   let cy = 0;
   for (let i = 0; i < raw.length; i += 2) {
@@ -85,60 +61,159 @@ function descriptorsFrom(pts: Float32Array): Term[] {
   return terms;
 }
 
-export function presetContour(name: PresetName): Contour {
-  const raw: number[] = [];
-  for (let n = 0; n < N; n++) {
-    const t = (2 * Math.PI * n) / N;
-    const [x, y] = presetPoint(name, t);
-    raw.push(x, -y); // flip y for image coordinates
+/** Otsu threshold of a luma buffer (0..1): the split value that maximizes between-class variance. */
+function otsu(y: Float32Array): number {
+  const bins = 64;
+  const hist = new Float64Array(bins);
+  for (let i = 0; i < y.length; i++) hist[Math.min(bins - 1, Math.max(0, Math.floor(y[i] * bins)))]++;
+  const total = y.length;
+  let sum = 0;
+  for (let b = 0; b < bins; b++) sum += b * hist[b];
+  let sumB = 0;
+  let wB = 0;
+  let best = 0;
+  let bestVar = -1;
+  for (let b = 0; b < bins; b++) {
+    wB += hist[b];
+    if (wB === 0) continue;
+    const wF = total - wB;
+    if (wF === 0) break;
+    sumB += b * hist[b];
+    const mB = sumB / wB;
+    const mF = (sum - sumB) / wF;
+    const between = wB * wF * (mB - mF) * (mB - mF);
+    if (between > bestVar) {
+      bestVar = between;
+      best = b;
+    }
   }
-  const pts = normalizePoints(raw);
-  return { pts, terms: descriptorsFrom(pts) };
+  return (best + 0.5) / bins;
 }
 
-/** Trace a closed contour from the selected image by radial sampling of the foreground silhouette. */
-export function traceContour(planes: ImagePlanes): Contour | null {
+/** Largest 4-connected component of a binary mask, returned as a new mask. */
+function largestComponent(bin: Uint8Array, w: number, h: number): Uint8Array {
+  const label = new Int32Array(w * h).fill(-1);
+  const stack: number[] = [];
+  let bestId = -1;
+  let bestSize = 0;
+  let id = 0;
+  for (let s = 0; s < w * h; s++) {
+    if (bin[s] === 0 || label[s] !== -1) continue;
+    let size = 0;
+    stack.push(s);
+    label[s] = id;
+    while (stack.length) {
+      const p = stack.pop()!;
+      size++;
+      const x = p % w;
+      const yy = (p - x) / w;
+      if (x > 0 && bin[p - 1] && label[p - 1] === -1) ((label[p - 1] = id), stack.push(p - 1));
+      if (x < w - 1 && bin[p + 1] && label[p + 1] === -1) ((label[p + 1] = id), stack.push(p + 1));
+      if (yy > 0 && bin[p - w] && label[p - w] === -1) ((label[p - w] = id), stack.push(p - w));
+      if (yy < h - 1 && bin[p + w] && label[p + w] === -1) ((label[p + w] = id), stack.push(p + w));
+    }
+    if (size > bestSize) {
+      bestSize = size;
+      bestId = id;
+    }
+    id++;
+  }
+  const out = new Uint8Array(w * h);
+  if (bestId >= 0) for (let s = 0; s < w * h; s++) out[s] = label[s] === bestId ? 1 : 0;
+  return out;
+}
+
+/** Moore-neighbour boundary tracing (clockwise) of a filled binary component. Returns ordered [x,y,...]. */
+function traceBoundary(mask: Uint8Array, w: number, h: number): number[] {
+  let start = -1;
+  for (let s = 0; s < w * h && start < 0; s++) if (mask[s]) start = s;
+  if (start < 0) return [];
+  const at = (x: number, y: number) => (x >= 0 && y >= 0 && x < w && y < h ? mask[y * w + x] : 0);
+  const nb = [
+    [-1, 0],
+    [-1, -1],
+    [0, -1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+    [0, 1],
+    [-1, 1],
+  ]; // 8-neighbours clockwise from left
+  const sx = start % w;
+  const sy = (start - sx) / w;
+  const pts: number[] = [sx, sy];
+  let cx = sx;
+  let cy = sy;
+  let backdir = 0;
+  const maxSteps = 8 * (w + h);
+  for (let step = 0; step < maxSteps; step++) {
+    let found = false;
+    for (let i = 0; i < 8; i++) {
+      const dir = (backdir + i) % 8;
+      const nx = cx + nb[dir][0];
+      const ny = cy + nb[dir][1];
+      if (at(nx, ny)) {
+        cx = nx;
+        cy = ny;
+        pts.push(cx, cy);
+        backdir = (dir + 6) % 8;
+        found = true;
+        break;
+      }
+    }
+    if (!found) break;
+    if (cx === sx && cy === sy && pts.length > 4) break;
+  }
+  return pts;
+}
+
+/** Resample an ordered closed polyline to exactly n points by arc length. */
+function resampleClosed(pts: number[], n: number): number[] {
+  const m = pts.length / 2;
+  if (m < 3) return pts;
+  const seg: number[] = [0];
+  let total = 0;
+  for (let i = 1; i < m; i++) {
+    total += Math.hypot(pts[2 * i] - pts[2 * (i - 1)], pts[2 * i + 1] - pts[2 * (i - 1) + 1]);
+    seg.push(total);
+  }
+  total += Math.hypot(pts[0] - pts[2 * (m - 1)], pts[1] - pts[2 * (m - 1) + 1]);
+  const out: number[] = [];
+  let j = 0;
+  for (let k = 0; k < n; k++) {
+    const d = (k / n) * total;
+    while (j < m - 1 && seg[j + 1] < d) j++;
+    const d0 = seg[j];
+    const d1 = j < m - 1 ? seg[j + 1] : total;
+    const f = d1 > d0 ? (d - d0) / (d1 - d0) : 0;
+    const a = j;
+    const b = (j + 1) % m;
+    out.push(pts[2 * a] + f * (pts[2 * b] - pts[2 * a]), pts[2 * a + 1] + f * (pts[2 * b + 1] - pts[2 * a + 1]));
+  }
+  return out;
+}
+
+/** Extract the dominant closed contour of the SELECTED image and its Fourier descriptors. */
+export function imageContour(planes: ImagePlanes): Contour | null {
   const { w, h } = planes;
   const y = luma(planes);
-  // binarize at the mean; take the darker OR lighter side as foreground, whichever is the minority (the shape)
-  let mean = 0;
-  for (let i = 0; i < y.length; i++) mean += y[i];
-  mean /= y.length;
+  const thr = otsu(y);
   let below = 0;
-  for (let i = 0; i < y.length; i++) if (y[i] < mean) below++;
-  const fgIsDark = below <= y.length / 2;
-  const isFg = (i: number) => (fgIsDark ? y[i] < mean : y[i] >= mean);
-  // centroid of foreground
-  let cx = 0;
-  let cy = 0;
-  let cnt = 0;
-  for (let j = 0; j < h; j++)
-    for (let i = 0; i < w; i++)
-      if (isFg(j * w + i)) {
-        cx += i;
-        cy += j;
-        cnt++;
-      }
-  if (cnt < 50) return null;
-  cx /= cnt;
-  cy /= cnt;
-  const maxR = Math.hypot(w, h);
+  for (let i = 0; i < y.length; i++) if (y[i] < thr) below++;
+  const fgDark = below <= y.length / 2; // foreground = the minority side (the subject, not the field)
+  const bin = new Uint8Array(w * h);
+  for (let i = 0; i < y.length; i++) bin[i] = (fgDark ? y[i] < thr : y[i] >= thr) ? 1 : 0;
+  const comp = largestComponent(bin, w, h);
+  let fill = 0;
+  for (let i = 0; i < comp.length; i++) fill += comp[i];
+  fill /= comp.length;
+  const boundary = traceBoundary(comp, w, h);
+  if (boundary.length < 8) return null;
+  const res = resampleClosed(boundary, N);
   const raw: number[] = [];
-  for (let n = 0; n < N; n++) {
-    const ang = (2 * Math.PI * n) / N;
-    const dx = Math.cos(ang);
-    const dy = Math.sin(ang);
-    let boundary = 0;
-    for (let r = 1; r < maxR; r += 1) {
-      const px = Math.round(cx + dx * r);
-      const py = Math.round(cy + dy * r);
-      if (px < 0 || py < 0 || px >= w || py >= h) break;
-      if (isFg(py * w + px)) boundary = r;
-    }
-    raw.push(cx + dx * boundary, cy + dy * boundary);
-  }
+  for (let i = 0; i < res.length; i += 2) raw.push(res[i], -res[i + 1]); // flip y for display
   const pts = normalizePoints(raw);
-  return { pts, terms: descriptorsFrom(pts) };
+  return { pts, terms: descriptorsFrom(pts), fill };
 }
 
 /** The reconstructed contour path (K harmonics), as [x0,y0,...] in [-1,1]. */
