@@ -101,6 +101,13 @@
 .il-sp-cell .t { font-size: 0.86rem; font-weight: 600; color: var(--color-fg); margin: 0.15rem 0; }
 .il-sp-cell .d { font-size: 0.72rem; color: var(--color-fg-subtle); line-height: 1.4; }
 
+/* ---- image selector thumbnails (App sidebar) ---- */
+.il-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 0.35rem; }
+.il-thumb { padding: 0; border: 2px solid transparent; border-radius: 6px; overflow: hidden; cursor: pointer; background: none; aspect-ratio: 1; }
+.il-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.il-thumb:hover { border-color: var(--color-fg-faint); }
+.il-thumb.on { border-color: var(--color-accent); }
+
 /* under-construction note (honest, while representations are being wired in) */
 .il-wip { border: 1px dashed var(--color-border); border-radius: 10px; padding: 0.8rem 1rem; background: color-mix(in oklab, var(--il-transform) 6%, transparent); color: var(--color-fg-subtle); font-size: 0.86rem; }
 .il-wip b { color: var(--color-fg); }
