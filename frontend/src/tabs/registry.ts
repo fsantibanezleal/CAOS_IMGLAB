@@ -39,8 +39,9 @@ import { dctTab } from './dct';
 import { waveletTab } from './wavelet';
 import { kltTab } from './klt';
 import { symbolicTab } from './symbolic';
+import { epicycleTab } from './epicycle';
 
-export const TABS: TabModule[] = [fourierTab, dctTab, waveletTab, kltTab, symbolicTab];
+export const TABS: TabModule[] = [fourierTab, dctTab, waveletTab, kltTab, symbolicTab, epicycleTab];
 
 export function tabsByFamily(family: Family): TabModule[] {
   return TABS.filter((t) => t.family === family);
