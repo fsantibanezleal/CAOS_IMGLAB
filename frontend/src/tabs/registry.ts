@@ -44,8 +44,9 @@ import { framesTab } from './frames';
 import { neuralTab } from './neural';
 import { primitivesTab } from './primitives';
 import { latentsTab } from './latents';
+import { diffusionTab } from './diffusion';
 
-export const TABS: TabModule[] = [fourierTab, dctTab, waveletTab, kltTab, framesTab, primitivesTab, neuralTab, symbolicTab, epicycleTab, latentsTab];
+export const TABS: TabModule[] = [fourierTab, dctTab, waveletTab, kltTab, framesTab, primitivesTab, neuralTab, symbolicTab, epicycleTab, latentsTab, diffusionTab];
 
 export function tabsByFamily(family: Family): TabModule[] {
   return TABS.filter((t) => t.family === family);

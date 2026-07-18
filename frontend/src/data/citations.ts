@@ -159,6 +159,13 @@ export const CITATIONS: Citation[] = [
     url: 'https://arxiv.org/abs/2112.10752',
   },
   {
+    id: 'sauer2023add',
+    label: 'Sauer et al. 2023',
+    citation:
+      'Sauer A., Lorenz D., Blattmann A., Rombach R. (2023). Adversarial Diffusion Distillation (SD-Turbo). arXiv.',
+    url: 'https://arxiv.org/abs/2311.17042',
+  },
+  {
     id: 'cheng2023diss',
     label: 'Cheng et al. 2023',
     citation:
