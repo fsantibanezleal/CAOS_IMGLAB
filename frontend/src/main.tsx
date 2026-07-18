@@ -7,6 +7,7 @@ import '@fasl-work/caos-app-shell/styles.css';
 import 'katex/dist/katex.min.css';
 import './imglab.css';
 import { CITATIONS } from './data/citations';
+import { ARCHITECTURE } from './lib/architecture';
 import { EXTERNAL_LINKS } from './lib/links';
 import pkg from '../package.json';
 
@@ -48,6 +49,7 @@ const config: ShellConfig = {
     portfolio: EXTERNAL_LINKS.portfolio,
   },
   version: displayVersion,
+  architecture: ARCHITECTURE,
   footer: {
     provenance: {
       en: 'Images: public-domain and permissively-licensed sources (NASA/STScI, ESA/Webb, Kodak, CLIC, the Met and Art Institute of Chicago CC0, Poly Haven and ambientCG CC0, BBBC CC-BY) plus in-repo procedurally generated figures (MIT), each attributed. Engines: numpy, scipy, PyWavelets, scikit-image, scikit-learn and PyTorch offline; in-browser transforms and shaders live.',
