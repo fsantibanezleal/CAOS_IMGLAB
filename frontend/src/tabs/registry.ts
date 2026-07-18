@@ -37,8 +37,9 @@ export const FAMILY_ORDER: Family[] = [
 import { fourierTab } from './fourier';
 import { dctTab } from './dct';
 import { waveletTab } from './wavelet';
+import { kltTab } from './klt';
 
-export const TABS: TabModule[] = [fourierTab, dctTab, waveletTab];
+export const TABS: TabModule[] = [fourierTab, dctTab, waveletTab, kltTab];
 
 export function tabsByFamily(family: Family): TabModule[] {
   return TABS.filter((t) => t.family === family);
