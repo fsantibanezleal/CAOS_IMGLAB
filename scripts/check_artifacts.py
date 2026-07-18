@@ -1,9 +1,10 @@
-"""Validate CONTRACT 2 on disk (the pipeline -> web artifact contract): the index references every case; each
-manifest exists; each artifact exists, is non-empty, and its byte size matches the manifest; the lane matches the
-gate verdict. Stdlib only (runs in CI WITHOUT installing the package). Exit non-zero on any drift.
+"""Validate the artifact contract on disk (the pipeline -> web contract): every committed derived index
+references files that exist and are non-empty, and no artifact under data/derived/ is empty. Stdlib only,
+runs in CI without installing the package. Exit non-zero on any drift.
 
-Used by scripts/smoke.* and by .github/workflows/ci.yml, the mechanical guard that a product can't regress to
-serving artifacts that don't match their manifests."""
+Guards against the regression where a bake half-writes an index (or a frame is dropped) and the SPA then
+fetches a 404 or a zero-byte file at runtime. Each representation writes its own compact index; this checks
+the reference integrity of all of them."""
 from __future__ import annotations
 
 import json
@@ -12,39 +13,78 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DERIVED = ROOT / "data" / "derived"
-MANIFESTS = DERIVED / "manifests"
+
+
+def _group_present(group: str) -> bool:
+    """A representation group is validated only when its directory is committed in this build."""
+    return (DERIVED / group).is_dir()
+
+
+def _load(rel: str, errs: list[str]):
+    p = DERIVED / rel
+    if not p.exists():
+        errs.append(f"missing index: {rel}")
+        return None
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        errs.append(f"bad JSON in {rel}: {e}")
+        return None
+
+
+def _need(rel: str, errs: list[str]) -> None:
+    p = DERIVED / rel
+    if not p.exists():
+        errs.append(f"missing artifact: {rel}")
+    elif p.stat().st_size == 0:
+        errs.append(f"empty artifact: {rel}")
 
 
 def main() -> int:
-    idx_path = MANIFESTS / "index.json"
-    if not idx_path.exists():
-        print(f"FAIL: missing {idx_path} (run scripts/precompute.sh first)")
+    if not DERIVED.exists():
+        print(f"FAIL: missing {DERIVED} (run scripts/precompute.sh first)")
         return 1
-    index = json.loads(idx_path.read_text(encoding="utf-8"))
     errs: list[str] = []
-    for entry in index.get("cases", []):
-        mp = DERIVED / entry["manifest_path"]
-        if not mp.exists():
-            errs.append(f"missing manifest: {mp}")
+
+    # 1) no empty file anywhere under data/derived/
+    n_files = 0
+    for f in DERIVED.rglob("*"):
+        if f.is_file() and f.name != ".gitkeep":
+            n_files += 1
+            if f.stat().st_size == 0:
+                errs.append(f"empty file: {f.relative_to(DERIVED)}")
+
+    # 2) direct (index-less) artifacts
+    for group, files in (("_klt", ("patch.json",)), ("_dict", ("learned.json", "overdct.json"))):
+        if not _group_present(group):
             continue
-        m = json.loads(mp.read_text(encoding="utf-8"))
-        art = DERIVED / m["artifact"]["path"]
-        if not art.exists():
-            errs.append(f"missing artifact: {art}")
+        for name in files:
+            _need(f"{group}/{name}", errs)
+            _load(f"{group}/{name}", errs)
+
+    # 3) per-image list artifacts (INR weights, primitive fits)
+    for group, key in (("_inr", "trained"), ("_prim", "fitted")):
+        if not _group_present(group):
             continue
-        size = art.stat().st_size
-        if size != m["artifact"]["bytes"]:
-            errs.append(f"byte drift {art}: manifest={m['artifact']['bytes']} disk={size}")
-        if size == 0:
-            errs.append(f"empty artifact: {art}")
-        if m.get("gate", {}).get("lane") != m.get("lane"):
-            errs.append(f"lane/gate mismatch: {entry['case_id']}")
+        idx = _load(f"{group}/index.json", errs)
+        for img_id in (idx or {}).get(key, []):
+            _need(f"{group}/{img_id}.json", errs)
+
+    # 4) frame-strip artifacts (VAE latent walks, diffusion strips)
+    for group, key in (("_vae", "walks"), ("_diff", "strips")):
+        if not _group_present(group):
+            continue
+        idx = _load(f"{group}/index.json", errs)
+        for item in (idx or {}).get(key, []):
+            for i in range(item.get("frames", 0)):
+                _need(f"{group}/{item['id']}/{i:02d}.png", errs)
+
     if errs:
-        print("CONTRACT 2 DRIFT:")
+        print("ARTIFACT CONTRACT DRIFT:")
         for e in errs:
             print("  -", e)
         return 1
-    print(f"CONTRACT 2 OK: {len(index.get('cases', []))} cases, manifests <-> artifacts consistent.")
+    print(f"artifact contract OK: {n_files} derived files, every index references existing non-empty artifacts.")
     return 0
 
 

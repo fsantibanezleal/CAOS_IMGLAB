@@ -1,6 +1,12 @@
-# PRECOMPUTE lane, the heavy, research-chosen SOTA engines, in the .venv-pipeline (local-only, never deployed).
-# THIS is where the deep research becomes binding: every engine pinned here is documented in docs/frameworks/<tool>/
-# and actually used by data-pipeline/examplelab/stages/. The EXAMPLE engine (SIR) is numpy-only on purpose so the
-# template installs instantly with no native build; a real product adds e.g. yade / pychrono / ortools / mintpy /
-# torch here, each PINNED to the version it installs+verifies.
-numpy==2.4.6
+# Offline lane, the classical (no-torch) bakes CI installs and can run: the procedural image set, the KLT
+# basis, the sparse dictionaries and the primitive fits. Every package here is actually imported by
+# data-pipeline/imglab/methods/*.py. The heavy learned bakes (INR training, the VAE and diffusion strips)
+# need torch/diffusers and live in requirements-precompute.txt, run locally, never in CI or on deploy.
+numpy>=2.0,<3
+Pillow>=10.4
+scikit-learn>=1.5
+scikit-image>=0.24
+scipy>=1.13
+PyWavelets>=1.6
+requests>=2.32
+PyYAML>=6.0
