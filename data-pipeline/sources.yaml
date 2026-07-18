@@ -1,0 +1,99 @@
+# Pinned, declarative source list for the licensed (real) subset of the ImageLab curated image set.
+# `spdx` values are the machine ids from imglab.io.image.LICENSE_ALLOW; `mode` selects the resolver.
+# A source that fails to resolve or download is logged and skipped (a partial set still builds).
+sources:
+  - id: photo_parrots
+    category: photo
+    title: "Macaws"
+    titleEs: "Guacamayos"
+    mode: direct
+    url: "https://r0k.us/graphics/kodak/kodim23.png"
+    mirrors: ["https://raw.githubusercontent.com/MohamedBakrAli/Kodak-Lossless-True-Color-Image-Suite/master/PhotoCD_PCD0992/23.png"]
+    spdx: "LicenseRef-Kodak-Unrestricted"
+    attribution: "Eastman Kodak Company; released for unrestricted use"
+    family_hints: [0, 1, 2, 6]
+  - id: photo_lighthouse
+    category: photo
+    title: "Lighthouse"
+    titleEs: "Faro"
+    mode: direct
+    url: "https://r0k.us/graphics/kodak/kodim19.png"
+    mirrors: ["https://raw.githubusercontent.com/MohamedBakrAli/Kodak-Lossless-True-Color-Image-Suite/master/PhotoCD_PCD0992/19.png"]
+    spdx: "LicenseRef-Kodak-Unrestricted"
+    attribution: "Eastman Kodak Company; released for unrestricted use"
+    family_hints: [1, 2]
+  - id: photo_motorcycle
+    category: photo
+    title: "Motorbikes"
+    titleEs: "Motos"
+    mode: direct
+    url: "https://r0k.us/graphics/kodak/kodim05.png"
+    mirrors: ["https://raw.githubusercontent.com/MohamedBakrAli/Kodak-Lossless-True-Color-Image-Suite/master/PhotoCD_PCD0992/05.png"]
+    spdx: "LicenseRef-Kodak-Unrestricted"
+    attribution: "Eastman Kodak Company; released for unrestricted use"
+    family_hints: [0, 2]
+  - id: art_greatwave
+    category: art
+    title: "The Great Wave off Kanagawa"
+    titleEs: "La gran ola de Kanagawa"
+    mode: met
+    object_id: 45434
+    spdx: "CC0-1.0"
+    attribution: "The Metropolitan Museum of Art, Open Access (CC0)"
+    family_hints: [3, 1, 6]
+  - id: art_wheatfield
+    category: art
+    title: "Wheat Field with Cypresses"
+    titleEs: "Campo de trigo con cipreses"
+    mode: met
+    object_id: 436535
+    spdx: "CC0-1.0"
+    attribution: "The Metropolitan Museum of Art, Open Access (CC0)"
+    family_hints: [0, 2, 6]
+  - id: art_woodblock
+    category: art
+    title: "Japanese woodblock print"
+    titleEs: "Grabado en madera japones"
+    mode: met
+    object_id: 56736
+    spdx: "CC0-1.0"
+    attribution: "The Metropolitan Museum of Art, Open Access (CC0)"
+    family_hints: [3, 1]
+  - id: astro_pillars
+    category: astronomy
+    title: "Pillars of Creation (Eagle Nebula)"
+    titleEs: "Pilares de la Creacion (Nebulosa del Aguila)"
+    mode: direct
+    url: "https://cdn.esahubble.org/archives/images/large/heic1501a.jpg"
+    mirrors: ["https://cdn.spacetelescope.org/archives/images/large/heic1501a.jpg"]
+    spdx: "CC-BY-4.0"
+    attribution: "NASA, ESA and the Hubble Heritage Team (STScI/AURA)"
+    family_hints: [1, 2, 6]
+  - id: astro_deepfield
+    category: astronomy
+    title: "Galaxy cluster (deep field)"
+    titleEs: "Cumulo de galaxias (campo profundo)"
+    mode: direct
+    url: "https://cdn.esawebb.org/archives/images/large/weic2201a.jpg"
+    mirrors: []
+    spdx: "CC-BY-4.0"
+    attribution: "NASA, ESA, CSA, and STScI (JWST)"
+    family_hints: [1, 6, 0]
+  - id: tex_fabric
+    category: texture
+    title: "Woven fabric"
+    titleEs: "Tejido"
+    mode: polyhaven
+    keyword: "fabric"
+    spdx: "CC0-1.0"
+    attribution: "Poly Haven (CC0)"
+    family_hints: [1, 2]
+  - id: tex_wood
+    category: texture
+    title: "Wood grain"
+    titleEs: "Veta de madera"
+    mode: polyhaven
+    keyword: "wood"
+    spdx: "CC0-1.0"
+    attribution: "Poly Haven (CC0)"
+    family_hints: [2, 1]

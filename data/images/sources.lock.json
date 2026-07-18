@@ -1,0 +1,87 @@
+{
+  "locks": [
+    {
+      "id": "photo_parrots",
+      "resolved_url": "https://r0k.us/graphics/kodak/kodim23.png",
+      "provider_note": "",
+      "spdx": "LicenseRef-Kodak-Unrestricted",
+      "sha256": "e3111a2fd4da24af15d6459ef9eacfe54106b38e27b4a21821b75c3f5d2d5baf",
+      "flags": []
+    },
+    {
+      "id": "photo_lighthouse",
+      "resolved_url": "https://r0k.us/graphics/kodak/kodim19.png",
+      "provider_note": "",
+      "spdx": "LicenseRef-Kodak-Unrestricted",
+      "sha256": "b7450b264b1b0a411390d8931b112c27905a992520fc90569dc4b920aa32bbdc",
+      "flags": []
+    },
+    {
+      "id": "photo_motorcycle",
+      "resolved_url": "https://r0k.us/graphics/kodak/kodim05.png",
+      "provider_note": "",
+      "spdx": "LicenseRef-Kodak-Unrestricted",
+      "sha256": "10349e963c5c813d327852f82c1795fa4148d69fedffc4c589bee458e3ac3d53",
+      "flags": []
+    },
+    {
+      "id": "art_greatwave",
+      "resolved_url": "https://images.metmuseum.org/CRDImages/as/original/DP130155.jpg",
+      "provider_note": "Met objectID 45434 isPublicDomain=True",
+      "spdx": "CC0-1.0",
+      "sha256": "cbb9988f2f18b9180a1cc0cf5dbb0e3bbf8f2e85d17930cf6ca9ab36fac36303",
+      "flags": []
+    },
+    {
+      "id": "art_wheatfield",
+      "resolved_url": "https://images.metmuseum.org/CRDImages/ep/original/DP-42549-001.jpg",
+      "provider_note": "Met objectID 436535 isPublicDomain=True",
+      "spdx": "CC0-1.0",
+      "sha256": "b46d02a42fd3bb13b022cefc5beaa997b1d7a28cd7b53e4413d940aa0dc4014d",
+      "flags": []
+    },
+    {
+      "id": "art_woodblock",
+      "resolved_url": "https://images.metmuseum.org/CRDImages/as/original/DP123720.jpg",
+      "provider_note": "Met objectID 56736 isPublicDomain=True",
+      "spdx": "CC0-1.0",
+      "sha256": "7171937c5f1fe19d1e0ce8ce52386968aa02bf2810d935540db3bf77a40f4763",
+      "flags": []
+    },
+    {
+      "id": "astro_pillars",
+      "resolved_url": "https://cdn.esahubble.org/archives/images/large/heic1501a.jpg",
+      "provider_note": "",
+      "spdx": "CC-BY-4.0",
+      "sha256": "284191a3bbb4dddfcdd3b9064a26afde010a29edff35b12bface1fe3eb9e3ea6",
+      "flags": [
+        "large source 6780x7071; will be center-cropped and downscaled"
+      ]
+    },
+    {
+      "id": "astro_deepfield",
+      "resolved_url": "https://cdn.esawebb.org/archives/images/large/weic2201a.jpg",
+      "provider_note": "",
+      "spdx": "CC-BY-4.0",
+      "sha256": "0e0d3ffeefad5125002e7db765e72cd69d4fde5fa2dfe77b9b24493ff5e335df",
+      "flags": []
+    },
+    {
+      "id": "tex_fabric",
+      "resolved_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/denim_fabric/denim_fabric_diff_2k.jpg",
+      "provider_note": "PolyHaven denim_fabric Diffuse 2k jpg (CC0)",
+      "spdx": "CC0-1.0",
+      "sha256": "164fdc3adbae7eab65171b05fb43aac5e3945615cb905b37b48049b2630c56d2",
+      "flags": []
+    },
+    {
+      "id": "tex_wood",
+      "resolved_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/aerial_wood_snips/aerial_wood_snips_diff_2k.jpg",
+      "provider_note": "PolyHaven aerial_wood_snips Diffuse 2k jpg (CC0)",
+      "spdx": "CC0-1.0",
+      "sha256": "e3c49c5fd99b3f8170b65d19e48c981f8718a7757d27f3d5b2d78d854b6370de",
+      "flags": []
+    }
+  ],
+  "failed": []
+}

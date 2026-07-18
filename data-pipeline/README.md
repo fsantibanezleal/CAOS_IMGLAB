@@ -1,16 +1,25 @@
-# data-pipeline/, the offline engine (`examplelab`)
+# data-pipeline/, the offline engine (`imglab`)
 
-Rename `examplelab` → `<slug>lab` per product. The **single source of physics/algorithm truth**; `frontend/` and
-`app/` consume it, never re-implement it. Its own venv: **`.venv-pipeline`** (heavy SOTA engines, local-only).
+The single source of algorithm truth for the offline bakes. `frontend/` consumes the committed artifacts and
+recomputes the live representations from scratch; it never re-implements the offline math. The package has its
+own environment, `.venv-pipeline` (the classical bakes plus the heavy learned engines, local-only).
 
 ## Layout (the package lives directly under `data-pipeline/`)
-- `examplelab/pipeline.py`, orchestrator + CLI (`python -m examplelab.pipeline [all|<case>] [--seed N]`)
-- `examplelab/registry.py`, cases grouped by CATEGORY · `examplelab/live.py`, Pyodide live entrypoint
-- `examplelab/io/`, `contract.py` (**CONTRACT 1**) · `formats.py` (standard readers/writers) · `schema.py` (types)
-- `examplelab/core/`, `rng.py` (seeded determinism) · `trace.py` · `manifest.py` (**CONTRACT 2**) · `gate.py`
-- `examplelab/model/`, the shared pure-Python core (Pyodide-safe); EXAMPLE = SIR
-- `examplelab/stages/`, `preprocess → feature_extraction → train → infer → evaluate → export`
-- `examplelab/cases/`, documented cases
 
-Setup + run: `scripts/setup.{sh,ps1}` then `scripts/precompute.{sh,ps1}`. See
-[../docs/architecture/05_precompute-pipeline.md](../docs/architecture/05_precompute-pipeline.md).
+- `imglab/pipeline.py`, the bake orchestrator + CLI (`python -m imglab.pipeline [images|light|heavy|all]`)
+- `imglab/imageset.py`, build the curated image set (procedural generators + fetch the licensed real subset)
+- `imglab/gen/synthetic.py`, the procedural, CC0 image generators (control scenes + math art)
+- `imglab/io/image.py`, Contract 1 (ingestion: the license allowlist + deterministic load to working planes)
+- `imglab/core/metrics.py`, the fidelity measures (PSNR, SSIM, MS-SSIM) shared verbatim with the frontend
+- `imglab/methods/`, one module per representation bake:
+  - `klt_basis.py`, the patch KLT/PCA basis
+  - `dictionaries.py`, the learned + overcomplete-DCT sparse dictionaries
+  - `inr_train.py`, train a small SIREN per image and export its weights
+  - `primitives_fit.py`, the greedy translucent-ellipse fit
+  - `vae_latents.py`, decode latent-interpolation walks with the Stable Diffusion VAE
+  - `diffusion_strips.py`, bake a denoising trajectory + a prompt walk with SD-Turbo
+- `imglab/stages/fetch_images.py`, download the licensed real image subset (the only network step)
+
+The classical bakes (`images`, `light`) need only `requirements.txt` and run in CI; the learned bakes (`heavy`)
+need `requirements-precompute.txt` (torch, diffusers) and run locally. Setup + run: `scripts/setup.{sh,ps1}` then
+`scripts/precompute.{sh,ps1} <group>`. Architecture: [../docs/architecture/01_overview.md](../docs/architecture/01_overview.md).

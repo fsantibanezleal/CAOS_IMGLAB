@@ -1,0 +1,17 @@
+{
+  "imageId": "_klt",
+  "method": "klt",
+  "params": {
+    "patch": 8,
+    "K": 64,
+    "stride": 4,
+    "images": 18,
+    "patches": 71442
+  },
+  "seed": 0,
+  "lane": "live",
+  "bytes": 44781,
+  "runMs": 0,
+  "format": "imglab.klt/v1",
+  "version": "0.1.0"
+}

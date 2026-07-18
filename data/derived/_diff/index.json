@@ -1,0 +1,1 @@
+{"model": "stabilityai/sd-turbo", "strips": [{"id": "denoise", "kind": "denoise", "frames": 8, "prompt": "a colorful macaw parrot, lush jungle, vivid"}, {"id": "promptwalk", "kind": "promptwalk", "frames": 9, "a": "a lighthouse on a rocky coast, dramatic sky, oil painting", "b": "a colorful macaw parrot, lush jungle, vivid"}]}

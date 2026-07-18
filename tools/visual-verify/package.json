@@ -1,0 +1,9 @@
+{
+  "name": "imglab-visual-verify",
+  "private": true,
+  "type": "module",
+  "description": "Screenshot harness for verifying the SPA (light + dark, per route). Not part of the app build.",
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}
