@@ -1,0 +1,218 @@
+{
+  "images": [
+    "photo_parrots",
+    "art_greatwave",
+    "mathart-julia",
+    "astro_pillars",
+    "tex_wood",
+    "synthetic-gradient"
+  ],
+  "size": 256,
+  "fracs": [
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.25
+  ],
+  "rd": {
+    "fourier": [
+      {
+        "frac": 0.005,
+        "psnr": 29.02,
+        "ssim": 0.633
+      },
+      {
+        "frac": 0.01,
+        "psnr": 29.87,
+        "ssim": 0.637
+      },
+      {
+        "frac": 0.02,
+        "psnr": 30.79,
+        "ssim": 0.652
+      },
+      {
+        "frac": 0.05,
+        "psnr": 32.28,
+        "ssim": 0.691
+      },
+      {
+        "frac": 0.1,
+        "psnr": 33.84,
+        "ssim": 0.736
+      },
+      {
+        "frac": 0.25,
+        "psnr": 37.35,
+        "ssim": 0.82
+      }
+    ],
+    "dct": [
+      {
+        "frac": 0.005,
+        "psnr": 29.53,
+        "ssim": 0.632
+      },
+      {
+        "frac": 0.01,
+        "psnr": 30.42,
+        "ssim": 0.643
+      },
+      {
+        "frac": 0.02,
+        "psnr": 31.41,
+        "ssim": 0.663
+      },
+      {
+        "frac": 0.05,
+        "psnr": 33.16,
+        "ssim": 0.71
+      },
+      {
+        "frac": 0.1,
+        "psnr": 35.17,
+        "ssim": 0.763
+      },
+      {
+        "frac": 0.25,
+        "psnr": 39.96,
+        "ssim": 0.868
+      }
+    ],
+    "wavelet": [
+      {
+        "frac": 0.005,
+        "psnr": 17.75,
+        "ssim": 0.477
+      },
+      {
+        "frac": 0.01,
+        "psnr": 30.2,
+        "ssim": 0.663
+      },
+      {
+        "frac": 0.02,
+        "psnr": 31.85,
+        "ssim": 0.762
+      },
+      {
+        "frac": 0.05,
+        "psnr": 34.81,
+        "ssim": 0.848
+      },
+      {
+        "frac": 0.1,
+        "psnr": 38.37,
+        "ssim": 0.909
+      },
+      {
+        "frac": 0.25,
+        "psnr": 49.41,
+        "ssim": 0.969
+      }
+    ],
+    "klt": [
+      {
+        "frac": 0.005,
+        "psnr": 26.52,
+        "ssim": 0.65
+      },
+      {
+        "frac": 0.01,
+        "psnr": 26.52,
+        "ssim": 0.65
+      },
+      {
+        "frac": 0.02,
+        "psnr": 26.52,
+        "ssim": 0.65
+      },
+      {
+        "frac": 0.05,
+        "psnr": 29.37,
+        "ssim": 0.734
+      },
+      {
+        "frac": 0.1,
+        "psnr": 30.5,
+        "ssim": 0.786
+      },
+      {
+        "frac": 0.25,
+        "psnr": 33.12,
+        "ssim": 0.873
+      }
+    ]
+  },
+  "budget": [
+    {
+      "family": "Fourier",
+      "psnr": 32.28,
+      "ssim": 0.691,
+      "params": "3276 coeffs",
+      "note": "top 5% coefficients"
+    },
+    {
+      "family": "DCT",
+      "psnr": 33.16,
+      "ssim": 0.71,
+      "params": "3276 coeffs",
+      "note": "top 5% coefficients"
+    },
+    {
+      "family": "Wavelet",
+      "psnr": 34.81,
+      "ssim": 0.848,
+      "params": "3276 coeffs",
+      "note": "top 5% coefficients"
+    },
+    {
+      "family": "KLT (patch)",
+      "psnr": 29.37,
+      "ssim": 0.734,
+      "params": "3276 coeffs",
+      "note": "top 5% coefficients"
+    },
+    {
+      "family": "Primitives",
+      "psnr": 21.89,
+      "ssim": null,
+      "params": "~90 ellipses",
+      "note": "greedy shape fit (committed)"
+    },
+    {
+      "family": "Neural field (INR)",
+      "psnr": 32.95,
+      "ssim": null,
+      "params": "~2307 weights",
+      "note": "SIREN per image (committed)"
+    },
+    {
+      "family": "VAE latent",
+      "psnr": 24.4,
+      "ssim": null,
+      "params": "4x32x32 latent",
+      "note": "encode-decode reconstruction (committed)"
+    }
+  ],
+  "locality": [
+    {
+      "family": "Fourier",
+      "concentration": 0.156
+    },
+    {
+      "family": "DCT",
+      "concentration": 0.228
+    },
+    {
+      "family": "Wavelet",
+      "concentration": 0.999
+    },
+    {
+      "family": "KLT",
+      "concentration": 1.0
+    }
+  ]
+}
