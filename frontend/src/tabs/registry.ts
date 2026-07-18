@@ -34,7 +34,9 @@ export const FAMILY_ORDER: Family[] = [
 ];
 
 // Registered representation tabs. Populated as each representation lands.
-export const TABS: TabModule[] = [];
+import { fourierTab } from './fourier';
+
+export const TABS: TabModule[] = [fourierTab];
 
 export function tabsByFamily(family: Family): TabModule[] {
   return TABS.filter((t) => t.family === family);
