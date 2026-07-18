@@ -36,8 +36,9 @@ export const FAMILY_ORDER: Family[] = [
 // Registered representation tabs. Populated as each representation lands.
 import { fourierTab } from './fourier';
 import { dctTab } from './dct';
+import { waveletTab } from './wavelet';
 
-export const TABS: TabModule[] = [fourierTab, dctTab];
+export const TABS: TabModule[] = [fourierTab, dctTab, waveletTab];
 
 export function tabsByFamily(family: Family): TabModule[] {
   return TABS.filter((t) => t.family === family);
