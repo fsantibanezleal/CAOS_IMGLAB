@@ -1,0 +1,15 @@
+{
+  "imageId": "_dict",
+  "method": "frames",
+  "params": {
+    "patch": 8,
+    "nAtoms": 144,
+    "patches": 71442
+  },
+  "seed": 0,
+  "lane": "live",
+  "bytes": 0,
+  "runMs": 0,
+  "format": "imglab.dict/v1",
+  "version": "0.1.0"
+}
