@@ -177,7 +177,7 @@
     },
     {
       "family": "Primitives",
-      "psnr": 21.89,
+      "psnr": 32.02,
       "ssim": null,
       "params": "~90 ellipses",
       "note": "greedy shape fit (committed)"
@@ -191,10 +191,17 @@
     },
     {
       "family": "VAE latent",
-      "psnr": 24.4,
+      "psnr": 26.77,
       "ssim": null,
       "params": "4x32x32 latent",
       "note": "encode-decode reconstruction (committed)"
+    },
+    {
+      "family": "Symbolic equation",
+      "psnr": 29.42,
+      "ssim": null,
+      "params": "512 trig terms",
+      "note": "random-Fourier ridge fit (committed)"
     }
   ],
   "locality": [

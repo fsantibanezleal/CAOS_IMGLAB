@@ -1,14 +1,17 @@
-"""Bake diffusion strips with a real small diffusion model (SD-Turbo). A denoising trajectory (the reverse
-process, decoding the intermediate latents at each step) and a prompt-interpolation walk (the text embedding
-is interpolated between two prompts). The live tab scrubs these frames: the image emerging from noise, and
-morphing between prompts. Semantic but entangled. CPU-feasible but slow (tens of seconds per image).
+"""Diffusion applied to the SELECTED image: SD-Turbo image-to-image regeneration at increasing strength.
+For each curated image we encode it, add a controlled amount of noise, and let the diffusion model denoise
+back, at a sweep of strengths. Low strength returns almost the original; high strength lets the learned prior
+re-imagine the picture. The live tab scrubs this per-image strip, so diffusion is about the selected image
+(not a fixed prompt): a semantic but entangled edit, the far generative pole.
 
-    python -m imglab.methods.diffusion_strips
+    python -m imglab.methods.diffusion_strips            # all images
+    python -m imglab.methods.diffusion_strips --ids photo_parrots
 
-Downloads SD-Turbo (~2.5 GB) to the Hugging Face cache on first run (HF_HOME on a large disk).
+Downloads SD-Turbo (~2.5 GB) to the HF cache on first run. CPU-feasible but slow (tens of seconds per frame).
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 from pathlib import Path
@@ -19,72 +22,57 @@ from PIL import Image
 os.environ.setdefault("HF_HOME", "E:/_Temp/hf")
 
 ROOT = Path(__file__).resolve().parents[3]
+IMAGES = ROOT / "data" / "images"
 OUT = ROOT / "data" / "derived" / "_diff"
 MODEL = "stabilityai/sd-turbo"
-STEPS = 8
-PROMPT_A = "a lighthouse on a rocky coast, dramatic sky, oil painting"
-PROMPT_B = "a colorful macaw parrot, lush jungle, vivid"
+SIZE = 256
+STRENGTHS = [0.3, 0.45, 0.6, 0.75, 0.9]  # frame 0 is the original; then increasing regeneration
+STEPS = 8  # scheduler steps; img2img runs round(strength*STEPS) of them, so keep strength*STEPS >= 1
 
 
 def main() -> None:
     import torch
-    from diffusers import AutoPipelineForText2Image
+    from diffusers import AutoPipelineForImage2Image
 
     torch.manual_seed(0)
-    pipe = AutoPipelineForText2Image.from_pretrained(MODEL, torch_dtype=torch.float32, safety_checker=None)
+    pipe = AutoPipelineForImage2Image.from_pretrained(MODEL, torch_dtype=torch.float32, safety_checker=None)
     pipe.set_progress_bar_config(disable=True)
-    vae = pipe.vae
-    sf = vae.config.scaling_factor
     OUT.mkdir(parents=True, exist_ok=True)
 
-    def decode_latent(lat):
-        with torch.no_grad():
-            img = vae.decode(lat / sf).sample
-        arr = ((img[0].permute(1, 2, 0).clamp(-1, 1) + 1) / 2).numpy()
-        return (np.clip(arr, 0, 1) * 255).astype(np.uint8)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--ids", nargs="*", default=None)
+    args = ap.parse_args()
+    all_ids = [p.stem for p in sorted(IMAGES.glob("*.png")) if ".hi." not in p.name]
+    ids = args.ids if args.ids else all_ids
 
-    # --- 1) denoising trajectory: capture the decoded latent at each reverse step ---
-    tdir = OUT / "denoise"
-    tdir.mkdir(parents=True, exist_ok=True)
-    traj = []
-
-    def cb(pipe_, step, timestep, kw):
-        traj.append(kw["latents"].detach().clone())
-        return kw
-
-    _ = pipe(PROMPT_B, num_inference_steps=STEPS, guidance_scale=0.0, height=256, width=256, callback_on_step_end=cb)
-    for i, lat in enumerate(traj):
-        Image.fromarray(decode_latent(lat)).save(tdir / f"{i:02d}.png")
-    print(f"  denoise trajectory: {len(traj)} frames")
-
-    # --- 2) prompt-interpolation walk: interpolate the text embeddings between two prompts ---
-    wdir = OUT / "promptwalk"
-    wdir.mkdir(parents=True, exist_ok=True)
-    n = 9
-    for i in range(n):
-        t = i / (n - 1)
-        with torch.no_grad():
-            ea, _ = pipe.encode_prompt(PROMPT_A, device="cpu", num_images_per_prompt=1, do_classifier_free_guidance=False)
-            eb, _ = pipe.encode_prompt(PROMPT_B, device="cpu", num_images_per_prompt=1, do_classifier_free_guidance=False)
-            emb = (1 - t) * ea + t * eb
+    done = []
+    for img_id in ids:
+        f = IMAGES / f"{img_id}.png"
+        if not f.exists():
+            continue
+        src = Image.open(f).convert("RGB").resize((SIZE, SIZE), Image.LANCZOS)
+        d = OUT / img_id
+        d.mkdir(parents=True, exist_ok=True)
+        src.save(d / "00.png")  # frame 0 = the original
+        for i, s in enumerate(STRENGTHS, start=1):
             gen = torch.Generator("cpu").manual_seed(0)
-            out = pipe(prompt_embeds=emb, num_inference_steps=4, guidance_scale=0.0, height=256, width=256, generator=gen)
-        out.images[0].save(wdir / f"{i:02d}.png")
-    print(f"  prompt walk: {n} frames")
+            out = pipe(prompt="", image=src, strength=s, num_inference_steps=STEPS, guidance_scale=0.0, generator=gen)
+            out.images[0].save(d / f"{i:02d}.png")
+        frames = 1 + len(STRENGTHS)
+        done.append({"id": img_id, "frames": frames})
+        print(f"  {img_id:<24} {frames} frames (img2img strengths {STRENGTHS})")
 
-    (OUT / "index.json").write_text(
-        json.dumps(
-            {
-                "model": MODEL,
-                "strips": [
-                    {"id": "denoise", "kind": "denoise", "frames": len(traj), "prompt": PROMPT_B},
-                    {"id": "promptwalk", "kind": "promptwalk", "frames": n, "a": PROMPT_A, "b": PROMPT_B},
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
-    print(f"baked diffusion strips with {MODEL}")
+    prev = []
+    ip = OUT / "index.json"
+    if ip.exists():
+        prevdoc = json.loads(ip.read_text())
+        prev = prevdoc.get("images", [])
+    by_id = {e["id"]: e for e in prev}
+    for e in done:
+        by_id[e["id"]] = e
+    images = [by_id[i] for i in all_ids if i in by_id]
+    ip.write_text(json.dumps({"model": MODEL, "kind": "img2img", "strengths": STRENGTHS, "images": images}), encoding="utf-8")
+    print(f"baked img2img strips for {len(done)} images; {len(images)} total")
 
 
 if __name__ == "__main__":

@@ -1,14 +1,17 @@
-"""Bake latent-space walks with a real pretrained VAE (the Stable Diffusion autoencoder). Encode
-representative images into the learned latent code, interpolate between pairs (and perturb a single latent),
-decode each step, and save the frames. The live tab scrubs these frames to show latent-space interpolation:
-smooth, plausible blends through a learned manifold, the editable-but-entangled generative pole.
+"""Learned latents applied to the SELECTED image: encode each curated image with a real pretrained VAE (the
+Stable Diffusion autoencoder), decode it back (the reconstruction), and bake a latent-perturbation strip
+(add increasing noise to THIS image's latent and decode). The live tab scrubs the per-image strip: the
+selected image drifts to plausible but globally different pictures, the semantic-but-entangled generative
+pole, shown for whatever image is selected (not a fixed pair).
 
-    python -m imglab.methods.vae_latents
+    python -m imglab.methods.vae_latents            # all images
+    python -m imglab.methods.vae_latents --ids photo_parrots
 
-Downloads the SD VAE (~330 MB) to the Hugging Face cache on first run (set HF_HOME to a large disk).
+Downloads the SD VAE (~330 MB) to the HF cache on first run.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 from pathlib import Path
@@ -22,24 +25,9 @@ ROOT = Path(__file__).resolve().parents[3]
 IMAGES = ROOT / "data" / "images"
 OUT = ROOT / "data" / "derived" / "_vae"
 SIZE = 256
-FRAMES = 13
+FRAMES = 11  # frame 0 = the VAE reconstruction (no noise), then increasing latent perturbation
+MAX_NOISE = 3.5
 VAE_ID = "stabilityai/sd-vae-ft-mse"
-
-# pairs to interpolate between (ids from the curated set), chosen to span domains
-PAIRS = [
-    ("photo_parrots", "art_greatwave"),
-    ("mathart-julia", "synthetic-gradient"),
-    ("astro_pillars", "tex_wood"),
-]
-PERTURB_SRC = "photo_parrots"
-
-
-def _load(img_id: str):
-    import torch
-
-    f = IMAGES / f"{img_id}.png"
-    im = np.asarray(Image.open(f).convert("RGB").resize((SIZE, SIZE), Image.LANCZOS), dtype=np.float32) / 255.0
-    return torch.from_numpy(im).permute(2, 0, 1)[None] * 2 - 1  # [1,3,H,W] in [-1,1]
 
 
 def main() -> None:
@@ -51,6 +39,12 @@ def main() -> None:
     sf = vae.config.scaling_factor
     OUT.mkdir(parents=True, exist_ok=True)
 
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--ids", nargs="*", default=None)
+    args = ap.parse_args()
+    all_ids = [p.stem for p in sorted(IMAGES.glob("*.png")) if ".hi." not in p.name]
+    ids = args.ids if args.ids else all_ids
+
     def encode(x):
         with torch.no_grad():
             return vae.encode(x).latent_dist.mean * sf
@@ -61,33 +55,40 @@ def main() -> None:
         img = ((out[0].permute(1, 2, 0).clamp(-1, 1) + 1) / 2).numpy()
         return (np.clip(img, 0, 1) * 255).astype(np.uint8)
 
-    walks = []
-    for a_id, b_id in PAIRS:
-        la = encode(_load(a_id))
-        lb = encode(_load(b_id))
-        wid = f"{a_id}__{b_id}"
-        wdir = OUT / wid
-        wdir.mkdir(parents=True, exist_ok=True)
+    done = []
+    for img_id in ids:
+        f = IMAGES / f"{img_id}.png"
+        if not f.exists():
+            continue
+        arr = np.asarray(Image.open(f).convert("RGB").resize((SIZE, SIZE), Image.LANCZOS), dtype=np.float32) / 255.0
+        x = torch.from_numpy(arr).permute(2, 0, 1)[None] * 2 - 1
+        lat = encode(x)
+        g = torch.randn_like(lat)
+        d = OUT / img_id
+        d.mkdir(parents=True, exist_ok=True)
+        recon = None
         for i in range(FRAMES):
-            t = i / (FRAMES - 1)
-            lat = (1 - t) * la + t * lb
-            Image.fromarray(decode(lat)).save(wdir / f"{i:02d}.png")
-        walks.append({"id": wid, "kind": "interpolate", "a": a_id, "b": b_id, "frames": FRAMES})
-        print(f"  walk {wid}: {FRAMES} frames")
+            amt = (i / (FRAMES - 1)) * MAX_NOISE
+            dec = decode(lat + amt * g)
+            if i == 0:
+                recon = dec
+            Image.fromarray(dec).save(d / f"{i:02d}.png")
+        orig8 = (arr * 255).astype(np.uint8)
+        mse = float((((recon.astype(np.float32) - orig8.astype(np.float32)) / 255.0) ** 2).mean())
+        psnr = round(10 * np.log10(1 / mse), 2) if mse > 0 else 99.0
+        done.append({"id": img_id, "frames": FRAMES, "psnr": psnr})
+        print(f"  {img_id:<24} recon PSNR {psnr:5.2f} dB, {FRAMES} frames")
 
-    # a latent-perturbation strip for one image
-    lp = encode(_load(PERTURB_SRC))
-    g = torch.randn_like(lp)
-    pdir = OUT / f"{PERTURB_SRC}__perturb"
-    pdir.mkdir(parents=True, exist_ok=True)
-    for i in range(FRAMES):
-        amt = (i / (FRAMES - 1)) * 4.0
-        Image.fromarray(decode(lp + amt * g)).save(pdir / f"{i:02d}.png")
-    walks.append({"id": f"{PERTURB_SRC}__perturb", "kind": "perturb", "a": PERTURB_SRC, "frames": FRAMES})
-    print(f"  perturb {PERTURB_SRC}: {FRAMES} frames")
-
-    (OUT / "index.json").write_text(json.dumps({"walks": walks, "size": SIZE, "vae": VAE_ID}), encoding="utf-8")
-    print(f"baked {len(walks)} latent walks with {VAE_ID}")
+    prev = []
+    ip = OUT / "index.json"
+    if ip.exists():
+        prev = json.loads(ip.read_text()).get("images", [])
+    by_id = {e["id"]: e for e in prev if isinstance(e, dict) and "id" in e}
+    for e in done:
+        by_id[e["id"]] = e
+    images = [by_id[i] for i in all_ids if i in by_id]
+    ip.write_text(json.dumps({"vae": VAE_ID, "size": SIZE, "maxNoise": MAX_NOISE, "images": images}), encoding="utf-8")
+    print(f"baked latent strips for {len(done)} images; {len(images)} total")
 
 
 if __name__ == "__main__":
