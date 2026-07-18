@@ -108,6 +108,29 @@
 .il-thumb:hover { border-color: var(--color-fg-faint); }
 .il-thumb.on { border-color: var(--color-accent); }
 
+/* ---- transform-tab layout (controls sidebar + view grid) ---- */
+.il-fourier { display: grid; grid-template-columns: 300px 1fr; gap: 1rem; align-items: start; }
+@media (max-width: 860px) { .il-fourier { grid-template-columns: 1fr; } }
+.il-fourier-controls { display: flex; flex-direction: column; gap: 0.7rem; position: sticky; top: 0.5rem; }
+.il-fourier-views { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; min-width: 0; }
+@media (max-width: 640px) { .il-fourier-views { grid-template-columns: 1fr; } }
+.il-fig { margin: 0; min-width: 0; }
+.il-fig figcaption { font-size: 0.72rem; color: var(--color-fg-faint); margin-top: 0.3rem; text-align: center; }
+
+/* segmented control */
+.il-seg { display: inline-flex; border: 1px solid var(--color-border); border-radius: 7px; overflow: hidden; flex-wrap: wrap; }
+.il-seg button { background: transparent; border: none; padding: 0.3rem 0.62rem; font-size: 0.76rem; color: var(--color-fg-subtle); cursor: pointer; }
+.il-seg button.on { background: var(--color-accent); color: var(--color-accent-fg); font-weight: 600; }
+.il-seg button:not(.on):hover { color: var(--color-fg); }
+
+.range { width: 100%; }
+
+/* uPlot: read the shell tokens so charts follow light/dark */
+.il-uplot { width: 100%; }
+.il-uplot .u-title { color: var(--color-fg); font: 600 0.82rem/1.2 var(--font-sans, system-ui); }
+.il-uplot .u-legend { font-size: 0.74rem; color: var(--color-fg-subtle); margin-top: 0.3rem; }
+.il-uplot .u-legend .u-value { font-family: var(--font-mono); color: var(--color-fg); }
+
 /* under-construction note (honest, while representations are being wired in) */
 .il-wip { border: 1px dashed var(--color-border); border-radius: 10px; padding: 0.8rem 1rem; background: color-mix(in oklab, var(--il-transform) 6%, transparent); color: var(--color-fg-subtle); font-size: 0.86rem; }
 .il-wip b { color: var(--color-fg); }

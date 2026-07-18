@@ -22,6 +22,20 @@ export function clonePlanes(p: ImagePlanes): ImagePlanes {
 
 export const clamp01 = (x: number): number => (x < 0 ? 0 : x > 1 ? 1 : x);
 
+export const isPow2 = (n: number): boolean => n > 1 && (n & (n - 1)) === 0;
+
+/** The three colour planes, in order, for channel-wise transforms. */
+export const channels = (p: ImagePlanes): Float32Array[] => [p.r, p.g, p.b];
+
+/** Rebuild planes from transformed channels (same w/h). */
+export const withChannels = (p: ImagePlanes, ch: Float32Array[]): ImagePlanes => ({
+  r: ch[0],
+  g: ch[1],
+  b: ch[2],
+  w: p.w,
+  h: p.h,
+});
+
 /** Rec.709 luma of a plane set (used by SSIM and grayscale transforms). */
 export function luma(p: ImagePlanes): Float32Array {
   const n = p.w * p.h;
