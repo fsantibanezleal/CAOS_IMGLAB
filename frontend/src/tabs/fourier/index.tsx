@@ -274,7 +274,7 @@ function RateDistortion({ planes, specs }: { planes: ImagePlanes; specs: Complex
       <p className="il-panel-sub" style={{ marginBottom: '0.6rem' }}>
         {t(
           'Fidelity against the fraction of Fourier coefficients kept (the nonlinear-approximation curve). This is transform compression: quality climbs as you keep more coefficients.',
-          'Fidelidad frente a la fraccion de coeficientes de Fourier conservados (la curva de aproximacion no lineal). Es la compresion por transformada: la calidad sube al conservar mas coeficientes.',
+          'Fidelidad frente a la fraccion de coeficientes de Fourier conservados (la curva de aproximación no lineal). Es la compresion por transformada: la calidad sube al conservar mas coeficientes.',
         )}
       </p>
       <UPlotChart

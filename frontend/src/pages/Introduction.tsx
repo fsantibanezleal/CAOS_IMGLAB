@@ -69,13 +69,13 @@ export default function Introduction() {
       <p>
         {t(
           'A simple scene is trivially editable: a red-bordered circle on a green background, occluded by a triangle, is a few numbers, and changing them gives sensible variations. A closed-form formula that reproduces a photograph, by contrast, is so intricate that any change shatters it. Between these extremes lies a whole spectrum, and the surprising result is that editability does not fall off smoothly along it.',
-          'Una escena simple es trivialmente editable: un circulo de borde rojo sobre fondo verde, ocluido por un triangulo, son unos pocos numeros, y cambiarlos da variaciones con sentido. Una formula en forma cerrada que reproduce una fotografia, en cambio, es tan intrincada que cualquier cambio la destroza. Entre estos extremos hay todo un espectro, y el resultado sorprendente es que la editabilidad no decae suavemente a lo largo de el.',
+          'Una escena simple es trivialmente editable: un circulo de borde rojo sobre fondo verde, ocluido por un triangulo, son unos pocos números, y cambiarlos da variaciones con sentido. Una formula en forma cerrada que reproduce una fotografia, en cambio, es tan intrincada que cualquier cambio la destroza. Entre estos extremos hay todo un espectro, y el resultado sorprendente es que la editabilidad no decae suavemente a lo largo de el.',
         )}
       </p>
       <Callout variant="strong" title={t('Editability is U-shaped, not monotone', 'La editabilidad tiene forma de U, no es monotona')}>
         {t(
           'It is high at two poles: the designed-structure pole (geometric primitives, sparse-dictionary atoms, where humans built local meaningful coordinates) and the learned-manifold pole (disentangled directions in a generative latent). It collapses toward noise in between: perturb a raw neural-field weight, or a constant of a brittle fitted formula, and the image dissolves. A parameter is both stable and meaningful only when it indexes a low-dimensional manifold of plausible images with locally disentangled coordinates.',
-          'Es alta en dos polos: el polo de estructura disenada (primitivas geometricas, atomos de diccionario disperso, donde los humanos construyeron coordenadas locales con sentido) y el polo de variedad aprendida (direcciones desenredadas en un latente generativo). Colapsa hacia el ruido en el medio: perturba un peso crudo de un campo neuronal, o una constante de una formula ajustada fragil, y la imagen se disuelve. Un parametro es estable Y significativo solo cuando indexa una variedad de baja dimension de imagenes plausibles con coordenadas localmente desenredadas.',
+          'Es alta en dos polos: el polo de estructura disenada (primitivas geometricas, atomos de diccionario disperso, donde los humanos construyeron coordenadas locales con sentido) y el polo de variedad aprendida (direcciones desenredadas en un latente generativo). Colapsa hacia el ruido en el medio: perturba un peso crudo de un campo neuronal, o una constante de una formula ajustada fragil, y la imagen se disuelve. Un parámetro es estable Y significativo solo cuando indexa una variedad de baja dimension de imagenes plausibles con coordenadas localmente desenredadas.',
         )}
       </Callout>
       <p>
@@ -92,7 +92,7 @@ export default function Introduction() {
           <tr>
             <th>{t('Response', 'Respuesta')}</th>
             <th>{t('Where', 'Donde')}</th>
-            <th>{t('Perturb a parameter and ...', 'Perturba un parametro y ...')}</th>
+            <th>{t('Perturb a parameter and ...', 'Perturba un parámetro y ...')}</th>
           </tr>
         </thead>
         <tbody>
@@ -114,7 +114,7 @@ export default function Introduction() {
           <tr>
             <td><span className="il-badge edit-noise">{t('unstable-noise', 'inestable-ruido')}</span></td>
             <td>{t('raw network weights, brittle formula constants', 'pesos crudos de red, constantes de formula fragiles')}</td>
-            <td>{t('garbage; the parameter has no local meaning', 'basura; el parametro no tiene sentido local')}</td>
+            <td>{t('garbage; the parameter has no local meaning', 'basura; el parámetro no tiene sentido local')}</td>
           </tr>
         </tbody>
       </table>
@@ -123,7 +123,7 @@ export default function Introduction() {
       <Callout variant="honest" title={t('Honest scope', 'Alcance honesto')}>
         {t(
           'It IS an interactive, referenced tour of image representations, with light transforms computed live in your browser and heavier representations baked offline by an open, reproducible pipeline. It is NOT a claim that arbitrary photographs reduce to compact, faithful, human-readable equations (they do not; the app shows the genuine partial results and says so). Diffusion reconstructions are labelled as generative, not faithful. The explicit-formula genre is cited and linked; every formula shown here is our own, and no third party artwork is redistributed.',
-          'ES un recorrido interactivo y referenciado por las representaciones de imagenes, con transformadas ligeras calculadas en vivo en tu navegador y representaciones mas pesadas horneadas offline por un pipeline abierto y reproducible. NO es una afirmacion de que fotografias arbitrarias se reduzcan a ecuaciones compactas, fieles y legibles por humanos (no lo hacen; la app muestra los resultados parciales genuinos y lo dice). Las reconstrucciones por difusion se etiquetan como generativas, no fieles. El genero del arte de formula se cita y enlaza; toda formula mostrada aqui es propia, y no se redistribuye obra de terceros.',
+          'ES un recorrido interactivo y referenciado por las representaciones de imagenes, con transformadas ligeras calculadas en vivo en tu navegador y representaciones mas pesadas precalculadas offline por un pipeline abierto y reproducible. NO es una afirmacion de que fotografias arbitrarias se reduzcan a ecuaciones compactas, fieles y legibles por humanos (no lo hacen; la app muestra los resultados parciales genuinos y lo dice). Las reconstrucciones por difusion se etiquetan como generativas, no fieles. El genero del arte de formula se cita y enlaza; toda formula mostrada aquí es propia, y no se redistribuye obra de terceros.',
         )}
       </Callout>
 

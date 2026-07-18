@@ -71,7 +71,7 @@ function KltPanel({ planes }: PanelProps) {
             <p className="il-panel-sub">
               {t(
                 'The KLT is the optimal linear basis for THIS ensemble: it decorrelates and packs the most energy into the fewest components. Reconstruct each 8x8 block from the top m eigen-patches. Unlike Fourier or DCT, this basis is data-adaptive, so it is quasi-semantic, but only for images like the ones it was fit on.',
-                'La KLT es la base lineal optima para ESTE conjunto: decorrelaciona y concentra la mayor energia en los menos componentes. Reconstruye cada bloque 8x8 con los m primeros parches propios. A diferencia de Fourier o DCT, esta base es adaptada a los datos, asi que es cuasi-semantica, pero solo para imagenes como las que la ajustaron.',
+                'La KLT es la base lineal optima para ESTE conjunto: decorrelaciona y concentra la mayor energía en los menos componentes. Reconstruye cada bloque 8x8 con los m primeros parches propios. A diferencia de Fourier o DCT, esta base es adaptada a los datos, así que es cuasi-semantica, pero solo para imagenes como las que la ajustaron.',
               )}
             </p>
             <div className="il-panel-sub">{t('Kept', 'Conservado')}: {keptRate}%</div>
@@ -99,7 +99,7 @@ function KltPanel({ planes }: PanelProps) {
           <Equation tex={String.raw`\Sigma=U\Lambda U^{\!\top},\qquad y=U^{\!\top}(x-\mu),\qquad \hat x=\mu+U_{:m}\,y_{:m}`} />
           <p>
             {t('Among linear orthonormal transforms the KLT uniquely decorrelates, maximizes energy compaction, and minimizes truncated error (Hotelling 1933); for aligned faces the eigenimages are eigenfaces ',
-              'Entre las transformadas ortonormales lineales la KLT unicamente decorrelaciona, maximiza la compactacion de energia y minimiza el error truncado (Hotelling 1933); para rostros alineados las imagenes propias son eigenfaces ')}
+              'Entre las transformadas ortonormales lineales la KLT unicamente decorrelaciona, maximiza la compactacion de energía y minimiza el error truncado (Hotelling 1933); para rostros alineados las imagenes propias son eigenfaces ')}
             (<Cite id="wang2004ssim" />).
           </p>
           <Refs label={t('References', 'Referencias')} ids={['wang2004ssim']} />
@@ -167,7 +167,7 @@ function EigenView({ basis, m }: { basis: PatchBasis; m: number }) {
   return (
     <div>
       <p className="il-panel-sub" style={{ marginBottom: '0.6rem' }}>
-        {t('The mean patch (top-left) and the eigen-patches, ordered by energy; the kept components are highlighted. Below, the eigenvalue spectrum shows how quickly energy compacts.', 'El parche medio (arriba-izquierda) y los parches propios, ordenados por energia; los componentes conservados estan resaltados. Abajo, el espectro de valores propios muestra cuan rapido se compacta la energia.')}
+        {t('The mean patch (top-left) and the eigen-patches, ordered by energy; the kept components are highlighted. Below, the eigenvalue spectrum shows how quickly energy compacts.', 'El parche medio (arriba-izquierda) y los parches propios, ordenados por energía; los componentes conservados estan resaltados. Abajo, el espectro de valores propios muestra cuan rápido se compacta la energía.')}
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '1.2rem', alignItems: 'start' }}>
         <canvas ref={galRef} className="il-canvas" style={{ imageRendering: 'pixelated', maxWidth: 280 }} />

@@ -42,7 +42,7 @@ function PrimitivesPanel({ entry, planes }: PanelProps) {
     return (
       <div className="il-doc">
         <div className="il-wip">
-          {t('Fitting shapes to an image is an offline search, so this tab is wired for a representative subset. Pick one of: ', 'Ajustar formas a una imagen es una busqueda offline, asi que esta pestana esta conectada para un subconjunto representativo. Elige una de: ')}
+          {t('Fitting shapes to an image is an offline search, so this tab is wired for a representative subset. Pick one of: ', 'Ajustar formas a una imagen es una busqueda offline, así que esta pestana esta conectada para un subconjunto representativo. Seleccionar una de: ')}
           <strong>{fitted.join(', ')}</strong>.
         </div>
       </div>
@@ -99,11 +99,11 @@ function PrimitivesPanel({ entry, planes }: PanelProps) {
       label: t('Method', 'Metodo'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('Greedily add the shape that most reduces the reconstruction error; the error-optimal colour of each shape is solved in closed form at a fixed opacity.', 'Agrega de forma voraz la forma que mas reduce el error de reconstruccion; el color optimo de cada forma se resuelve en forma cerrada a una opacidad fija.')}</p>
+          <p>{t('Greedily add the shape that most reduces the reconstruction error; the error-optimal colour of each shape is solved in closed form at a fixed opacity.', 'Agrega de forma voraz la forma que mas reduce el error de reconstrucción; el color optimo de cada forma se resuelve en forma cerrada a una opacidad fija.')}</p>
           <Equation tex={String.raw`\text{shape}_{i}=\arg\max_{s}\ \big\lVert x-\hat x_{i-1}\big\rVert^2-\big\lVert x-\text{blend}(\hat x_{i-1},s)\big\rVert^2`} />
           <p>
             {t('a hill-climbing, difference-free version of the primitive and stroke-based rendering line; the modern differentiable-vectorization descendants optimize Bezier paths against a perceptual loss instead. Each primitive is a local, interpretable coordinate, so an edit stays local, the defining property of the semantic-local pole.',
-              'una version por escalada de colina, sin diferenciacion, de la linea de render por primitivas y trazos; los descendientes modernos de vectorizacion diferenciable optimizan curvas de Bezier contra una perdida perceptual. Cada primitiva es una coordenada local e interpretable, asi que una edicion se mantiene local, la propiedad definitoria del polo semantico-local.')}
+              'una version por escalada de colina, sin diferenciacion, de la linea de render por primitivas y trazos; los descendientes modernos de vectorizacion diferenciable optimizan curvas de Bezier contra una perdida perceptual. Cada primitiva es una coordenada local e interpretable, así que una edicion se mantiene local, la propiedad definitoria del polo semantico-local.')}
           </p>
         </div>
       ),

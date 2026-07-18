@@ -147,7 +147,7 @@ function EpicyclePanel({ planes }: PanelProps) {
             <p className="il-panel-sub">
               {t(
                 'The outline is written exactly as a sum of rotating vectors (its Fourier descriptors). Add harmonics to refine it term by term; a couple of dozen already capture a recognizable shape because the coefficients decay fast. This is the one case where an image really does reduce to a compact, exact equation, because it is a one-dimensional curve.',
-                'El contorno se escribe exactamente como una suma de vectores rotatorios (sus descriptores de Fourier). Agrega armonicos para refinarlo termino a termino; un par de docenas ya capturan una forma reconocible porque los coeficientes decaen rapido. Este es el unico caso en que una imagen realmente se reduce a una ecuacion compacta y exacta, porque es una curva unidimensional.',
+                'El contorno se escribe exactamente como una suma de vectores rotatorios (sus descriptores de Fourier). Agrega armonicos para refinarlo termino a termino; un par de docenas ya capturan una forma reconocible porque los coeficientes decaen rápido. Este es el unico caso en que una imagen realmente se reduce a una ecuacion compacta y exacta, porque es una curva unidimensional.',
               )}
             </p>
           </div>
@@ -173,7 +173,7 @@ function EpicyclePanel({ planes }: PanelProps) {
           <Equation tex={String.raw`c_k=\frac1N\sum_{n=0}^{N-1} z_n\,e^{-i\,2\pi kn/N},\qquad z(t)\approx\sum_{|k|\le K} c_k\,e^{i k t}`} />
           <p>
             {t('The Fourier descriptors of a plane closed curve; truncating to the largest-magnitude terms gives a compact, exact-in-the-limit reconstruction ',
-              'Los descriptores de Fourier de una curva cerrada plana; truncar a los terminos de mayor magnitud da una reconstruccion compacta y exacta en el limite ')}
+              'Los descriptores de Fourier de una curva cerrada plana; truncar a los terminos de mayor magnitud da una reconstrucción compacta y exacta en el limite ')}
             (<Cite id="cooley1965fft" />).
           </p>
           <Refs label={t('References', 'Referencias')} ids={['cooley1965fft', 'yeganeh2024']} />

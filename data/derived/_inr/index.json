@@ -1,1 +1,1 @@
-{"trained": ["synthetic-gradient", "mathart-julia", "photo_parrots", "art_greatwave", "tex_wood", "astro_pillars"], "size": 128, "hidden": 32}
+{"trained": ["art_greatwave", "art_wheatfield", "art_woodblock", "astro_deepfield", "astro_pillars", "mathart-epicycle", "mathart-harmonograph", "mathart-julia", "mathart-rose", "mathart-warpnoise", "photo_lighthouse", "photo_motorcycle", "photo_parrots", "synthetic-checkerboard", "synthetic-gradient", "synthetic-polygons", "tex_fabric", "tex_wood"], "size": 128, "hidden": 32}

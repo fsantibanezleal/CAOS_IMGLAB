@@ -119,11 +119,11 @@ function WaveletPanel({ planes }: PanelProps) {
       label: t('Method', 'Metodo'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('The DWT is a filter bank: low-pass and high-pass, downsample by two, recurse on the approximation; 2D is separable into four subbands per level (LL, LH, HL, HH).', 'La DWT es un banco de filtros: paso bajo y paso alto, submuestreo por dos, recursion sobre la aproximacion; en 2D se separa en cuatro subbandas por nivel (LL, LH, HL, HH).')}</p>
+          <p>{t('The DWT is a filter bank: low-pass and high-pass, downsample by two, recurse on the approximation; 2D is separable into four subbands per level (LL, LH, HL, HH).', 'La DWT es un banco de filtros: paso bajo y paso alto, submuestreo por dos, recursion sobre la aproximación; en 2D se separa en cuatro subbandas por nivel (LL, LH, HL, HH).')}</p>
           <Equation tex={String.raw`a_j[n]=\sum_k h[k]\,x_j[2n+k],\qquad d_j[n]=\sum_k g[k]\,x_j[2n+k]`} />
           <p>
             {t('Haar is blocky, Daubechies is smooth, CDF 9/7 is the JPEG2000 biorthogonal default. Nonlinear approximation on piecewise-smooth images decays faster than Fourier or DCT, which is why wavelets win at low rate ',
-              'Haar es en bloques, Daubechies es suave, CDF 9/7 es el biortogonal por defecto de JPEG2000. La aproximacion no lineal en imagenes suaves por partes decae mas rapido que Fourier o DCT, por eso las wavelets ganan a baja tasa ')}
+              'Haar es en bloques, Daubechies es suave, CDF 9/7 es el biortogonal por defecto de JPEG2000. La aproximación no lineal en imagenes suaves por partes decae mas rápido que Fourier o DCT, por eso las wavelets ganan a baja tasa ')}
             (<Cite id="mallat1989mra" />, <Cite id="daubechies1988" />).
           </p>
           <Refs label={t('References', 'Referencias')} ids={['mallat1989mra', 'daubechies1988']} />
@@ -172,7 +172,7 @@ function WaveletRD({ planes, name, levels }: { planes: ImagePlanes; name: Wavele
   return (
     <div>
       <p className="il-panel-sub" style={{ marginBottom: '0.6rem' }}>
-        {t('Fidelity against the fraction of wavelet coefficients kept. Compare this curve to the Fourier and DCT tabs: on natural images the wavelet curve rises faster at low rate.', 'Fidelidad frente a la fraccion de coeficientes wavelet conservados. Compara esta curva con las pestanas de Fourier y DCT: en imagenes naturales la curva wavelet sube mas rapido a baja tasa.')}
+        {t('Fidelity against the fraction of wavelet coefficients kept. Compare this curve to the Fourier and DCT tabs: on natural images the wavelet curve rises faster at low rate.', 'Fidelidad frente a la fraccion de coeficientes wavelet conservados. Compara esta curva con las pestanas de Fourier y DCT: en imagenes naturales la curva wavelet sube mas rápido a baja tasa.')}
       </p>
       <UPlotChart
         data={data}
