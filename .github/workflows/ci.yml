@@ -21,9 +21,9 @@ jobs:
         run: ruff check data-pipeline tests
       - name: Tests
         run: pytest
-      - name: Pipeline smoke (regenerate one case)
-        run: python -m imglab.pipeline EX02_epidemic
-      - name: CONTRACT 2, manifests <-> artifacts consistent (no drift)
+      - name: Pipeline smoke (regenerate the procedural image set, deterministic)
+        run: python -m imglab.pipeline images
+      - name: Artifact contract, every derived index references existing non-empty files
         run: python scripts/check_artifacts.py
 
   guards:

@@ -6,8 +6,9 @@ symbolic formula art, generative latents) and bakes compact, standard-format art
 so a user can edit each representation's parameters and see when the image stays meaningful and when it
 collapses into noise.
 
-The two data contracts, the staged pipeline, the lane gate and the manifest/trace are the FROZEN base
-(ADR-0057); the per-representation engines are the rework surface.
+The package has two data contracts: ingestion (io.image loads a curated or uploaded image into working
+planes under a license allowlist) and artifact (methods.* bake compact indices + arrays under
+data/derived/, mirrored by the frontend contract types). imglab.pipeline drives the bakes.
 """
 
-__version__ = "0.00.000"  # display X.XX.XXX; PEP 440 form in pyproject.toml (0.0.0)
+__version__ = "0.01.000"  # display X.XX.XXX; PEP 440 form in pyproject.toml

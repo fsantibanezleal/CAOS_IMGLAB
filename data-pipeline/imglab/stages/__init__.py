@@ -1,2 +1,5 @@
-"""The named pipeline stages, FROZEN names/signatures, REWORK bodies. Order: preprocess -> feature_extraction ->
-train -> infer -> evaluate -> export. Each stage is deterministic, typed, seeded, and independently testable."""
+"""Pipeline stages that need network or a heavy dependency, kept out of the pure method modules.
+
+fetch_images.py downloads the licensed real-world subset of the curated image set (the only network
+step); the deterministic representation bakes live in imglab.methods and are driven by imglab.pipeline.
+"""

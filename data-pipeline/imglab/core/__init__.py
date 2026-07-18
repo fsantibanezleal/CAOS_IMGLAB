@@ -1,2 +1,3 @@
-"""Core primitives shared across stages: seeded determinism (rng), the compact trace (trace), the artifact manifest
-= Contract 2 (manifest), and the measured live-vs-precompute lane gate (gate)."""
+"""Core numerics shared across the offline bakes: metrics.py holds the fidelity measures (PSNR, SSIM,
+MS-SSIM) computed identically here and in the frontend so a baked reconstruction and its live twin score
+the same number."""
