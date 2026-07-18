@@ -65,12 +65,11 @@ function NeuralPanel({ entry, planes }: PanelProps) {
   if (trained && !trained.includes(entry.id)) {
     return (
       <div className="il-doc">
-        <Callout variant="note" title={t('Pick a trained image', 'Seleccionar una imagen entrenada')}>
+        <Callout variant="honest" title={t('Baked for the curated set', 'Horneado para el conjunto curado')}>
           {t(
-            'Training a network per image is an offline step, so this tab is wired for a representative subset. Select one of these images to see its neural field: ',
-            'Entrenar una red por imagen es un paso offline, así que esta pestana esta conectada para un subconjunto representativo. Selecciona una de estas imagenes para ver su campo neuronal: ',
+            'Every curated image has a network trained offline for it. Training a SIREN on your uploaded image would take a minute of compute the browser cannot spend, so the neural field is shown for the curated set; your upload is reconstructed live by the transform, dictionary and primitive tabs instead.',
+            'Cada imagen curada tiene una red entrenada offline. Entrenar un SIREN sobre tu imagen cargada tomaria un minuto de computo que el navegador no puede gastar, asi que el campo neuronal se muestra para el conjunto curado; tu carga se reconstruye en vivo en las pestanas de transformada, diccionario y primitivas.',
           )}
-          <strong>{trained.join(', ')}</strong>.
         </Callout>
       </div>
     );

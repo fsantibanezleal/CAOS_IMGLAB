@@ -17,7 +17,7 @@ function PrimitivesPanel({ entry, planes }: PanelProps) {
   const t = useT();
   const [fitted, setFitted] = useState<string[] | null>(null);
   const [doc, setDoc] = useState<PrimDoc | null>(null);
-  const [count, setCount] = useState(30);
+  const [count, setCount] = useState(250);
   const [psnr, setPsnr] = useState<number | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -42,8 +42,10 @@ function PrimitivesPanel({ entry, planes }: PanelProps) {
     return (
       <div className="il-doc">
         <div className="il-wip">
-          {t('Fitting shapes to an image is an offline search, so this tab is wired for a representative subset. Pick one of: ', 'Ajustar formas a una imagen es una busqueda offline, así que esta pestana esta conectada para un subconjunto representativo. Seleccionar una de: ')}
-          <strong>{fitted.join(', ')}</strong>.
+          {t(
+            'Every curated image has a 1200-ellipse fit baked offline. The greedy search is too slow to run in the browser on your uploaded image, so this tab covers the curated set; your upload is reconstructed live by the transform and dictionary tabs.',
+            'Cada imagen curada tiene un ajuste de 1200 elipses horneado offline. La busqueda voraz es demasiado lenta para correr en el navegador sobre tu imagen cargada, asi que esta pestana cubre el conjunto curado; tu carga se reconstruye en vivo en las pestanas de transformada y diccionario.',
+          )}
         </div>
       </div>
     );
