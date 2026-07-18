@@ -22,14 +22,14 @@ export const CATEGORY_ORDER: ImageCategory[] = [
 ];
 
 export const CATEGORY_LABEL: Record<ImageCategory, { en: string; es: string }> = {
-  photo: { en: 'Photographs', es: 'Fotografias' },
+  photo: { en: 'Photographs', es: 'Fotografías' },
   art: { en: 'Fine art', es: 'Arte' },
-  'math-art': { en: 'Math art', es: 'Arte matematico' },
-  astronomy: { en: 'Astronomy', es: 'Astronomia' },
+  'math-art': { en: 'Math art', es: 'Arte matemático' },
+  astronomy: { en: 'Astronomy', es: 'Astronomía' },
   texture: { en: 'Textures', es: 'Texturas' },
-  biological: { en: 'Biological', es: 'Biologico' },
-  microscopy: { en: 'Microscopy', es: 'Microscopia' },
-  synthetic: { en: 'Synthetic', es: 'Sinteticas' },
+  biological: { en: 'Biological', es: 'Biológico' },
+  microscopy: { en: 'Microscopy', es: 'Microscopía' },
+  synthetic: { en: 'Synthetic', es: 'Sintéticas' },
 };
 
 export function groupByCategory(images: ImageEntry[]): Array<[ImageCategory, ImageEntry[]]> {

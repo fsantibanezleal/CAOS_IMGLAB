@@ -109,7 +109,7 @@ export default function AppPage() {
       <div className="il-doc">
         <p className="il-kicker">{t('App', 'App')}</p>
         <div className="il-wip">
-          {t('Could not load the image set: ', 'No se pudo cargar el conjunto de imagenes: ')}
+          {t('Could not load the image set: ', 'No se pudo cargar el conjunto de imágenes: ')}
           <code>{error}</code>
         </div>
       </div>
@@ -123,7 +123,7 @@ export default function AppPage() {
           <div className="il-panel-t">{t('Image', 'Imagen')}</div>
           <label className="chip" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
             <Upload size={14} aria-hidden="true" />
-            {t('Upload your own', 'Sube la tuya')}
+            {t('Upload your own', 'Subir imagen propia')}
             <input
               type="file"
               accept="image/*"
@@ -178,7 +178,7 @@ export default function AppPage() {
           <div className="il-wip">
             {t(
               'The representation tabs are being wired in. The Image tab shows the selected picture and which representations it best illustrates; the first live tab is the Fourier transform.',
-              'Las pestanas de representacion se estan conectando. La pestana Imagen muestra la imagen seleccionada y que representaciones ilustra mejor; la primera pestana en vivo es la transformada de Fourier.',
+              'Las pestañas de representación se están conectando. La pestaña Imagen muestra la imagen seleccionada y qué representaciones ilustra mejor; la primera pestaña en vivo es la transformada de Fourier.',
             )}
           </div>
         )}
@@ -209,13 +209,13 @@ function ImageTab({ entry, planes }: { entry: ImageEntry; planes: ImagePlanes | 
         <p style={{ color: 'var(--color-fg-subtle)', lineHeight: 1.6, marginTop: 0 }}>
           {t(
             'This is the raw image: a matrix of pixels, the representation with no compression and no structure. Every other tab re-expresses this same picture as mathematics and lets you edit it.',
-            'Esta es la imagen cruda: una matriz de pixeles, la representacion sin compresion ni estructura. Cada otra pestana re-expresa esta misma imagen como matemática y te deja editarla.',
+            'Esta es la imagen cruda: una matriz de píxeles, la representación sin compresión ni estructura. Cada otra pestaña re-expresa esta misma imagen como matemática y permite editarla.',
           )}
         </p>
         <table className="il-table" style={{ marginTop: '0.6rem' }}>
           <tbody>
             <tr>
-              <td>{t('Size', 'Tamano')}</td>
+              <td>{t('Size', 'Tamaño')}</td>
               <td className="mono">{planes ? `${planes.w} x ${planes.h}` : `${entry.width} x ${entry.height}`}</td>
             </tr>
             <tr>

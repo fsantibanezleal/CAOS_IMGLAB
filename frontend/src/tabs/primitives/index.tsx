@@ -44,7 +44,7 @@ function PrimitivesPanel({ entry, planes }: PanelProps) {
         <div className="il-wip">
           {t(
             'Every curated image has a 1200-ellipse fit baked offline. The greedy search is too slow to run in the browser on your uploaded image, so this tab covers the curated set; your upload is reconstructed live by the transform and dictionary tabs.',
-            'Cada imagen curada tiene un ajuste de 1200 elipses horneado offline. La busqueda voraz es demasiado lenta para correr en el navegador sobre tu imagen cargada, asi que esta pestana cubre el conjunto curado; tu carga se reconstruye en vivo en las pestanas de transformada y diccionario.',
+            'Cada imagen curada tiene un ajuste de 1200 elipses precalculado offline. La búsqueda voraz es demasiado lenta para ejecutarse en el navegador sobre la imagen cargada, así que esta pestaña cubre el conjunto curado; la carga se reconstruye en vivo en las pestañas de transformada y diccionario.',
           )}
         </div>
       </div>
@@ -79,7 +79,7 @@ function PrimitivesPanel({ entry, planes }: PanelProps) {
             <p className="il-panel-sub">
               {t(
                 'The image is approximated by a stack of translucent ellipses, added greedily one at a time to reduce the error most. Slide from zero to see it build up. Each shape is independent and local: this is the cleanest editable representation, move or recolor one shape and only its region changes.',
-                'La imagen se aproxima con una pila de elipses translucidas, agregadas de forma voraz una a una para reducir mas el error. Desliza desde cero para verla construirse. Cada forma es independiente y local: esta es la representacion editable mas limpia, mueve o recolorea una forma y solo cambia su region.',
+                'La imagen se aproxima con una pila de elipses translúcidas, agregadas de forma voraz una a una para reducir más el error. Deslizar desde cero para verla construirse. Cada forma es independiente y local: esta es la representación editable más limpia, al mover o recolorear una forma solo cambia su región.',
               )}
             </p>
           </div>
@@ -98,14 +98,14 @@ function PrimitivesPanel({ entry, planes }: PanelProps) {
     },
     {
       id: 'method',
-      label: t('Method', 'Metodo'),
+      label: t('Method', 'Método'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('Greedily add the shape that most reduces the reconstruction error; the error-optimal colour of each shape is solved in closed form at a fixed opacity.', 'Agrega de forma voraz la forma que mas reduce el error de reconstrucción; el color optimo de cada forma se resuelve en forma cerrada a una opacidad fija.')}</p>
+          <p>{t('Greedily add the shape that most reduces the reconstruction error; the error-optimal colour of each shape is solved in closed form at a fixed opacity.', 'Agregar de forma voraz la forma que más reduce el error de reconstrucción; el color óptimo de cada forma se resuelve en forma cerrada a una opacidad fija.')}</p>
           <Equation tex={String.raw`\text{shape}_{i}=\arg\max_{s}\ \big\lVert x-\hat x_{i-1}\big\rVert^2-\big\lVert x-\text{blend}(\hat x_{i-1},s)\big\rVert^2`} />
           <p>
             {t('a hill-climbing, difference-free version of the primitive and stroke-based rendering line; the modern differentiable-vectorization descendants optimize Bezier paths against a perceptual loss instead. Each primitive is a local, interpretable coordinate, so an edit stays local, the defining property of the semantic-local pole.',
-              'una version por escalada de colina, sin diferenciacion, de la linea de render por primitivas y trazos; los descendientes modernos de vectorizacion diferenciable optimizan curvas de Bezier contra una perdida perceptual. Cada primitiva es una coordenada local e interpretable, así que una edicion se mantiene local, la propiedad definitoria del polo semantico-local.')}
+              'una versión por escalada de colina, sin diferenciación, de la línea de render por primitivas y trazos; los descendientes modernos de vectorización diferenciable optimizan curvas de Bezier contra una pérdida perceptual. Cada primitiva es una coordenada local e interpretable, así que una edición se mantiene local, la propiedad definitoria del polo semántico-local.')}
           </p>
         </div>
       ),

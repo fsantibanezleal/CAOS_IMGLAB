@@ -98,7 +98,7 @@ const svgDeploy = FRAME(
 
 export const ARCHITECTURE: ArchitectureConfig = {
   title_en: 'Architecture / How it works',
-  title_es: 'Arquitectura / Como funciona',
+  title_es: 'Arquitectura / Cómo funciona',
   tabs: [
     {
       id: 'thesis',
@@ -108,7 +108,7 @@ export const ARCHITECTURE: ArchitectureConfig = {
       body_en:
         'ImageLab writes one image as parameters in many ways and asks what a perturbation of those parameters does. Editability is U-shaped. It peaks at the designed-structure pole (orthonormal transforms, sparse dictionaries, geometric primitives), where a parameter is a local, exact handle, and at the learned-manifold pole (VAE and diffusion latents), where a parameter is a semantic but entangled handle. Between the poles, a raw or densely-coded parameter nudge just produces noise.\n\nEvery tab in the App is one point on this curve, and the Experiments page measures the locality of a one-parameter edit to place each family on it.',
       body_es:
-        'ImageLab escribe una imagen como parámetros de muchas maneras y pregunta que hace una perturbacion de esos parámetros. La editabilidad tiene forma de U. Alcanza su máximo en el polo de estructura disenada (transformadas ortonormales, diccionarios dispersos, primitivas geometricas), donde un parámetro es un control local y exacto, y en el polo de variedad aprendida (latentes de VAE y difusion), donde un parámetro es un control semantico pero enredado. Entre los polos, un empujon a un parámetro crudo o densamente codificado solo produce ruido.\n\nCada pestana de la App es un punto de esta curva, y la página de Experimentos mide la localidad de una edicion de un parámetro para ubicar cada familia en ella.',
+        'ImageLab escribe una imagen como parámetros de muchas maneras y pregunta qué hace una perturbación de esos parámetros. La editabilidad tiene forma de U. Alcanza su máximo en el polo de estructura diseñada (transformadas ortonormales, diccionarios dispersos, primitivas geométricas), donde un parámetro es un control local y exacto, y en el polo de variedad aprendida (latentes de VAE y difusión), donde un parámetro es un control semántico pero enredado. Entre los polos, un empujón a un parámetro crudo o densamente codificado solo produce ruido.\n\nCada pestaña de la App es un punto de esta curva, y la página de Experimentos mide la localidad de una edición de un parámetro para ubicar cada familia en ella.',
     },
     {
       id: 'offline',
@@ -118,7 +118,7 @@ export const ARCHITECTURE: ArchitectureConfig = {
       body_en:
         'The heavy representations are baked once, offline, by a deterministic Python pipeline (imglab.methods) in its own environment. It learns a patch KLT basis and sparse dictionaries, trains a small sinusoidal network (SIREN) per image, decodes latent-interpolation walks with the Stable Diffusion VAE, generates diffusion strips with SD-Turbo, fits geometric primitives, and finally measures the cross-family benchmark. Each writes a compact index plus its arrays under data/derived, which is committed to the repo.\n\nThe artifacts are the deployable inputs: the bake is reproducible from the repo but never runs at request time.',
       body_es:
-        'Las representaciones pesadas se precalculan una vez, offline, con un pipeline determinista de Python (imglab.methods) en su propio entorno. Aprende una base KLT por parches y diccionarios dispersos, entrena una pequeña red sinusoidal (SIREN) por imagen, decodifica caminatas de interpolación latente con el VAE de Stable Diffusion, genera tiras de difusion con SD-Turbo, ajusta primitivas geometricas y finalmente mide el benchmark entre familias. Cada uno escribe un indice compacto y sus arreglos bajo data/derived, que se versiona en el repo.\n\nLos artefactos son las entradas desplegables: el precálculo es reproducible desde el repo pero nunca corre en tiempo de peticion.',
+        'Las representaciones pesadas se precalculan una vez, offline, con un pipeline determinista de Python (imglab.methods) en su propio entorno. Aprende una base KLT por parches y diccionarios dispersos, entrena una pequeña red sinusoidal (SIREN) por imagen, decodifica caminatas de interpolación latente con el VAE de Stable Diffusion, genera tiras de difusión con SD-Turbo, ajusta primitivas geométricas y finalmente mide el benchmark entre familias. Cada uno escribe un índice compacto y sus arreglos bajo data/derived, que se versiona en el repo.\n\nLos artefactos son las entradas desplegables: el precálculo es reproducible desde el repo pero nunca se ejecuta en tiempo de petición.',
     },
     {
       id: 'live',
@@ -128,7 +128,7 @@ export const ARCHITECTURE: ArchitectureConfig = {
       body_en:
         'The transform, frame, primitive, symbolic and neural-field tabs compute in your browser, with no server call. The selected image (or your upload) is decoded to fixed-size planes, then the engines run in TypeScript (the FFT, the block DCT, wavelet lifting, orthogonal matching pursuit) or on the GPU as WebGL2 fragment shaders (the SIREN and CPPN forward pass, evaluated per pixel). The result is drawn to a canvas.\n\nBecause the same PSNR/SSIM code runs live and offline, a live reconstruction and its baked twin score the same number.',
       body_es:
-        'Las pestanas de transformada, marco, primitivas, simbolica y campo neuronal calculan en tu navegador, sin llamada al servidor. La imagen seleccionada (o tu carga) se decodifica a planos de tamaño fijo, y luego los motores corren en TypeScript (la FFT, la DCT por bloques, el lifting wavelet, el matching pursuit ortogonal) o en la GPU como shaders de fragmento WebGL2 (el paso hacia adelante de SIREN y CPPN, evaluado por pixel). El resultado se dibuja en un canvas.\n\nComo el mismo código PSNR/SSIM corre en vivo y offline, una reconstrucción en vivo y su gemela precalculada obtienen el mismo número.',
+        'Las pestañas de transformada, marco, primitivas, simbólica y campo neuronal calculan en el navegador, sin llamada al servidor. La imagen seleccionada (o la carga propia) se decodifica a planos de tamaño fijo, y luego los motores se ejecutan en TypeScript (la FFT, la DCT por bloques, el lifting wavelet, el matching pursuit ortogonal) o en la GPU como shaders de fragmento WebGL2 (el paso hacia adelante de SIREN y CPPN, evaluado por pixel). El resultado se dibuja en un canvas.\n\nComo el mismo código PSNR/SSIM se ejecuta en vivo y offline, una reconstrucción en vivo y su gemela precalculada obtienen el mismo número.',
     },
     {
       id: 'deploy',
@@ -138,7 +138,7 @@ export const ARCHITECTURE: ArchitectureConfig = {
       body_en:
         'ImageLab deploys as a static site on GitHub Pages. A GitHub Actions workflow builds the single-page app and overlays the committed derived artifacts into the site, then publishes to the CDN behind imglab.fasl-work.com. There is no backend: everything the page needs is either fetched as a static artifact or computed live in your tab.\n\nThe offline bake is deliberately not run on deploy; the committed artifacts under data/derived are the inputs, so a deploy is fast and cannot drift from what was reviewed.',
       body_es:
-        'ImageLab se despliega como sitio estático en GitHub Pages. Un flujo de GitHub Actions construye la aplicacion de página unica y superpone los artefactos derivados versionados en el sitio, luego publica al CDN detras de imglab.fasl-work.com. No hay backend: todo lo que la página necesita se obtiene como artefacto estático o se calcula en vivo en tu pestana.\n\nEl precálculo offline deliberadamente no corre en el despliegue; los artefactos versionados bajo data/derived son las entradas, así que un despliegue es rápido y no puede desviarse de lo revisado.',
+        'ImageLab se despliega como sitio estático en GitHub Pages. Un flujo de GitHub Actions construye la aplicación de página única y superpone los artefactos derivados versionados en el sitio, luego publica al CDN detrás de imglab.fasl-work.com. No hay backend: todo lo que la página necesita se obtiene como artefacto estático o se calcula en vivo en la pestaña.\n\nEl precálculo offline deliberadamente no se ejecuta en el despliegue; los artefactos versionados bajo data/derived son las entradas, así que un despliegue es rápido y no puede desviarse de lo revisado.',
     },
   ],
 };

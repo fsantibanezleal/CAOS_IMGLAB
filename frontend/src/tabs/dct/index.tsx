@@ -56,7 +56,7 @@ function DctPanel({ planes }: PanelProps) {
             </label>
             <label className="il-ctl">
               <div className="il-ctl-row">
-                <span>{t('Block size', 'Tamano de bloque')}</span>
+                <span>{t('Block size', 'Tamaño de bloque')}</span>
                 <b>{block} x {block}</b>
               </div>
               <div className="il-seg">
@@ -84,7 +84,7 @@ function DctPanel({ planes }: PanelProps) {
             <p className="il-panel-sub">
               {t(
                 'Quality is the rate knob: lower quality quantizes away high-frequency coefficients, and the image develops the characteristic blocking and edge ringing, block by block. Global within each 8x8 block, blocky between blocks.',
-                'La calidad es la perilla de tasa: menor calidad cuantiza los coeficientes de alta frecuencia, y la imagen desarrolla el caracteristico bloqueo y anillado de bordes, bloque a bloque. Global dentro de cada bloque 8x8, en bloques entre bloques.',
+                'La calidad es la perilla de tasa: menor calidad cuantiza los coeficientes de alta frecuencia, y la imagen desarrolla el característico bloqueo y anillado de bordes, bloque a bloque. Global dentro de cada bloque 8x8, en bloques entre bloques.',
               )}
             </p>
           </div>
@@ -95,26 +95,26 @@ function DctPanel({ planes }: PanelProps) {
             </figure>
             <figure className="il-fig">
               <PlanesCanvas planes={result.recon} />
-              <figcaption>{t('JPEG-style reconstruction', 'Reconstruccion estilo JPEG')}</figcaption>
+              <figcaption>{t('JPEG-style reconstruction', 'Reconstrucción estilo JPEG')}</figcaption>
             </figure>
           </div>
         </div>
       ),
     },
     { id: 'basis', label: t('Basis', 'Base'), content: <BasisGallery /> },
-    { id: 'rd', label: t('Rate-distortion', 'Tasa-distorsion'), content: <DctRD planes={planes} block={block} /> },
+    { id: 'rd', label: t('Rate-distortion', 'Tasa-distorsión'), content: <DctRD planes={planes} block={block} /> },
     {
       id: 'method',
-      label: t('Method', 'Metodo'),
+      label: t('Method', 'Método'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
           <p>{t('The 2D DCT-II on 8x8 blocks; each block is a weighted sum of 64 fixed cosine patterns.', 'La DCT-II 2D en bloques 8x8; cada bloque es una suma ponderada de 64 patrones coseno fijos.')}</p>
           <Equation tex={String.raw`C(k)=\alpha(k)\sum_{n=0}^{N-1} x(n)\cos\!\Big[\tfrac{\pi(2n+1)k}{2N}\Big],\ \ \alpha(0)=\sqrt{1/N},\ \alpha(k\ge1)=\sqrt{2/N}`} />
           <p>
-            {t('Quantization ', 'La cuantizacion ')}
+            {t('Quantization ', 'La cuantización ')}
             <code>{'round(C/Q)'}</code>
             {t(' is the only lossy step; for image-like sources the DCT approaches the optimal Karhunen-Loeve transform, which is why JPEG uses it ',
-              ' es el unico paso con perdida; para fuentes de tipo imagen la DCT se acerca a la transformada optima de Karhunen-Loeve, por eso JPEG la usa ')}
+              ' es el único paso con pérdida; para fuentes de tipo imagen la DCT se acerca a la transformada óptima de Karhunen-Loeve, por eso JPEG la usa ')}
             (<Cite id="ahmed1974dct" />, <Cite id="wallace1991jpeg" />).
           </p>
           <Refs label={t('References', 'Referencias')} ids={['ahmed1974dct', 'wallace1991jpeg']} />
@@ -206,7 +206,7 @@ function DctRD({ planes, block }: { planes: ImagePlanes; block: number }) {
   return (
     <div>
       <p className="il-panel-sub" style={{ marginBottom: '0.6rem' }}>
-        {t('Fidelity against the JPEG quality factor: the operational rate-distortion curve of block DCT coding.', 'Fidelidad frente al factor de calidad JPEG: la curva tasa-distorsion operacional del código DCT por bloques.')}
+        {t('Fidelity against the JPEG quality factor: the operational rate-distortion curve of block DCT coding.', 'Fidelidad frente al factor de calidad JPEG: la curva tasa-distorsión operacional del código DCT por bloques.')}
       </p>
       <UPlotChart
         data={data}

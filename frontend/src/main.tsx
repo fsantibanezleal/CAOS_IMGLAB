@@ -57,7 +57,7 @@ const config: ShellConfig = {
     },
     disclaimer: {
       en: 'A research lab, not a production image tool: every representation is either computed live in your browser or baked offline by the open, seed-deterministic pipeline and is reproducible from the repo; generative reconstructions are labelled as plausible, not faithful.',
-      es: 'Un laboratorio de investigación, no una herramienta de imágenes de producción: cada representación se calcula en vivo en tu navegador o se hornea offline con el pipeline abierto y determinista por semilla, y es reproducible desde el repo; las reconstrucciones generativas se etiquetan como plausibles, no fieles.',
+      es: 'Un laboratorio de investigación, no una herramienta de imágenes de producción: cada representación se calcula en vivo en el navegador o se precalcula offline con el pipeline abierto y determinista por semilla, y es reproducible desde el repo; las reconstrucciones generativas se etiquetan como plausibles, no fieles.',
     },
   },
 };

@@ -129,7 +129,7 @@ function FourierPanel({ planes }: PanelProps) {
             <p className="il-panel-sub">
               {t(
                 'Every kept coefficient is a global sinusoid: editing one changes the whole image by a smooth ripple. Stable, bounded, never local. That is the transform family: compact but not semantic.',
-                'Cada coeficiente conservado es una sinusoide global: editar uno cambia toda la imagen con una onda suave. Estable, acotado, nunca local. Esa es la familia de transformadas: compacta pero no semantica.',
+                'Cada coeficiente conservado es una sinusoide global: editar uno cambia toda la imagen con una onda suave. Estable, acotado, nunca local. Esa es la familia de transformadas: compacta pero no semántica.',
               )}
             </p>
           </div>
@@ -140,7 +140,7 @@ function FourierPanel({ planes }: PanelProps) {
             </figure>
             <figure className="il-fig">
               <PlanesCanvas planes={recon} />
-              <figcaption>{t('Reconstruction', 'Reconstruccion')}</figcaption>
+              <figcaption>{t('Reconstruction', 'Reconstrucción')}</figcaption>
             </figure>
           </div>
         </div>
@@ -153,12 +153,12 @@ function FourierPanel({ planes }: PanelProps) {
     },
     {
       id: 'rd',
-      label: t('Rate-distortion', 'Tasa-distorsion'),
+      label: t('Rate-distortion', 'Tasa-distorsión'),
       content: <RateDistortion planes={planes} specs={specs} />,
     },
     {
       id: 'method',
-      label: t('Method', 'Metodo'),
+      label: t('Method', 'Método'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
           <p>
@@ -167,10 +167,10 @@ function FourierPanel({ planes }: PanelProps) {
           </p>
           <Equation tex={String.raw`F(u,v)=\sum_{x,y} f(x,y)\,e^{-j2\pi(ux/W+vy/H)},\quad f=\tfrac{1}{WH}\sum_{u,v}F(u,v)\,e^{+j2\pi(ux/W+vy/H)}`} />
           <p>
-            {t('Editing one coefficient is an isometric change ', 'Editar un coeficiente es un cambio isometrico ')}
+            {t('Editing one coefficient is an isometric change ', 'Editar un coeficiente es un cambio isométrico ')}
             <InlineMath tex={String.raw`\lVert\delta f\rVert_2=\lvert\delta F\rvert/\sqrt{WH}`} />
             {t(': stable and bounded, but global (Parseval). Keeping the largest coefficients is transform compression; the phase, not the magnitude, carries the structure ',
-              ': estable y acotado, pero global (Parseval). Quedarse con los mayores coeficientes es compresion por transformada; la fase, no la magnitud, lleva la estructura ')}
+              ': estable y acotado, pero global (Parseval). Quedarse con los mayores coeficientes es compresión por transformada; la fase, no la magnitud, lleva la estructura ')}
             (<Cite id="cooley1965fft" />, <Cite id="oppenheim1981phase" />).
           </p>
           <Refs label={t('References', 'Referencias')} ids={['cooley1965fft', 'oppenheim1981phase', 'wang2004ssim']} />
@@ -219,7 +219,7 @@ function PhaseView({ specs, planes }: { specs: Complex2D[]; planes: ImagePlanes 
         <p className="il-panel-sub">
           {t(
             'Rebuild the image from only the magnitude of its Fourier transform, or only the phase. Magnitude alone is unrecognizable texture; phase alone keeps the edges and shapes. The structure of an image lives in its phase.',
-            'Reconstruye la imagen usando solo la magnitud de su transformada de Fourier, o solo la fase. La magnitud sola es una textura irreconocible; la fase sola conserva bordes y formas. La estructura de una imagen vive en su fase.',
+            'Reconstruir la imagen usando solo la magnitud de su transformada de Fourier, o solo la fase. La magnitud sola es una textura irreconocible; la fase sola conserva bordes y formas. La estructura de una imagen vive en su fase.',
           )}
         </p>
       </div>
@@ -228,7 +228,7 @@ function PhaseView({ specs, planes }: { specs: Complex2D[]; planes: ImagePlanes 
           <PlanesCanvas planes={recon} />
           <figcaption>
             {phaseMode === 'both'
-              ? t('Full reconstruction', 'Reconstruccion completa')
+              ? t('Full reconstruction', 'Reconstrucción completa')
               : phaseMode === 'mag'
                 ? t('Magnitude only (normalized)', 'Solo magnitud (normalizada)')
                 : t('Phase only (normalized)', 'Solo fase (normalizada)')}
@@ -274,7 +274,7 @@ function RateDistortion({ planes, specs }: { planes: ImagePlanes; specs: Complex
       <p className="il-panel-sub" style={{ marginBottom: '0.6rem' }}>
         {t(
           'Fidelity against the fraction of Fourier coefficients kept (the nonlinear-approximation curve). This is transform compression: quality climbs as you keep more coefficients.',
-          'Fidelidad frente a la fraccion de coeficientes de Fourier conservados (la curva de aproximación no lineal). Es la compresion por transformada: la calidad sube al conservar mas coeficientes.',
+          'Fidelidad frente a la fracción de coeficientes de Fourier conservados (la curva de aproximación no lineal). Es la compresión por transformada: la calidad sube al conservar más coeficientes.',
         )}
       </p>
       <UPlotChart

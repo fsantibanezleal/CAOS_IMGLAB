@@ -54,7 +54,7 @@ function FramesPanel({ planes }: PanelProps) {
   const tabs: SubTabDef[] = [
     {
       id: 'sparse',
-      label: t('Sparse code', 'Codigo disperso'),
+      label: t('Sparse code', 'Código disperso'),
       content: (
         <div className="il-fourier">
           <div className="il-fourier-controls il-panel">
@@ -67,7 +67,7 @@ function FramesPanel({ planes }: PanelProps) {
             </label>
             <label className="il-ctl">
               <div className="il-ctl-row">
-                <span>{t('Sparsity (atoms per patch)', 'Dispersion (atomos por parche)')}</span>
+                <span>{t('Sparsity (atoms per patch)', 'Dispersión (átomos por parche)')}</span>
                 <b>{T}</b>
               </div>
               <input className="range" type="range" min={1} max={16} step={1} value={T} onChange={(e) => setT(+e.target.value)} />
@@ -83,13 +83,13 @@ function FramesPanel({ planes }: PanelProps) {
               </div>
               <div className="il-kpi">
                 <div className="il-kpi-v">{result?.avg.toFixed(1) ?? '...'}</div>
-                <div className="il-kpi-l">{t('atoms/patch', 'atomos/parche')}</div>
+                <div className="il-kpi-l">{t('atoms/patch', 'átomos/parche')}</div>
               </div>
             </div>
             <p className="il-panel-sub">
               {t(
                 'An overcomplete dictionary has 144 atoms for 64-dimensional patches, so each patch is written as a sparse mix of just a few. Swap the alphabet between the learned dictionary and the overcomplete cosine dictionary: the same image, re-expressed. This is the interpretable middle of the spectrum, atom edits are local and meaningful.',
-                'Un diccionario sobrecompleto tiene 144 atomos para parches de 64 dimensiones, así que cada parche se escribe como una mezcla dispersa de solo unos pocos. Cambia el alfabeto entre el diccionario aprendido y el diccionario coseno sobrecompleto: la misma imagen, re-expresada. Este es el medio interpretable del espectro, las ediciones de atomos son locales y con sentido.',
+                'Un diccionario sobrecompleto tiene 144 átomos para parches de 64 dimensiones, así que cada parche se escribe como una mezcla dispersa de solo unos pocos. Cambiar el alfabeto entre el diccionario aprendido y el diccionario coseno sobrecompleto: la misma imagen, re-expresada. Este es el medio interpretable del espectro, las ediciones de átomos son locales y con sentido.',
               )}
             </p>
           </div>
@@ -100,23 +100,23 @@ function FramesPanel({ planes }: PanelProps) {
             </figure>
             <figure className="il-fig">
               <PlanesCanvas planes={result?.recon ?? null} />
-              <figcaption>{t('Sparse reconstruction', 'Reconstruccion dispersa')}</figcaption>
+              <figcaption>{t('Sparse reconstruction', 'Reconstrucción dispersa')}</figcaption>
             </figure>
           </div>
         </div>
       ),
     },
-    { id: 'atoms', label: t('Atoms', 'Atomos'), content: <AtomGallery dict={dict} which={which} /> },
+    { id: 'atoms', label: t('Atoms', 'Átomos'), content: <AtomGallery dict={dict} which={which} /> },
     {
       id: 'method',
-      label: t('Method', 'Metodo'),
+      label: t('Method', 'Método'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('Find the sparsest combination of dictionary atoms that reconstructs each patch, within a fixed atom budget.', 'Encuentra la combinacion mas dispersa de atomos del diccionario que reconstruye cada parche, dentro de un presupuesto fijo de atomos.')}</p>
+          <p>{t('Find the sparsest combination of dictionary atoms that reconstructs each patch, within a fixed atom budget.', 'Encontrar la combinación más dispersa de átomos del diccionario que reconstruye cada parche, dentro de un presupuesto fijo de átomos.')}</p>
           <Equation tex={String.raw`\min_{a}\ \lVert x - D\,a\rVert_2^2\quad\text{s.t.}\quad \lVert a\rVert_0\le T`} />
           <p>
             {t('solved greedily by orthogonal matching pursuit. The learned dictionary is fit on natural-image patches (sparse coding gives localized, oriented atoms); the overcomplete-DCT dictionary is fixed. Both are overcomplete frames ',
-              'resuelto de forma voraz por orthogonal matching pursuit. El diccionario aprendido se ajusta sobre parches de imagenes naturales (la codificacion dispersa da atomos localizados y orientados); el diccionario DCT sobrecompleto es fijo. Ambos son marcos sobrecompletos ')}
+              'resuelto de forma voraz por orthogonal matching pursuit. El diccionario aprendido se ajusta sobre parches de imágenes naturales (la codificación dispersa da átomos localizados y orientados); el diccionario DCT sobrecompleto es fijo. Ambos son marcos sobrecompletos ')}
             (<Cite id="olshausen1996" />, <Cite id="aharon2006ksvd" />, <Cite id="tang2007haar" />).
           </p>
           <Refs label={t('References', 'Referencias')} ids={['olshausen1996', 'aharon2006ksvd', 'tang2007haar', 'donoho2006cs']} />
@@ -168,8 +168,8 @@ function AtomGallery({ dict, which }: { dict: Dictionary; which: string }) {
   return (
     <div>
       <p className="il-panel-sub" style={{ marginBottom: '0.6rem' }}>
-        {t('The 144 atoms of the', 'Los 144 atomos del')} {which === 'learned' ? t('learned dictionary', 'diccionario aprendido') : t('overcomplete-DCT dictionary', 'diccionario DCT sobrecompleto')}
-        {t('. The learned atoms are localized oriented edges and textures; the DCT atoms are cosine gratings.', '. Los atomos aprendidos son bordes y texturas orientados y localizados; los atomos DCT son rejillas coseno.')}
+        {t('The 144 atoms of the', 'Los 144 átomos del')} {which === 'learned' ? t('learned dictionary', 'diccionario aprendido') : t('overcomplete-DCT dictionary', 'diccionario DCT sobrecompleto')}
+        {t('. The learned atoms are localized oriented edges and textures; the DCT atoms are cosine gratings.', '. Los átomos aprendidos son bordes y texturas orientados y localizados; los átomos DCT son rejillas coseno.')}
       </p>
       <canvas ref={ref} className="il-canvas" style={{ imageRendering: 'pixelated', maxWidth: 320 }} />
     </div>
