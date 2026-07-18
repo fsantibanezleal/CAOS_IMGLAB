@@ -38,7 +38,7 @@ def _method(name: str) -> None:
     mod.main()
 
 
-LIGHT = ["klt_basis", "dictionaries", "primitives_fit"]
+LIGHT = ["klt_basis", "dictionaries", "primitives_fit", "benchmark"]
 HEAVY = ["inr_train", "vae_latents", "diffusion_strips"]
 
 GROUPS = {
