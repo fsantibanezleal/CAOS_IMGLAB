@@ -41,8 +41,9 @@ import { kltTab } from './klt';
 import { symbolicTab } from './symbolic';
 import { epicycleTab } from './epicycle';
 import { framesTab } from './frames';
+import { neuralTab } from './neural';
 
-export const TABS: TabModule[] = [fourierTab, dctTab, waveletTab, kltTab, framesTab, symbolicTab, epicycleTab];
+export const TABS: TabModule[] = [fourierTab, dctTab, waveletTab, kltTab, framesTab, neuralTab, symbolicTab, epicycleTab];
 
 export function tabsByFamily(family: Family): TabModule[] {
   return TABS.filter((t) => t.family === family);
