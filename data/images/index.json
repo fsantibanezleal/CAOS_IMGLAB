@@ -1,0 +1,97 @@
+[
+  {
+    "id": "mathart-harmonograph",
+    "category": "math-art",
+    "title": "Harmonograph",
+    "titleEs": "Armonografo",
+    "license": "MIT",
+    "source": "ImageLab (procedural)",
+    "attribution": "Procedurally generated in-repo, ImageLab (MIT)",
+    "sourceUrl": "",
+    "width": 256,
+    "height": 256,
+    "illustrates": [
+      "symbolic",
+      "primitives"
+    ]
+  },
+  {
+    "id": "mathart-julia",
+    "category": "math-art",
+    "title": "Julia set",
+    "titleEs": "Conjunto de Julia",
+    "license": "MIT",
+    "source": "ImageLab (procedural)",
+    "attribution": "Procedurally generated in-repo, ImageLab (MIT)",
+    "sourceUrl": "",
+    "width": 256,
+    "height": 256,
+    "illustrates": [
+      "transforms",
+      "neural-field",
+      "symbolic"
+    ]
+  },
+  {
+    "id": "mathart-rose",
+    "category": "math-art",
+    "title": "Rose (epicycles)",
+    "titleEs": "Rosa (epiciclos)",
+    "license": "MIT",
+    "source": "ImageLab (procedural)",
+    "attribution": "Procedurally generated in-repo, ImageLab (MIT)",
+    "sourceUrl": "",
+    "width": 256,
+    "height": 256,
+    "illustrates": [
+      "symbolic",
+      "primitives"
+    ]
+  },
+  {
+    "id": "synthetic-checkerboard",
+    "category": "synthetic",
+    "title": "Checkerboard",
+    "titleEs": "Tablero",
+    "license": "MIT",
+    "source": "ImageLab (procedural)",
+    "attribution": "Procedurally generated in-repo, ImageLab (MIT)",
+    "sourceUrl": "",
+    "width": 256,
+    "height": 256,
+    "illustrates": [
+      "transforms"
+    ]
+  },
+  {
+    "id": "synthetic-gradient",
+    "category": "synthetic",
+    "title": "Radial gradient",
+    "titleEs": "Gradiente radial",
+    "license": "MIT",
+    "source": "ImageLab (procedural)",
+    "attribution": "Procedurally generated in-repo, ImageLab (MIT)",
+    "sourceUrl": "",
+    "width": 256,
+    "height": 256,
+    "illustrates": [
+      "transforms",
+      "neural-field"
+    ]
+  },
+  {
+    "id": "synthetic-polygons",
+    "category": "synthetic",
+    "title": "Occluded primitives",
+    "titleEs": "Primitivas ocluidas",
+    "license": "MIT",
+    "source": "ImageLab (procedural)",
+    "attribution": "Procedurally generated in-repo, ImageLab (MIT)",
+    "sourceUrl": "",
+    "width": 256,
+    "height": 256,
+    "illustrates": [
+      "primitives"
+    ]
+  }
+]
