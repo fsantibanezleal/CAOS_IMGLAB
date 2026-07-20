@@ -61,7 +61,7 @@ function LatentsPanel({ entry }: PanelProps) {
         <Callout variant="honest" title={t('Baked for the curated set', 'Precalculado para el conjunto curado')}>
           {t(
             'Encoding and decoding a VAE is too heavy for the browser, so the latent reconstruction and perturbation are baked offline for every curated image; your uploaded image is handled by the live transform and dictionary tabs.',
-            'Codificar y decodificar un VAE es demasiado pesado para el navegador, asi que la reconstruccion latente y la perturbacion se precalculan offline para cada imagen curada; tu imagen cargada se maneja en las pestanas en vivo de transformada y diccionario.',
+            'Codificar y decodificar un VAE es demasiado pesado para el navegador, así que la reconstrucción latente y la perturbación se precalculan offline para cada imagen curada; la imagen cargada se maneja en las pestañas en vivo de transformada y diccionario.',
           )}
         </Callout>
       </div>
@@ -72,7 +72,7 @@ function LatentsPanel({ entry }: PanelProps) {
   const tabs: SubTabDef[] = [
     {
       id: 'walk',
-      label: t('Latent perturbation', 'Perturbacion latente'),
+      label: t('Latent perturbation', 'Perturbación latente'),
       content: (
         <div className="il-fourier">
           <div className="il-fourier-controls il-panel">
@@ -99,14 +99,14 @@ function LatentsPanel({ entry }: PanelProps) {
             <p className="il-panel-sub">
               {t(
                 'The selected image is encoded into the VAE latent code and decoded back: frame 0 is the reconstruction (a lossy pass through a learned code). Add noise to that latent and decode again, and the image drifts to plausible but globally different pictures. A latent nudge is semantic but entangled, the opposite of the local, exact edits of the transform and primitive tabs.',
-                'La imagen seleccionada se codifica en el codigo latente del VAE y se decodifica de vuelta: el fotograma 0 es la reconstruccion (un paso con perdida por un codigo aprendido). Agrega ruido a ese latente y decodifica otra vez, y la imagen deriva a imagenes plausibles pero globalmente distintas. Un empujon latente es semantico pero enredado, lo opuesto a las ediciones locales y exactas de las pestanas de transformada y primitivas.',
+                'La imagen seleccionada se codifica en el código latente del VAE y se decodifica de vuelta: el fotograma 0 es la reconstrucción (un paso con perdida por un código aprendido). Agregar ruido a ese latente y decodificar otra vez, y la imagen deriva a imágenes plausibles pero globalmente distintas. Un empujón latente es semántico pero enredado, lo opuesto a las ediciones locales y exactas de las pestañas de transformada y primitivas.',
               )}
             </p>
           </div>
           <div className="il-fourier-views">
             <figure className="il-fig">
-              <img src={vaeFrameUrl(entry.id, 0)} alt={t('VAE reconstruction', 'Reconstruccion VAE')} className="il-canvas" style={{ width: '100%', display: 'block' }} />
-              <figcaption>{t('Reconstruction (frame 0)', 'Reconstruccion (fotograma 0)')}</figcaption>
+              <img src={vaeFrameUrl(entry.id, 0)} alt={t('VAE reconstruction', 'Reconstrucción VAE')} className="il-canvas" style={{ width: '100%', display: 'block' }} />
+              <figcaption>{t('Reconstruction (frame 0)', 'Reconstrucción (fotograma 0)')}</figcaption>
             </figure>
             <figure className="il-fig">
               <img src={vaeFrameUrl(entry.id, frame)} alt={t('perturbed latent', 'latente perturbado')} className="il-canvas" style={{ width: '100%', display: 'block' }} />
@@ -118,20 +118,20 @@ function LatentsPanel({ entry }: PanelProps) {
     },
     {
       id: 'method',
-      label: t('Method', 'Metodo'),
+      label: t('Method', 'Método'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <p>{t('A variational autoencoder maps the selected image to a low-dimensional latent code and back; the latent is a learned, continuous representation.', 'Un autoencoder variacional mapea la imagen seleccionada a un codigo latente de baja dimension y de vuelta; el latente es una representacion aprendida y continua.')}</p>
+          <p>{t('A variational autoencoder maps the selected image to a low-dimensional latent code and back; the latent is a learned, continuous representation.', 'Un autoencoder variacional mapea la imagen seleccionada a un código latente de baja dimensión y de vuelta; el latente es una representación aprendida y continua.')}</p>
           <Equation tex={String.raw`z=\mathcal{E}(x),\qquad \hat x=\mathcal{D}(z),\qquad \tilde x=\mathcal{D}(z+\sigma\,\epsilon)`} />
           <p>
             {t('Perturbing the latent gives plausible images along the learned manifold; disentangled generative directions (in GAN W-space, or a diffusion latent) are the most editable representation of all, though the edits here are entangled because the VAE latent is not disentangled ',
-              'Perturbar el latente da imagenes plausibles a lo largo de la variedad aprendida; las direcciones generativas desenredadas (en el espacio W de un GAN, o un latente de difusion) son la representacion mas editable de todas, aunque las ediciones aqui estan enredadas porque el latente del VAE no esta desenredado ')}
+              'Perturbar el latente da imágenes plausibles a lo largo de la variedad aprendida; las direcciones generativas desenredadas (en el espacio W de un GAN, o un latente de difusión) son la representación más editable de todas, aunque las ediciones aqui estan enredadas porque el latente del VAE no esta desenredado ')}
             (<Cite id="kingma2013vae" />, <Cite id="karras2019stylegan" />, <Cite id="harkonen2020ganspace" />, <Cite id="rombach2022ldm" />).
           </p>
           <Callout variant="honest" title={t('Baked, not live', 'Precalculado, no en vivo')}>
             {t(
               'The encode and decode run offline in the open pipeline and the frames are replayed here; the reconstruction is a pass through a compression autoencoder for the exact selected image, not a live edit.',
-              'La codificacion y decodificacion corren offline en el pipeline abierto y los fotogramas se reproducen aqui; la reconstruccion es un paso por un autoencoder de compresion para la imagen seleccionada exacta, no una edicion en vivo.',
+              'La codificación y decodificación se ejecutan offline en el pipeline abierto y los fotogramas se reproducen aqui; la reconstrucción es un paso por un autoencoder de compresión para la imagen seleccionada exacta, no una edicion en vivo.',
             )}
           </Callout>
           <Refs label={t('References', 'Referencias')} ids={['kingma2013vae', 'karras2019stylegan', 'harkonen2020ganspace', 'rombach2022ldm']} />
