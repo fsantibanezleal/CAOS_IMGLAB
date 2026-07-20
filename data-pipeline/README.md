@@ -16,8 +16,10 @@ own environment, `.venv-pipeline` (the classical bakes plus the heavy learned en
   - `dictionaries.py`, the learned + overcomplete-DCT sparse dictionaries
   - `inr_train.py`, train a small SIREN per image and export its weights
   - `primitives_fit.py`, the greedy translucent-ellipse fit
-  - `vae_latents.py`, decode latent-interpolation walks with the Stable Diffusion VAE
-  - `diffusion_strips.py`, bake a denoising trajectory + a prompt walk with SD-Turbo
+  - `symbolic_fit.py`, fit each image as a closed-form trigonometric equation (random Fourier features)
+  - `vae_latents.py`, per-image Stable-Diffusion-VAE reconstruction + latent-perturbation strip
+  - `diffusion_strips.py`, per-image SD-Turbo image-to-image regeneration at increasing strength
+  - `benchmark.py`, the measured cross-family fidelity + editability-locality numbers
 - `imglab/stages/fetch_images.py`, download the licensed real image subset (the only network step)
 
 The classical bakes (`images`, `light`) need only `requirements.txt` and run in CI; the learned bakes (`heavy`)

@@ -216,6 +216,42 @@ export function imageContour(planes: ImagePlanes): Contour | null {
   return { pts, terms: descriptorsFrom(pts), fill };
 }
 
+const e2 = (v: number) => (Object.is(v, -0) ? 0 : v).toFixed(2);
+const e3 = (v: number) => (Object.is(v, -0) ? 0 : v).toFixed(3);
+
+/** KaTeX for the ACTUAL parametric equation of the traced contour: the top `n` of the k kept epicycles. */
+export function epicycleEquationTex(terms: Term[], k: number, n = 6): string {
+  const kept = terms.slice(0, Math.max(1, k));
+  const parts: string[] = [`z(t) = {} &`];
+  kept.slice(0, n).forEach((term, i) => {
+    const phase = Math.atan2(term.im, term.re);
+    const ph = phase >= 0 ? `+${e2(phase)}` : e2(phase);
+    const lead = i === 0 ? '' : '+\\;';
+    const sep = i > 0 && i % 2 === 0 ? ' \\\\ &' : i === 0 ? '' : ' ';
+    parts.push(`${sep}${lead}${e3(term.mag)}\\,e^{i(${term.freq}t${ph})}`);
+  });
+  const rest = kept.length - Math.min(n, kept.length);
+  if (rest > 0) parts.push(` \\\\ & +\\;\\cdots\\;(${rest}\\ \\text{more circles})`);
+  return `\\begin{aligned}${parts.join('')}\\end{aligned}`;
+}
+
+/** The COMPLETE parametric equation of the traced contour as plain text (all k kept epicycles). */
+export function epicycleEquationText(terms: Term[], k: number, imageId: string): string {
+  const kept = terms.slice(0, Math.max(1, k));
+  const out: string[] = [
+    `ImageLab, the exact parametric contour equation of "${imageId}"`,
+    `model: z(t) = sum_k A_k * exp(i*(f_k*t + phi_k)), t in [0, 2*pi); x(t)=Re z, y(t)=Im z`,
+    `kept epicycles: ${kept.length} of ${terms.length} Fourier descriptors (sorted by amplitude)`,
+    ``,
+    `z(t) =`,
+  ];
+  for (const term of kept) {
+    const phase = Math.atan2(term.im, term.re);
+    out.push(`  + ${term.mag.toFixed(5)} * exp(i*(${term.freq}*t + ${phase.toFixed(4)}))`);
+  }
+  return out.join('\n');
+}
+
 /** The reconstructed contour path (K harmonics), as [x0,y0,...] in [-1,1]. */
 export function reconstructPath(terms: Term[], k: number, samples = 720): Float32Array {
   const kept = terms.slice(0, Math.max(1, k));

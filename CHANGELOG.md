@@ -5,6 +5,25 @@ the lab is under construction. Tag every release.
 
 ## [Unreleased]
 
+## [0.03.000] - 2026-07-18
+
+The equations become visible: the image-to-parametric-equation promise is now shown, not just claimed.
+
+### Added
+- Symbolic tab, "Written equation" sub-tab: the ACTUAL fitted closed-form equation of the selected image with
+  its real coefficients (amplitude-phase form, per channel R/G/B), plus a download of the complete formula
+  (all 512 terms of all three channels) as plain text.
+- Epicycles tab, "The equation" sub-tab: the ACTUAL parametric equation of the traced contour, z(t) as a sum
+  of rotating circles with their real amplitudes, signed frequencies and phases, following the harmonics
+  slider, plus a download of every kept term.
+- Primitives Method: the differentiable-vectorization reference (Li et al. 2020, diffvg).
+
+### Fixed
+- Purged the stale old-demo language everywhere it survived the per-image overhaul: the architecture modal
+  (offline-bake diagram + bodies now name the equation fit, per-image VAE strips and img2img), the methods
+  wiki (sections 5-7 rewritten), the data-contract README (adds _sym and _bench, corrects _vae/_diff to the
+  per-image schema), the pipeline README, and the Implementation and Methodology pages.
+
 ## [0.02.000] - 2026-07-18
 
 Every representation now operates on the selected image, across the whole 18-image set (was a hand-picked

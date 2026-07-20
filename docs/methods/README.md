@@ -46,33 +46,41 @@ a named handle.
 
 References: Sitzmann et al. 2020 (SIREN); Tancik et al. 2020 (Fourier features).
 
-## 5. Symbolic formula art (live)
+## 5. Symbolic closed-form equation (offline fit, live shader + written equation)
 
-A Compositional Pattern-Producing Network maps coordinates to colour through a fixed symbolic graph of primitive
-functions (sin, gaussian, products). The image is a short symbolic expression, and small changes to its constants
-sweep whole families of coherent patterns. This is generative structure from a compact parametric formula, closer
-to the design pole than the neural field because the graph is legible.
+Each image is fitted as an explicit trigonometric formula by ridge regression on random Fourier features:
+`ch(x, y) = a0 + sum_k [ a_k cos(omega_k . (x, y)) + b_k sin(omega_k . (x, y)) ]`, with D = 512 random
+frequencies shared across the three channels. Unlike the fixed-basis transforms the frequencies are random, and
+unlike the neural field the model is linear in known analytic basis functions, so the picture literally IS a
+readable equation: the tab renders it per pixel in a WebGL2 shader, shows the actual fitted terms with their
+real coefficients (amplitude-phase form), and exports the complete formula as text. Fidelity is honest and
+bounded: a smooth gradient reaches about 57 dB from the same 512 terms, a hard-edged checkerboard only about 14,
+because a finite trigonometric sum cannot render a discontinuity.
 
-Reference: Stanley 2007 (CPPNs).
+References: Tancik et al. 2020 (Fourier features); Naderi Yeganeh (hand-authored formula art); Stanley 2007
+(CPPNs, the generative-formula ancestor); Cranmer 2023 (symbolic regression).
 
 ## 6. Fourier descriptors / epicycles (live)
 
-Trace a closed outline as a complex signal and take its DFT: the shape becomes a sum of rotating circles
-(epicycles), `z(t) = sum_k c_k e^{i k t}`. Truncating the high-order terms smooths the outline; the coefficients
-are an exact, orderable parametric description of the contour. The tab reconstructs the outline from the first k
-epicycles.
+The dominant closed contour of the selected image is traced (Otsu threshold, largest connected component,
+Moore-neighbour boundary following), resampled by arc length, and transformed: the outline becomes a sum of
+rotating circles, `z(t) = sum_k c_k e^{i f_k t}`. The coefficients are an exact, orderable parametric
+description of the contour: the tab reconstructs the outline from the largest k epicycles, shows the actual
+equation with its real amplitudes, frequencies and phases, and exports every kept term. Because a contour is a
+one-dimensional closed curve this reduction is exact in the limit, the honest end of image-to-equation.
 
 Reference: the classical Fourier-descriptor shape literature (Zahn and Roskies 1972).
 
 ## 7. Learned generative latents (offline bake, live scrub)
 
-An autoencoder or diffusion model maps the image to a low-dimensional latent and back: `z = E(x)`, `x_hat = D(z)`.
-The VAE tab interpolates between two images' latents, `z_t = (1 - t) z_a + t z_b`, and decodes each step, so the
-blend stays on the learned manifold (a plausible image at every step, not a pixel cross-fade). The diffusion tab
-shows the reverse process, an image emerging from noise step by step, and a prompt-interpolation walk. This is the
-second pole of high editability: a latent nudge is semantic (it moves along meaningful directions) but entangled
-(the whole image changes together). These are baked offline (the models are too heavy for the browser) and
-replayed, honestly labelled as generative interpolation rather than a faithful edit of your exact image.
+An autoencoder or diffusion model maps the selected image to a low-dimensional latent and back: `z = E(x)`,
+`x_hat = D(z)`. The VAE tab shows this image's own reconstruction (frame 0) and then decodes increasing
+perturbations of its latent, `x_tilde = D(z + sigma epsilon)`: the picture drifts to plausible but globally
+different images. The diffusion tab regenerates the selected image with SD-Turbo image-to-image at increasing
+strength: low strength returns almost the original, high strength lets the learned prior re-imagine it. This is
+the second pole of high editability: a latent nudge is semantic (it moves along the learned manifold) but
+entangled (the whole image changes together). Both are baked offline per image (the models are too heavy for the
+browser) and replayed, honestly labelled as generative reconstruction rather than a faithful edit.
 
 References: Kingma and Welling 2013 (VAE); Karras et al. 2019 (StyleGAN); Harkonen et al. 2020 (GANSpace); Rombach
-et al. 2022 (latent diffusion).
+et al. 2022 (latent diffusion); Sauer et al. 2023 (adversarial diffusion distillation).
