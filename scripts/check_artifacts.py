@@ -63,7 +63,7 @@ def main() -> int:
             _load(f"{group}/{name}", errs)
 
     # 3) per-image list artifacts (INR weights, primitive fits, symbolic equations)
-    for group, key in (("_inr", "trained"), ("_prim", "fitted"), ("_sym", "fitted")):
+    for group, key in (("_inr", "trained"), ("_prim", "fitted"), ("_sym", "fitted"), ("_gabor", "fitted"), ("_gsplat", "fitted")):
         if not _group_present(group):
             continue
         idx = _load(f"{group}/index.json", errs)

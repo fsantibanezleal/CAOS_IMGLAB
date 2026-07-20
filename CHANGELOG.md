@@ -5,6 +5,24 @@ the lab is under construction. Tag every release.
 
 ## [Unreleased]
 
+## [0.04.000] - 2026-07-20
+
+Three new equation families, from a deep research pass over the image-as-equation landscape: every family is
+per-image across all 18, rendered live, written out with its real coefficients, and downloadable in full.
+
+### Added
+- Gabor atoms tab: 250 wave packets per image (greedy matching pursuit, per-channel amplitude/phase in closed
+  form on the quadrature pair), rendered live in a WebGL2 shader with an atom-count slider, the written
+  equation, and a full export. Every term is a Gaussian envelope times an oriented cosine.
+- Gaussian mixture tab: the 2D Gaussian-splatting equation (200 anisotropic Gaussians, precision-Cholesky
+  parameterization, Adam), rendered live with a count slider, the written equation, and a full export.
+- Polynomial series tab: a tensor Chebyshev series fitted LIVE in the browser (discretely orthonormalized
+  basis per axis, rotated back to the legible Chebyshev basis), degree slider 2-48, works on runtime uploads
+  too; written equation + full coefficient export.
+- Benchmark rows for the three new families; five new verified references (Mallat-Zhang 1993, Daugman 1985,
+  GaussianImage ECCV 2024, 3D Gaussian splatting 2023, Tchebichef moments 2001).
+
+
 ## [0.03.000] - 2026-07-18
 
 The equations become visible: the image-to-parametric-equation promise is now shown, not just claimed.

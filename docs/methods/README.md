@@ -1,6 +1,6 @@
 # Methods, the representation families
 
-ImageLab carries one image across seven families of mathematical representation, ordered along the editability
+ImageLab carries one image across ten families of mathematical representation, ordered along the editability
 curve. Each family is a tab in the app; each tab's Method sub-tab transcribes the theory below with rendered
 equations and references. A representation is a way to write an image as parameters; the question every tab asks
 is what a perturbation of those parameters does.
@@ -60,7 +60,40 @@ because a finite trigonometric sum cannot render a discontinuity.
 References: Tancik et al. 2020 (Fourier features); Naderi Yeganeh (hand-authored formula art); Stanley 2007
 (CPPNs, the generative-formula ancestor); Cranmer 2023 (symbolic regression).
 
-## 6. Fourier descriptors / epicycles (live)
+## 6. Gabor atoms (offline matching pursuit, live shader + written equation)
+
+The image is decomposed over a redundant dictionary of Gabor functions by greedy matching pursuit: each term
+is a Gaussian envelope times an oriented cosine, `g_k = exp(-u^2/(2 sx^2) - v^2/(2 sy^2)) cos(om u - ph)` with
+`(u, v) = R_theta ((x, y) - mu)`, the per-channel amplitude and phase solved in closed form on the quadrature
+pair. 250 atoms per image, all 18 baked. Localized wave packets buy markedly more fidelity per parameter than
+the global trig fit on photographs, and every term is a legible object: position, width, orientation,
+frequency, phase. The tab renders the sum live in a WebGL2 shader, builds the image atom by atom, writes the
+equation with its real numbers, and exports every atom.
+
+References: Mallat and Zhang 1993 (matching pursuit); Daugman 1985 (2D Gabor filters).
+
+## 7. Gaussian mixture, 2D splatting (offline gradient fit, live shader + written equation)
+
+The image is one equation: a sum of colored anisotropic Gaussians,
+`ch(x, y) = b_ch + sum_k c_k,ch exp(-1/2 d_k^T Sigma_k^-1 d_k)`, with the precision parameterized by its
+Cholesky factor and all 200 Gaussians optimized jointly with Adam (the accumulated-sum variant of 2D Gaussian
+splatting for images, the image counterpart of the representation behind real-time radiance fields). All 18
+baked. The tab renders the mixture live, adds bumps by color mass, writes the equation and exports every
+Gaussian.
+
+References: Zhang et al. 2024 (GaussianImage, ECCV); Kerbl et al. 2023 (3D Gaussian splatting).
+
+## 8. Chebyshev polynomial series (fitted LIVE in the browser)
+
+Each channel is written as a truncated tensor polynomial series, `ch(x, y) = sum_ij a_ij T_j(x) T_i(y)` with
+`T_k(t) = cos(k arccos t)`, fitted by least squares with a discretely orthonormalized basis per axis (the
+discrete-orthogonal-moments idea) and rotated back to the plain Chebyshev basis so the written equation stays
+legible. This is the only equation family fitted entirely live, so it works on runtime uploads too; the degree
+slider recomputes the fit in the browser. Fidelity saturates on hard edges, the classical moments trade-off.
+
+Reference: Mukundan et al. 2001 (Tchebichef moments).
+
+## 9. Fourier descriptors / epicycles (live)
 
 The dominant closed contour of the selected image is traced (Otsu threshold, largest connected component,
 Moore-neighbour boundary following), resampled by arc length, and transformed: the outline becomes a sum of
@@ -71,7 +104,7 @@ one-dimensional closed curve this reduction is exact in the limit, the honest en
 
 Reference: the classical Fourier-descriptor shape literature (Zahn and Roskies 1972).
 
-## 7. Learned generative latents (offline bake, live scrub)
+## 10. Learned generative latents (offline bake, live scrub)
 
 An autoencoder or diffusion model maps the selected image to a low-dimensional latent and back: `z = E(x)`,
 `x_hat = D(z)`. The VAE tab shows this image's own reconstruction (frame 0) and then decodes increasing

@@ -89,6 +89,41 @@ export const CITATIONS: Citation[] = [
     doi: '10.1109/TIT.2006.871582',
   },
   {
+    id: 'mallat1993mp',
+    label: 'Mallat and Zhang 1993',
+    citation:
+      'Mallat S. G., Zhang Z. (1993). Matching Pursuits with Time-Frequency Dictionaries. IEEE Trans. Signal Processing 41(12), 3397-3415.',
+    doi: '10.1109/78.258082',
+  },
+  {
+    id: 'daugman1985gabor',
+    label: 'Daugman 1985',
+    citation:
+      'Daugman J. G. (1985). Uncertainty relation for resolution in space, spatial frequency, and orientation optimized by two-dimensional visual cortical filters. J. Optical Society of America A 2(7), 1160-1169.',
+    doi: '10.1364/JOSAA.2.001160',
+  },
+  {
+    id: 'zhang2024gaussianimage',
+    label: 'Zhang et al. 2024',
+    citation:
+      'Zhang X., Ge X., Xu T., He D., Wang Y., Qin H., Lu G., Geng J., Zhang J. (2024). GaussianImage: 1000 FPS Image Representation and Compression by 2D Gaussian Splatting. ECCV.',
+    url: 'https://arxiv.org/abs/2403.08551',
+  },
+  {
+    id: 'kerbl2023gs',
+    label: 'Kerbl et al. 2023',
+    citation:
+      'Kerbl B., Kopanas G., Leimkuehler T., Drettakis G. (2023). 3D Gaussian Splatting for Real-Time Radiance Field Rendering. ACM Trans. Graphics 42(4).',
+    url: 'https://arxiv.org/abs/2308.04079',
+  },
+  {
+    id: 'mukundan2001tcheb',
+    label: 'Mukundan et al. 2001',
+    citation:
+      'Mukundan R., Ong S. H., Lee P. A. (2001). Image Analysis by Tchebichef Moments. IEEE Trans. Image Processing 10(9), 1357-1364.',
+    doi: '10.1109/83.941859',
+  },
+  {
     id: 'li2020diffvg',
     label: 'Li et al. 2020',
     citation:

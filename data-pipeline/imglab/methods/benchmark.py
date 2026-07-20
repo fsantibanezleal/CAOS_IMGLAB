@@ -217,7 +217,6 @@ def main() -> None:
                            "params": "4x32x32 latent", "note": "encode-decode reconstruction (committed)"})
 
     # Symbolic equation: the committed per-image fit PSNR (closed-form trig, 512 terms)
-    sym_idx = DERIVED / "_sym" / "index.json"
     sp = []
     for i in SUBSET:
         sf = DERIVED / "_sym" / f"{i}.json"
@@ -226,6 +225,34 @@ def main() -> None:
     if sp:
         budget.append({"family": "Symbolic equation", "psnr": round(float(np.mean(sp)), 2), "ssim": None,
                        "params": "512 trig terms", "note": "random-Fourier ridge fit (committed)"})
+
+    # Gabor atoms and the Gaussian mixture: committed per-image fit PSNRs
+    for group, label, params, note in (
+        ("_gabor", "Gabor atoms", "250 wave packets", "matching pursuit (committed)"),
+        ("_gsplat", "Gaussian mixture", "200 Gaussians", "2D splatting, Adam (committed)"),
+    ):
+        vals = []
+        for i in SUBSET:
+            f2_ = DERIVED / group / f"{i}.json"
+            if f2_.exists():
+                vals.append(json.loads(f2_.read_text())["psnr"])
+        if vals:
+            budget.append({"family": label, "psnr": round(float(np.mean(vals)), 2), "ssim": None,
+                           "params": params, "note": note})
+
+    # Chebyshev polynomial series: computed here directly (the live-lane algorithm, deg 24)
+    def cheb_psnr(x: np.ndarray, deg: int = 24) -> float:
+        n = x.shape[0]
+        t = np.linspace(-1, 1, n)
+        V = np.polynomial.chebyshev.chebvander(t, deg)  # (n, deg+1)
+        Q, _ = np.linalg.qr(V)
+        rec = Q @ (Q.T @ x @ Q) @ Q.T
+        rec = np.clip(rec, 0, 1)
+        return psnr(x, rec.astype(np.float32))
+
+    cp = [float(cheb_psnr(x)) for x in imgs]
+    budget.append({"family": "Chebyshev series", "psnr": round(float(np.mean(cp)), 2), "ssim": None,
+                   "params": "625 poly terms", "note": "degree-24 tensor series (live-lane algorithm)"})
 
     (OUT / "index.json").write_text(
         json.dumps({"images": SUBSET, "size": SIZE, "fracs": FRACS, "rd": rd, "budget": budget, "locality": loc}, indent=2),
