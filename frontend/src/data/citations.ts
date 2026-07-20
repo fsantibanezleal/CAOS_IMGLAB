@@ -88,6 +88,13 @@ export const CITATIONS: Citation[] = [
     citation: 'Donoho D. L. (2006). Compressed sensing. IEEE Trans. Information Theory 52(4).',
     doi: '10.1109/TIT.2006.871582',
   },
+  {
+    id: 'li2020diffvg',
+    label: 'Li et al. 2020',
+    citation:
+      'Li T.-M., Lukac M., Gharbi M., Ragan-Kelley J. (2020). Differentiable Vector Graphics Rasterization for Editing and Learning. ACM Trans. Graphics 39(6) (SIGGRAPH Asia).',
+    doi: '10.1145/3414685.3417871',
+  },
   // --- implicit neural representations ---
   {
     id: 'sitzmann2020siren',

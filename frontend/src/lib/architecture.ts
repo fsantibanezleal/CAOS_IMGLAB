@@ -58,10 +58,11 @@ const svgOffline = FRAME(
     box(214, 82, 100, 34, 'KLT / PCA') +
     box(322, 82, 114, 34, 'dictionaries') +
     box(214, 124, 100, 34, 'SIREN (INR)') +
-    box(322, 124, 114, 34, 'VAE walks') +
+    box(322, 124, 114, 34, 'VAE strips') +
     box(214, 166, 100, 34, 'diffusion') +
     box(322, 166, 114, 34, 'primitives') +
-    box(214, 210, 222, 30, 'benchmark (fidelity + locality)') +
+    box(214, 210, 100, 30, 'equation fit') +
+    box(322, 210, 114, 30, 'benchmark') +
     arrow(450, 149, 496, 149) +
     box(500, 108, 132, 82, 'data/derived', 'compact indices + arrays', C_DESIGN),
 );
@@ -77,7 +78,7 @@ const svgLive = FRAME(
     label(439, 68, 'engines', 'middle', '0.7') +
     box(348, 78, 182, 30, 'FFT / block DCT (TypeScript)') +
     box(348, 116, 182, 30, 'wavelet lifting, OMP sparse') +
-    box(348, 154, 182, 30, 'SIREN / CPPN (WebGL2 shader)') +
+    box(348, 154, 182, 30, 'SIREN / equation (WebGL2 shader)') +
     box(348, 192, 182, 30, 'epicycles, primitive render') +
     arrow(544, 149, 588, 149) +
     box(590, 120, 56, 58, 'canvas', '', C_DESIGN),
@@ -116,9 +117,9 @@ export const ARCHITECTURE: ArchitectureConfig = {
       es: 'Precalculado offline',
       svg: svgOffline,
       body_en:
-        'The heavy representations are baked once, offline, by a deterministic Python pipeline (imglab.methods) in its own environment. It learns a patch KLT basis and sparse dictionaries, trains a small sinusoidal network (SIREN) per image, decodes latent-interpolation walks with the Stable Diffusion VAE, generates diffusion strips with SD-Turbo, fits geometric primitives, and finally measures the cross-family benchmark. Each writes a compact index plus its arrays under data/derived, which is committed to the repo.\n\nThe artifacts are the deployable inputs: the bake is reproducible from the repo but never runs at request time.',
+        'The heavy representations are baked once, offline, by a deterministic Python pipeline (imglab.methods) in its own environment. It learns a patch KLT basis and sparse dictionaries, trains a small sinusoidal network (SIREN) per image, fits each image as a closed-form trigonometric equation, encodes and perturbs the latent of each image with the Stable Diffusion VAE, regenerates each image with SD-Turbo image-to-image, fits geometric primitives, and finally measures the cross-family benchmark. Each writes a compact index plus its arrays under data/derived, which is committed to the repo.\n\nThe artifacts are the deployable inputs: the bake is reproducible from the repo but never runs at request time.',
       body_es:
-        'Las representaciones pesadas se precalculan una vez, offline, con un pipeline determinista de Python (imglab.methods) en su propio entorno. Aprende una base KLT por parches y diccionarios dispersos, entrena una pequeña red sinusoidal (SIREN) por imagen, decodifica caminatas de interpolación latente con el VAE de Stable Diffusion, genera tiras de difusión con SD-Turbo, ajusta primitivas geométricas y finalmente mide el benchmark entre familias. Cada uno escribe un índice compacto y sus arreglos bajo data/derived, que se versiona en el repo.\n\nLos artefactos son las entradas desplegables: el precálculo es reproducible desde el repo pero nunca se ejecuta en tiempo de petición.',
+        'Las representaciones pesadas se precalculan una vez, offline, con un pipeline determinista de Python (imglab.methods) en su propio entorno. Aprende una base KLT por parches y diccionarios dispersos, entrena una pequeña red sinusoidal (SIREN) por imagen, ajusta cada imagen como una ecuación trigonométrica de forma cerrada, codifica y perturba el latente de cada imagen con el VAE de Stable Diffusion, regenera cada imagen con SD-Turbo imagen-a-imagen, ajusta primitivas geométricas y finalmente mide el benchmark entre familias. Cada uno escribe un índice compacto y sus arreglos bajo data/derived, que se versiona en el repo.\n\nLos artefactos son las entradas desplegables: el precálculo es reproducible desde el repo pero nunca se ejecuta en tiempo de petición.',
     },
     {
       id: 'live',

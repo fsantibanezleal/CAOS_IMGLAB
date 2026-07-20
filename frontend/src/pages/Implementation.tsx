@@ -25,8 +25,8 @@ export default function Implementation() {
       <p>
         <span className="il-badge replay">{t('replay', 'replay')}</span>{' '}
         {t(
-          'Learned dictionaries, trained neural fields, generative latent walks and diffusion sequences are too heavy for the browser: they are computed once, offline, and the app replays the committed artifacts.',
-          'Los diccionarios aprendidos, los campos neuronales entrenados, las caminatas en latentes generativos y las secuencias de difusión son demasiado pesados para el navegador: se calculan una vez, offline, y la app reproduce los artefactos versionados.',
+          'Learned dictionaries, trained neural fields, the per-image VAE latent strips and the per-image diffusion regenerations are too heavy for the browser: they are computed once, offline, for every curated image, and the app replays the committed artifacts of whichever image is selected.',
+          'Los diccionarios aprendidos, los campos neuronales entrenados, las tiras latentes VAE por imagen y las regeneraciones de difusión por imagen son demasiado pesados para el navegador: se calculan una vez, offline, para cada imagen curada, y la app reproduce los artefactos versionados de la imagen seleccionada.',
         )}
       </p>
       <p>
