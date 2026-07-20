@@ -207,25 +207,25 @@ def main() -> None:
         li = json.loads((DERIVED / "_inr" / "photo_parrots.json").read_text())
         nweights = sum(len(np.ravel(w)) for layer in li["layers"] for w in (layer["w"], layer["b"]))
         budget.append({"family": "Neural field (INR)", "psnr": inr, "ssim": None, "params": f"~{nweights} weights", "note": "SIREN per image (committed)"})
-    # VAE reconstruction: PSNR(source, decode(encode(source))) = frame 0 of the interpolation walk
+    # VAE reconstruction: the committed per-image recon PSNR (frame 0 = decode(encode(x)))
     vae_idx = DERIVED / "_vae" / "index.json"
     if vae_idx.exists():
         vidx = json.loads(vae_idx.read_text())
-        vp = []
-        for w in vidx["walks"]:
-            if w["kind"] != "interpolate":
-                continue
-            src = w["a"]
-            if src not in SUBSET:
-                continue
-            f0 = DERIVED / "_vae" / w["id"] / "00.png"
-            if f0.exists():
-                rec = np.asarray(Image.open(f0).convert("RGB"), np.float32) / 255
-                orig = np.asarray(Image.open(IMAGES / f"{src}.png").convert("RGB").resize((rec.shape[1], rec.shape[0]), Image.LANCZOS), np.float32) / 255
-                vp.append(psnr(orig, rec))
+        vp = [e["psnr"] for e in vidx.get("images", []) if e["id"] in SUBSET and "psnr" in e]
         if vp:
             budget.append({"family": "VAE latent", "psnr": round(float(np.mean(vp)), 2), "ssim": None,
                            "params": "4x32x32 latent", "note": "encode-decode reconstruction (committed)"})
+
+    # Symbolic equation: the committed per-image fit PSNR (closed-form trig, 512 terms)
+    sym_idx = DERIVED / "_sym" / "index.json"
+    sp = []
+    for i in SUBSET:
+        sf = DERIVED / "_sym" / f"{i}.json"
+        if sf.exists():
+            sp.append(json.loads(sf.read_text())["psnr"])
+    if sp:
+        budget.append({"family": "Symbolic equation", "psnr": round(float(np.mean(sp)), 2), "ssim": None,
+                       "params": "512 trig terms", "note": "random-Fourier ridge fit (committed)"})
 
     (OUT / "index.json").write_text(
         json.dumps({"images": SUBSET, "size": SIZE, "fracs": FRACS, "rd": rd, "budget": budget, "locality": loc}, indent=2),

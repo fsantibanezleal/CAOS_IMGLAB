@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "imglab"
 # PEP 440 form of the display version X.XX.XXX (see CHANGELOG.md + imglab.__version__).
-version = "0.1.0"
+version = "0.2.0"
 description = "ImageLab offline data-pipeline: represent one image across the spectrum of mathematics (transforms, frames, primitives, implicit neural fields, symbolic formula art, generative latents) and bake compact web artifacts."
 readme = "README.md"
 requires-python = ">=3.11"

@@ -70,12 +70,12 @@ def main() -> int:
         for img_id in (idx or {}).get(key, []):
             _need(f"{group}/{img_id}.json", errs)
 
-    # 4) frame-strip artifacts (VAE latent walks, diffusion strips)
-    for group, key in (("_vae", "walks"), ("_diff", "strips")):
+    # 4) per-image frame strips (VAE latent perturbation, diffusion img2img)
+    for group in ("_vae", "_diff"):
         if not _group_present(group):
             continue
         idx = _load(f"{group}/index.json", errs)
-        for item in (idx or {}).get(key, []):
+        for item in (idx or {}).get("images", []):
             for i in range(item.get("frames", 0)):
                 _need(f"{group}/{item['id']}/{i:02d}.png", errs)
 

@@ -55,7 +55,7 @@ export default function Methodology() {
       label: t('Neural fields', 'Campos neuronales'),
       content: (
         <div className="il-doc" style={{ margin: 0 }}>
-          <h3>{t('Implicit neural representations', 'Representaciones neuronales implicitas')}</h3>
+          <h3>{t('Implicit neural representations', 'Representaciones neuronales implícitas')}</h3>
           <p>
             {t('A small multilayer perceptron is overfit to one image, mapping a coordinate to a colour. With a Fourier feature encoding or periodic activations it captures high frequencies; the stored object is the weight vector, a learned descendant of closed-form pixel art ',
               'Un pequeño perceptrón multicapa se sobreajusta a una imagen, mapeando una coordenada a un color. Con una codificación de rasgos de Fourier o activaciones periódicas captura altas frecuencias; el objeto almacenado es el vector de pesos, un descendiente aprendido del arte de fórmula por pixel ')}
