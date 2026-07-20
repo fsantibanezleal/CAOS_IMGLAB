@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { SubTabs, Equation, Callout, Cite, Refs, type SubTabDef } from '@fasl-work/caos-app-shell';
+import { Download } from 'lucide-react';
 import { useT } from '../../lib/i18n';
 import type { PanelProps, TabModule } from '../registry';
 import { paintPlanes, type ImagePlanes } from '../../engine/image';
-import { loadSym, loadSymIndex, packSym, perturbSym, SymRenderer, type SymDoc } from '../../engine/symbolic';
+import { CHANNEL_NAMES, loadSym, loadSymIndex, packSym, perturbSym, symEquationTex, symEquationText, SymRenderer, type Channel, type SymDoc } from '../../engine/symbolic';
 
 const RENDER = 288;
 
@@ -21,6 +22,7 @@ function SymbolicPanel({ entry, planes }: PanelProps) {
   const [doc, setDoc] = useState<SymDoc | null>(null);
   const [perturb, setPerturb] = useState(0);
   const [scale, setScale] = useState(1);
+  const [ch, setCh] = useState<Channel>(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<SymRenderer | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -76,6 +78,15 @@ function SymbolicPanel({ entry, planes }: PanelProps) {
   if (err) return <div className="il-panel il-panel-sub">{t('Renderer error: ', 'Error del renderizador: ')}<code>{err}</code></div>;
   if (!doc || !planes) return <div className="il-panel il-panel-sub">{t('Loading the equation...', 'Cargando la ecuación...')}</div>;
 
+  const downloadEquation = () => {
+    const blob = new Blob([symEquationText(doc, entry.id)], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `imglab-equation-${entry.id}.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+
   const tabs: SubTabDef[] = [
     {
       id: 'equation',
@@ -125,6 +136,47 @@ function SymbolicPanel({ entry, planes }: PanelProps) {
               <figcaption>{t('The equation, evaluated per pixel', 'La ecuación, evaluada por pixel')}</figcaption>
             </figure>
           </div>
+        </div>
+      ),
+    },
+    {
+      id: 'written',
+      label: t('Written equation', 'Ecuación escrita'),
+      content: (
+        <div className="il-doc" style={{ margin: 0 }}>
+          <p>
+            {t(
+              'This is the actual fitted equation of the selected image, with its real coefficients: the terms below are the largest of the ',
+              'Esta es la ecuación ajustada real de la imagen seleccionada, con sus coeficientes reales: los términos de abajo son los mayores de los ',
+            )}
+            {doc.d}
+            {t(
+              ' per channel, in amplitude-phase form. Evaluate it at any (x, y) in [-1, 1] and you reproduce the picture on the previous sub-tab.',
+              ' por canal, en forma amplitud-fase. Evalúala en cualquier (x, y) en [-1, 1] y reproduces la imagen de la sub-pestaña anterior.',
+            )}
+          </p>
+          <div className="il-chips" style={{ marginBottom: '0.5rem' }}>
+            {CHANNEL_NAMES.map((name, i) => (
+              <button key={name} className={`chip${ch === i ? ' on' : ''}`} onClick={() => setCh(i as Channel)}>
+                {t('channel', 'canal')} {name}
+              </button>
+            ))}
+            <button className="chip" onClick={downloadEquation} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+              <Download size={14} /> {t('Download the full equation (.txt)', 'Descargar la ecuación completa (.txt)')}
+            </button>
+          </div>
+          <Equation tex={symEquationTex(doc, ch)} />
+          <p className="il-panel-sub">
+            {t(
+              'The download carries every term of all three channels (',
+              'La descarga lleva cada término de los tres canales (',
+            )}
+            {3 * doc.d}
+            {t(
+              ' cosines plus three offsets), the complete closed-form description of this image at the fitted resolution. Nothing is hidden: the picture and the formula are the same object.',
+              ' cosenos más tres constantes), la descripción de forma cerrada completa de esta imagen a la resolución ajustada. Nada queda oculto: la imagen y la fórmula son el mismo objeto.',
+            )}
+          </p>
         </div>
       ),
     },

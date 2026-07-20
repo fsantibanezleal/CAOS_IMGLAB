@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { SubTabs, Equation, type SubTabDef } from '@fasl-work/caos-app-shell';
+import { SubTabs, Equation, Cite, Refs, type SubTabDef } from '@fasl-work/caos-app-shell';
 import { useT } from '../../lib/i18n';
 import type { PanelProps, TabModule } from '../registry';
 import { paintPlanes, type ImagePlanes } from '../../engine/image';
@@ -104,9 +104,12 @@ function PrimitivesPanel({ entry, planes }: PanelProps) {
           <p>{t('Greedily add the shape that most reduces the reconstruction error; the error-optimal colour of each shape is solved in closed form at a fixed opacity.', 'Agregar de forma voraz la forma que más reduce el error de reconstrucción; el color óptimo de cada forma se resuelve en forma cerrada a una opacidad fija.')}</p>
           <Equation tex={String.raw`\text{shape}_{i}=\arg\max_{s}\ \big\lVert x-\hat x_{i-1}\big\rVert^2-\big\lVert x-\text{blend}(\hat x_{i-1},s)\big\rVert^2`} />
           <p>
-            {t('a hill-climbing, difference-free version of the primitive and stroke-based rendering line; the modern differentiable-vectorization descendants optimize Bezier paths against a perceptual loss instead. Each primitive is a local, interpretable coordinate, so an edit stays local, the defining property of the semantic-local pole.',
-              'una versión por escalada de colina, sin diferenciación, de la línea de render por primitivas y trazos; los descendientes modernos de vectorización diferenciable optimizan curvas de Bezier contra una pérdida perceptual. Cada primitiva es una coordenada local e interpretable, así que una edición se mantiene local, la propiedad definitoria del polo semántico-local.')}
+            {t('a hill-climbing, difference-free version of the primitive and stroke-based rendering line; the modern differentiable-vectorization descendants optimize Bezier paths against a perceptual loss instead ',
+              'una versión por escalada de colina, sin diferenciación, de la línea de render por primitivas y trazos; los descendientes modernos de vectorización diferenciable optimizan curvas de Bezier contra una pérdida perceptual ')}
+            (<Cite id="li2020diffvg" />). {t('Each primitive is a local, interpretable coordinate, so an edit stays local, the defining property of the semantic-local pole.',
+              'Cada primitiva es una coordenada local e interpretable, así que una edición se mantiene local, la propiedad definitoria del polo semántico-local.')}
           </p>
+          <Refs label={t('References', 'Referencias')} ids={['li2020diffvg']} />
         </div>
       ),
     },

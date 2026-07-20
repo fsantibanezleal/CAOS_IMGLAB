@@ -56,6 +56,67 @@ export function perturbSym(flat: Float32Array, D: number, amount: number, seed =
   return out;
 }
 
+export type Channel = 0 | 1 | 2;
+export const CHANNEL_NAMES = ['R', 'G', 'B'] as const;
+
+interface SymTerm {
+  amp: number; // A_k = sqrt(a_k^2 + b_k^2)
+  phase: number; // phi_k = atan2(b_k, a_k), so a cos t + b sin t = A cos(t - phi)
+  fx: number;
+  fy: number;
+}
+
+/** The channel's terms in amplitude-phase form, sorted by descending amplitude. */
+function channelTerms(doc: SymDoc, ch: Channel): SymTerm[] {
+  const D = doc.d;
+  const terms: SymTerm[] = [];
+  for (let k = 0; k < D; k++) {
+    const a = doc.acos[ch * D + k];
+    const b = doc.bsin[ch * D + k];
+    terms.push({ amp: Math.hypot(a, b), phase: Math.atan2(b, a), fx: doc.omega[2 * k], fy: doc.omega[2 * k + 1] });
+  }
+  terms.sort((p, q) => q.amp - p.amp);
+  return terms;
+}
+
+const f2 = (v: number) => (Object.is(v, -0) ? 0 : v).toFixed(2);
+const f3 = (v: number) => (Object.is(v, -0) ? 0 : v).toFixed(3);
+
+/** KaTeX for the ACTUAL fitted equation of one channel: the top `n` terms with their real numbers. */
+export function symEquationTex(doc: SymDoc, ch: Channel, n = 8): string {
+  const terms = channelTerms(doc, ch);
+  const name = CHANNEL_NAMES[ch];
+  const lines: string[] = [`${name}(x,y) = {} & ${f3(doc.bias[ch])}`];
+  for (const t of terms.slice(0, n)) {
+    const fy = t.fy >= 0 ? `+${f2(t.fy)}` : f2(t.fy);
+    const ph = t.phase >= 0 ? `-${f2(t.phase)}` : `+${f2(-t.phase)}`;
+    lines.push(`& +\\;${f3(t.amp)}\\,\\cos(${f2(t.fx)}x${fy}y${ph})`);
+  }
+  const rest = doc.d - n;
+  if (rest > 0) lines.push(`& +\\;\\cdots\\;(${rest}\\ \\text{more terms})`);
+  return `\\begin{aligned}${lines.join(' \\\\ ')}\\end{aligned}`;
+}
+
+/** The COMPLETE fitted equation of the image as plain text (all D terms, all three channels). */
+export function symEquationText(doc: SymDoc, imageId: string): string {
+  const out: string[] = [
+    `ImageLab, the fitted closed-form equation of "${imageId}"`,
+    `model: ch(x,y) = a0 + sum_k A_k*cos(fx_k*x + fy_k*y - phi_k), x,y in [-1,1]`,
+    `terms per channel: ${doc.d} (random Fourier features, sigma=${doc.sigma}), fit PSNR ${doc.psnr} dB`,
+    ``,
+  ];
+  for (const ch of [0, 1, 2] as Channel[]) {
+    const terms = channelTerms(doc, ch);
+    out.push(`${CHANNEL_NAMES[ch]}(x,y) =`);
+    out.push(`  ${doc.bias[ch].toFixed(5)}`);
+    for (const t of terms) {
+      out.push(`  + ${t.amp.toFixed(5)}*cos(${t.fx.toFixed(4)}*x + ${t.fy.toFixed(4)}*y - ${t.phase.toFixed(4)})`);
+    }
+    out.push(``);
+  }
+  return out.join('\n');
+}
+
 const VERT = `#version 300 es
 in vec2 aPos;
 void main() { gl_Position = vec4(aPos, 0.0, 1.0); }`;

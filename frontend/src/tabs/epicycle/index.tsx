@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { SubTabs, Equation, Cite, Refs, type SubTabDef } from '@fasl-work/caos-app-shell';
-import { Pause, Play } from 'lucide-react';
+import { Download, Pause, Play } from 'lucide-react';
 import { useT } from '../../lib/i18n';
 import type { PanelProps, TabModule } from '../registry';
-import { type Contour, epicycleChain, imageContour, reconstructPath } from '../../engine/epicycle';
+import { type Contour, epicycleChain, epicycleEquationTex, epicycleEquationText, imageContour, reconstructPath } from '../../engine/epicycle';
 
-function EpicyclePanel({ planes }: PanelProps) {
+function EpicyclePanel({ entry, planes }: PanelProps) {
   const t = useT();
   const [k, setK] = useState(24);
   const [playing, setPlaying] = useState(false);
@@ -149,6 +149,47 @@ function EpicyclePanel({ planes }: PanelProps) {
               <figcaption>{t('Reconstruction from', 'Reconstrucción con')} {k} {t('rotating circles', 'círculos rotatorios')}</figcaption>
             </figure>
           </div>
+        </div>
+      ),
+    },
+    {
+      id: 'equation',
+      label: t('The equation', 'La ecuación'),
+      content: (
+        <div className="il-doc" style={{ margin: 0 }}>
+          <p>
+            {t(
+              'This is the actual parametric equation of the traced contour, with its real Fourier-descriptor coefficients. Each term is one rotating circle: amplitude, signed frequency and starting phase. Sweep t from 0 to 2*pi and the complex value z(t) draws the outline shown on the Draw sub-tab, exactly.',
+              'Esta es la ecuación paramétrica real del contorno trazado, con sus coeficientes de descriptores de Fourier reales. Cada término es un círculo rotatorio: amplitud, frecuencia con signo y fase inicial. Al recorrer t de 0 a 2*pi el valor complejo z(t) dibuja el contorno de la sub-pestaña Dibujar, exactamente.',
+            )}
+          </p>
+          {contour && (
+            <>
+              <div className="il-chips" style={{ marginBottom: '0.5rem' }}>
+                <button
+                  className="chip"
+                  onClick={() => {
+                    const blob = new Blob([epicycleEquationText(contour.terms, k, entry.id)], { type: 'text/plain' });
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = `imglab-contour-equation-${entry.id}.txt`;
+                    a.click();
+                    URL.revokeObjectURL(a.href);
+                  }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                >
+                  <Download size={14} /> {t('Download all', 'Descargar todos')} {k} {t('kept terms (.txt)', 'términos conservados (.txt)')}
+                </button>
+              </div>
+              <Equation tex={epicycleEquationTex(contour.terms, k)} />
+            </>
+          )}
+          <p className="il-panel-sub">
+            {t(
+              'The equation follows the harmonics slider: keep more circles and the written sum grows with them. Because a contour is a one-dimensional closed curve, this reduction is exact in the limit, the honest end of the image-to-equation spectrum.',
+              'La ecuación sigue el deslizador de armónicos: al conservar más círculos la suma escrita crece con ellos. Como un contorno es una curva cerrada unidimensional, esta reducción es exacta en el límite, el extremo honesto del espectro imagen-a-ecuación.',
+            )}
+          </p>
         </div>
       ),
     },
