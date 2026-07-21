@@ -45,8 +45,26 @@ import { neuralTab } from './neural';
 import { primitivesTab } from './primitives';
 import { latentsTab } from './latents';
 import { diffusionTab } from './diffusion';
+import { gaborTab } from './gabor';
+import { gsplatTab } from './gsplat';
+import { polyTab } from './poly';
 
-export const TABS: TabModule[] = [fourierTab, dctTab, waveletTab, kltTab, framesTab, primitivesTab, neuralTab, symbolicTab, epicycleTab, latentsTab, diffusionTab];
+export const TABS: TabModule[] = [
+  fourierTab,
+  dctTab,
+  waveletTab,
+  kltTab,
+  framesTab,
+  primitivesTab,
+  neuralTab,
+  symbolicTab,
+  gaborTab,
+  gsplatTab,
+  polyTab,
+  epicycleTab,
+  latentsTab,
+  diffusionTab,
+];
 
 export function tabsByFamily(family: Family): TabModule[] {
   return TABS.filter((t) => t.family === family);

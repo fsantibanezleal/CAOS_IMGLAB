@@ -61,7 +61,7 @@ const svgOffline = FRAME(
     box(322, 124, 114, 34, 'VAE strips') +
     box(214, 166, 100, 34, 'diffusion') +
     box(322, 166, 114, 34, 'primitives') +
-    box(214, 210, 100, 30, 'equation fit') +
+    box(214, 210, 100, 30, 'equation fits') +
     box(322, 210, 114, 30, 'benchmark') +
     arrow(450, 149, 496, 149) +
     box(500, 108, 132, 82, 'data/derived', 'compact indices + arrays', C_DESIGN),
@@ -117,9 +117,9 @@ export const ARCHITECTURE: ArchitectureConfig = {
       es: 'Precalculado offline',
       svg: svgOffline,
       body_en:
-        'The heavy representations are baked once, offline, by a deterministic Python pipeline (imglab.methods) in its own environment. It learns a patch KLT basis and sparse dictionaries, trains a small sinusoidal network (SIREN) per image, fits each image as a closed-form trigonometric equation, encodes and perturbs the latent of each image with the Stable Diffusion VAE, regenerates each image with SD-Turbo image-to-image, fits geometric primitives, and finally measures the cross-family benchmark. Each writes a compact index plus its arrays under data/derived, which is committed to the repo.\n\nThe artifacts are the deployable inputs: the bake is reproducible from the repo but never runs at request time.',
+        'The heavy representations are baked once, offline, by a deterministic Python pipeline (imglab.methods) in its own environment. It learns a patch KLT basis and sparse dictionaries, trains a small sinusoidal network (SIREN) per image, fits each image as closed-form equations (a trigonometric series, Gabor atoms by matching pursuit, and a 2D Gaussian mixture by gradient descent), encodes and perturbs the latent of each image with the Stable Diffusion VAE, regenerates each image with SD-Turbo image-to-image, fits geometric primitives, and finally measures the cross-family benchmark. Each writes a compact index plus its arrays under data/derived, which is committed to the repo.\n\nThe artifacts are the deployable inputs: the bake is reproducible from the repo but never runs at request time.',
       body_es:
-        'Las representaciones pesadas se precalculan una vez, offline, con un pipeline determinista de Python (imglab.methods) en su propio entorno. Aprende una base KLT por parches y diccionarios dispersos, entrena una pequeña red sinusoidal (SIREN) por imagen, ajusta cada imagen como una ecuación trigonométrica de forma cerrada, codifica y perturba el latente de cada imagen con el VAE de Stable Diffusion, regenera cada imagen con SD-Turbo imagen-a-imagen, ajusta primitivas geométricas y finalmente mide el benchmark entre familias. Cada uno escribe un índice compacto y sus arreglos bajo data/derived, que se versiona en el repo.\n\nLos artefactos son las entradas desplegables: el precálculo es reproducible desde el repo pero nunca se ejecuta en tiempo de petición.',
+        'Las representaciones pesadas se precalculan una vez, offline, con un pipeline determinista de Python (imglab.methods) en su propio entorno. Aprende una base KLT por parches y diccionarios dispersos, entrena una pequeña red sinusoidal (SIREN) por imagen, ajusta cada imagen como ecuaciones de forma cerrada (una serie trigonométrica, átomos de Gabor por matching pursuit y una mezcla gaussiana 2D por descenso de gradiente), codifica y perturba el latente de cada imagen con el VAE de Stable Diffusion, regenera cada imagen con SD-Turbo imagen-a-imagen, ajusta primitivas geométricas y finalmente mide el benchmark entre familias. Cada uno escribe un índice compacto y sus arreglos bajo data/derived, que se versiona en el repo.\n\nLos artefactos son las entradas desplegables: el precálculo es reproducible desde el repo pero nunca se ejecuta en tiempo de petición.',
     },
     {
       id: 'live',
