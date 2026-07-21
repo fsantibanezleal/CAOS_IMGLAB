@@ -36,6 +36,8 @@ def main() -> None:
 
     torch.manual_seed(0)
     pipe = AutoPipelineForImage2Image.from_pretrained(MODEL, torch_dtype=torch.float32, safety_checker=None)
+    if torch.cuda.is_available():
+        pipe = pipe.to("cuda")
     pipe.set_progress_bar_config(disable=True)
     OUT.mkdir(parents=True, exist_ok=True)
 

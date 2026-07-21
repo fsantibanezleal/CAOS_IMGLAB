@@ -36,6 +36,8 @@ def main() -> None:
 
     vae = AutoencoderKL.from_pretrained(VAE_ID)
     vae.eval()
+    dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    vae = vae.to(dev)
     sf = vae.config.scaling_factor
     OUT.mkdir(parents=True, exist_ok=True)
 
@@ -52,7 +54,7 @@ def main() -> None:
     def decode(lat):
         with torch.no_grad():
             out = vae.decode(lat / sf).sample
-        img = ((out[0].permute(1, 2, 0).clamp(-1, 1) + 1) / 2).numpy()
+        img = ((out[0].permute(1, 2, 0).clamp(-1, 1) + 1) / 2).cpu().numpy()
         return (np.clip(img, 0, 1) * 255).astype(np.uint8)
 
     done = []
@@ -61,7 +63,7 @@ def main() -> None:
         if not f.exists():
             continue
         arr = np.asarray(Image.open(f).convert("RGB").resize((SIZE, SIZE), Image.LANCZOS), dtype=np.float32) / 255.0
-        x = torch.from_numpy(arr).permute(2, 0, 1)[None] * 2 - 1
+        x = (torch.from_numpy(arr).permute(2, 0, 1)[None] * 2 - 1).to(dev)
         lat = encode(x)
         g = torch.randn_like(lat)
         d = OUT / img_id

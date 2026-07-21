@@ -202,6 +202,27 @@
       "ssim": null,
       "params": "512 trig terms",
       "note": "random-Fourier ridge fit (committed)"
+    },
+    {
+      "family": "Gabor atoms",
+      "psnr": 32.05,
+      "ssim": null,
+      "params": "250 wave packets",
+      "note": "matching pursuit (committed)"
+    },
+    {
+      "family": "Gaussian mixture",
+      "psnr": 30.48,
+      "ssim": null,
+      "params": "300 Gaussians",
+      "note": "2D splatting, Adam on GPU (committed)"
+    },
+    {
+      "family": "Chebyshev series",
+      "psnr": 28.88,
+      "ssim": null,
+      "params": "625 poly terms",
+      "note": "degree-24 tensor series (live-lane algorithm)"
     }
   ],
   "locality": [

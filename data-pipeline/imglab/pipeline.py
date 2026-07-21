@@ -38,8 +38,8 @@ def _method(name: str) -> None:
     mod.main()
 
 
-LIGHT = ["klt_basis", "dictionaries", "primitives_fit", "symbolic_fit", "benchmark"]
-HEAVY = ["inr_train", "vae_latents", "diffusion_strips"]
+LIGHT = ["klt_basis", "dictionaries", "primitives_fit", "symbolic_fit", "gabor_fit", "benchmark"]
+HEAVY = ["inr_train", "gaussians_fit", "vae_latents", "diffusion_strips"]
 
 GROUPS = {
     "images": lambda: run_images(),
