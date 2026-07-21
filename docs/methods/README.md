@@ -1,6 +1,6 @@
 # Methods, the representation families
 
-ImageLab carries one image across ten families of mathematical representation, ordered along the editability
+ImageLab carries one image across twelve families of mathematical representation, ordered along the editability
 curve. Each family is a tab in the app; each tab's Method sub-tab transcribes the theory below with rendered
 equations and references. A representation is a way to write an image as parameters; the question every tab asks
 is what a perturbation of those parameters does.
@@ -83,7 +83,19 @@ Gaussian.
 
 References: Zhang et al. 2024 (GaussianImage, ECCV); Kerbl et al. 2023 (3D Gaussian splatting).
 
-## 8. Chebyshev polynomial series (fitted LIVE in the browser)
+## 8. Radial basis functions, thin-plate spline (offline solve, live shader + written equation)
+
+The image is written as a linear combination of the same thin-plate radial kernel centered on a fixed grid,
+plus an affine plane: `ch(x, y) = a0 + a1 x + a2 y + sum_i w_i,ch phi(||(x,y) - c_i||)` with `phi(r) = r^2 log r`.
+Unlike the Gaussian mixture (free anisotropic bumps found by gradient descent), the centers and kernel are
+FIXED and only the linear weights are fitted, in closed form by ridge-regularized least squares (one linear
+solve, ~0.2 s). The thin-plate spline is the smoothest interpolant of scattered data; broad content is
+captured cleanly and sharp edges soften, the honest signature of a smooth interpolation equation. All 18
+baked; rendered live per pixel.
+
+References: Bookstein 1989 (thin-plate splines); Hardy 1971 (multiquadrics, the origin of radial basis functions).
+
+## 9. Chebyshev polynomial series (fitted LIVE in the browser)
 
 Each channel is written as a truncated tensor polynomial series, `ch(x, y) = sum_ij a_ij T_j(x) T_i(y)` with
 `T_k(t) = cos(k arccos t)`, fitted by least squares with a discretely orthonormalized basis per axis (the
@@ -93,7 +105,7 @@ slider recomputes the fit in the browser. Fidelity saturates on hard edges, the 
 
 Reference: Mukundan et al. 2001 (Tchebichef moments).
 
-## 9. Fourier descriptors / epicycles (live)
+## 10. Fourier descriptors / epicycles (live)
 
 The dominant closed contour of the selected image is traced (Otsu threshold, largest connected component,
 Moore-neighbour boundary following), resampled by arc length, and transformed: the outline becomes a sum of
@@ -104,7 +116,19 @@ one-dimensional closed curve this reduction is exact in the limit, the honest en
 
 Reference: the classical Fourier-descriptor shape literature (Zahn and Roskies 1972).
 
-## 10. Learned generative latents (offline bake, live scrub)
+## 11. Gielis superformula (shape as one famous equation, live fit)
+
+The dominant silhouette of the selected image is reduced to a radial profile r(theta) about its centroid and
+fitted by the single Gielis superformula,
+`r(theta) = ( |cos(m theta/4)/a|^n2 + |sin(m theta/4)/b|^n3 )^(-1/n1)`, whose one shape parameter m sets the
+symmetry and three exponents set the sharpness (fitted live: best scale in closed form, exponents by
+coordinate descent, m by search). Symmetric figures (the rose, the star) collapse to an almost exact compact
+formula; an irregular photo silhouette gets its best m-fold-symmetric superformula. Contrast the epicycle tab,
+which writes the contour as an exact but many-term Fourier series: this is one line with five numbers.
+
+Reference: Gielis 2003 (the superformula).
+
+## 12. Learned generative latents (offline bake, live scrub)
 
 An autoencoder or diffusion model maps the selected image to a low-dimensional latent and back: `z = E(x)`,
 `x_hat = D(z)`. The VAE tab shows this image's own reconstruction (frame 0) and then decodes increasing

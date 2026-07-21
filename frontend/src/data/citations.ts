@@ -124,6 +124,27 @@ export const CITATIONS: Citation[] = [
     doi: '10.1109/83.941859',
   },
   {
+    id: 'gielis2003',
+    label: 'Gielis 2003',
+    citation:
+      'Gielis J. (2003). A generic geometric transformation that unifies a wide range of natural and abstract shapes (the superformula). American Journal of Botany 90(3), 333-338.',
+    doi: '10.3732/ajb.90.3.333',
+  },
+  {
+    id: 'bookstein1989tps',
+    label: 'Bookstein 1989',
+    citation:
+      'Bookstein F. L. (1989). Principal Warps: Thin-Plate Splines and the Decomposition of Deformations. IEEE Trans. Pattern Analysis and Machine Intelligence 11(6), 567-585.',
+    doi: '10.1109/34.24792',
+  },
+  {
+    id: 'hardy1971mq',
+    label: 'Hardy 1971',
+    citation:
+      'Hardy R. L. (1971). Multiquadric Equations of Topography and Other Irregular Surfaces. J. Geophysical Research 76(8), 1905-1915.',
+    doi: '10.1029/JB076i008p01905',
+  },
+  {
     id: 'li2020diffvg',
     label: 'Li et al. 2020',
     citation:

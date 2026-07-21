@@ -48,6 +48,8 @@ import { diffusionTab } from './diffusion';
 import { gaborTab } from './gabor';
 import { gsplatTab } from './gsplat';
 import { polyTab } from './poly';
+import { rbfTab } from './rbf';
+import { superformulaTab } from './superformula';
 
 export const TABS: TabModule[] = [
   fourierTab,
@@ -60,8 +62,10 @@ export const TABS: TabModule[] = [
   symbolicTab,
   gaborTab,
   gsplatTab,
+  rbfTab,
   polyTab,
   epicycleTab,
+  superformulaTab,
   latentsTab,
   diffusionTab,
 ];
