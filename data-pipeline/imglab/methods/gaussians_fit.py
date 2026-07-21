@@ -12,7 +12,7 @@ a sum of colored anisotropic Gaussian bumps: every term has a legible position, 
     python -m imglab.methods.gaussians_fit                 # all images
     python -m imglab.methods.gaussians_fit --ids photo_parrots
 
-Env: IMGLAB_GS_N (default 200), IMGLAB_GS_ITERS (700).
+Env: IMGLAB_GS_N (default 300), IMGLAB_GS_ITERS (1200). Uses CUDA when available, else CPU.
 """
 from __future__ import annotations
 
@@ -29,8 +29,8 @@ ROOT = Path(__file__).resolve().parents[3]
 IMAGES = ROOT / "data" / "images"
 OUT = ROOT / "data" / "derived" / "_gsplat"
 SIZE = 96
-N_GAUSS = int(os.environ.get("IMGLAB_GS_N", "200"))
-ITERS = int(os.environ.get("IMGLAB_GS_ITERS", "700"))
+N_GAUSS = int(os.environ.get("IMGLAB_GS_N", "300"))
+ITERS = int(os.environ.get("IMGLAB_GS_ITERS", "1200"))
 SEED = 0
 
 
@@ -38,25 +38,26 @@ def fit_one(img: np.ndarray):
     import torch
 
     torch.manual_seed(SEED)
+    dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     h = w = SIZE
-    lin = torch.linspace(-1, 1, SIZE)
+    lin = torch.linspace(-1, 1, SIZE, device=dev)
     yy, xx = torch.meshgrid(lin, lin, indexing="ij")
     P = torch.stack([xx.reshape(-1), yy.reshape(-1)], dim=1)  # (M,2)
-    target = torch.from_numpy(img.reshape(-1, 3).astype(np.float32))
+    target = torch.from_numpy(img.reshape(-1, 3).astype(np.float32)).to(dev)
 
     g = torch.Generator().manual_seed(SEED)
-    mu = (torch.rand(N_GAUSS, 2, generator=g) * 2 - 1).requires_grad_(True)
+    mu = (torch.rand(N_GAUSS, 2, generator=g) * 2 - 1).to(dev).requires_grad_(True)
     # log-diagonal Cholesky of the PRECISION matrix; init sigma ~ 8/96 of the field -> l ~ 1/sigma
     s0 = float(np.log(1.0 / 0.12))
-    ls = (torch.ones(N_GAUSS, 2) * s0 + torch.randn(N_GAUSS, 2, generator=g) * 0.2).requires_grad_(True)
-    lo = torch.zeros(N_GAUSS, requires_grad=True)  # off-diagonal
+    ls = (torch.ones(N_GAUSS, 2) * s0 + torch.randn(N_GAUSS, 2, generator=g) * 0.2).to(dev).requires_grad_(True)
+    lo = torch.zeros(N_GAUSS, device=dev, requires_grad=True)  # off-diagonal
     # init colors by sampling the image at mu
     with torch.no_grad():
         ix = ((mu[:, 0] + 1) / 2 * (w - 1)).long().clamp(0, w - 1)
         iy = ((mu[:, 1] + 1) / 2 * (h - 1)).long().clamp(0, h - 1)
         cinit = target.reshape(h, w, 3)[iy, ix] - img.mean()
     col = cinit.clone().requires_grad_(True)
-    bias = torch.tensor(img.reshape(-1, 3).mean(axis=0), dtype=torch.float32).requires_grad_(True)
+    bias = torch.tensor(img.reshape(-1, 3).mean(axis=0), dtype=torch.float32).to(dev).requires_grad_(True)
 
     opt = torch.optim.Adam([
         {"params": [mu], "lr": 2e-3},
@@ -89,11 +90,11 @@ def fit_one(img: np.ndarray):
     with torch.no_grad():
         l11 = torch.exp(ls[:, 0])
         l22 = torch.exp(ls[:, 1])
-        a = (l11 * l11 + lo * lo).numpy()
-        b = (lo * l22).numpy()
-        c = (l22 * l22).numpy()
+        a = (l11 * l11 + lo * lo).cpu().numpy()
+        b = (lo * l22).cpu().numpy()
+        c = (l22 * l22).cpu().numpy()
         gs = []
-        order = np.argsort(-np.abs(col.numpy()).sum(axis=1))  # biggest color mass first
+        order = np.argsort(-np.abs(col.detach().cpu().numpy()).sum(axis=1))  # biggest color mass first
         for k in order:
             gs.append(
                 {

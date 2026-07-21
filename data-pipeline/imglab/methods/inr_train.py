@@ -75,9 +75,10 @@ def _coords(n: int) -> torch.Tensor:
 
 def train_one(img: np.ndarray) -> tuple[dict, float]:
     torch.manual_seed(SEED)
-    xy = _coords(SIZE)
-    target = torch.from_numpy(img.reshape(-1, 3).astype(np.float32))
-    net = Siren()
+    dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    xy = _coords(SIZE).to(dev)
+    target = torch.from_numpy(img.reshape(-1, 3).astype(np.float32)).to(dev)
+    net = Siren().to(dev)
     opt = torch.optim.Adam(net.parameters(), lr=2e-3)
     for step in range(STEPS):
         opt.zero_grad()
@@ -90,10 +91,10 @@ def train_one(img: np.ndarray) -> tuple[dict, float]:
     psnr = 10 * np.log10(1 / mse) if mse > 0 else 99.0
 
     def w(layer):
-        return [round(float(v), 5) for v in layer.weight.detach().numpy().ravel()]
+        return [round(float(v), 5) for v in layer.weight.detach().cpu().numpy().ravel()]
 
     def b(layer):
-        return [round(float(v), 5) for v in layer.bias.detach().numpy().ravel()]
+        return [round(float(v), 5) for v in layer.bias.detach().cpu().numpy().ravel()]
 
     weights = {
         "hidden": HIDDEN,
