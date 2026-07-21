@@ -229,7 +229,7 @@ def main() -> None:
     # Gabor atoms and the Gaussian mixture: committed per-image fit PSNRs
     for group, label, params, note in (
         ("_gabor", "Gabor atoms", "250 wave packets", "matching pursuit (committed)"),
-        ("_gsplat", "Gaussian mixture", "200 Gaussians", "2D splatting, Adam (committed)"),
+        ("_gsplat", "Gaussian mixture", "300 Gaussians", "2D splatting, Adam on GPU (committed)"),
     ):
         vals = []
         for i in SUBSET:

@@ -212,10 +212,10 @@
     },
     {
       "family": "Gaussian mixture",
-      "psnr": 29.38,
+      "psnr": 30.48,
       "ssim": null,
-      "params": "200 Gaussians",
-      "note": "2D splatting, Adam (committed)"
+      "params": "300 Gaussians",
+      "note": "2D splatting, Adam on GPU (committed)"
     },
     {
       "family": "Chebyshev series",
