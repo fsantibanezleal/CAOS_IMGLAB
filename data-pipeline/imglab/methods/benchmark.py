@@ -226,10 +226,11 @@ def main() -> None:
         budget.append({"family": "Symbolic equation", "psnr": round(float(np.mean(sp)), 2), "ssim": None,
                        "params": "512 trig terms", "note": "random-Fourier ridge fit (committed)"})
 
-    # Gabor atoms and the Gaussian mixture: committed per-image fit PSNRs
+    # Gabor atoms, the Gaussian mixture, and the thin-plate RBF: committed per-image fit PSNRs
     for group, label, params, note in (
         ("_gabor", "Gabor atoms", "250 wave packets", "matching pursuit (committed)"),
-        ("_gsplat", "Gaussian mixture", "300 Gaussians", "2D splatting, Adam on GPU (committed)"),
+        ("_gsplat", "Gaussian mixture", "300 Gaussians", "2D splatting, best-of-two init on GPU (committed)"),
+        ("_rbf", "Thin-plate RBF", "225 kernels", "ridge least-squares solve (committed)"),
     ):
         vals = []
         for i in SUBSET:

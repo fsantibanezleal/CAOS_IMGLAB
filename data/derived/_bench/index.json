@@ -212,10 +212,17 @@
     },
     {
       "family": "Gaussian mixture",
-      "psnr": 30.48,
+      "psnr": 31.89,
       "ssim": null,
       "params": "300 Gaussians",
-      "note": "2D splatting, Adam on GPU (committed)"
+      "note": "2D splatting, best-of-two init on GPU (committed)"
+    },
+    {
+      "family": "Thin-plate RBF",
+      "psnr": 29.43,
+      "ssim": null,
+      "params": "225 kernels",
+      "note": "ridge least-squares solve (committed)"
     },
     {
       "family": "Chebyshev series",

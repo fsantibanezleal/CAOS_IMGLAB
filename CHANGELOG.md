@@ -5,6 +5,27 @@ the lab is under construction. Tag every release.
 
 ## [Unreleased]
 
+## [0.05.000] - 2026-07-21
+
+Two more equation families (verified from primary sources) and the Image-GS Gaussian upgrade; a CUDA pipeline.
+
+### Added
+- Superformula tab: the selected image's outline fitted LIVE by the single Gielis superformula
+  r(theta) = (|cos(m theta/4)|^n2 + |sin(m theta/4)|^n3)^(-1/n1); symmetry m, exponents and scale fitted, the
+  fitted curve drawn over the traced outline, the written equation and a parameter export.
+- Radial basis tab: the image as a thin-plate RBF equation (a weighted sum of r^2 log r kernels on a grid
+  plus an affine plane), solved in closed form by ridge least squares, rendered live in a WebGL2 shader, with
+  the written equation and a full weight export.
+
+### Changed
+- Gaussian mixture: upgraded to the verified Image-GS recipe (gradient-magnitude init + error-guided
+  progressive densification + per-attribute learning rates), run best-of-two against uniform init so no image
+  regresses. Benchmark 30.48 -> 31.89 dB.
+- Pipeline: all torch bakes are CUDA-aware (RTX 4070); the Gaussian rebake runs ~7s/image on GPU.
+- Three new verified references (Gielis 2003 superformula, Bookstein 1989 thin-plate splines, Hardy 1971
+  multiquadrics). Sixteen tabs total; the methods wiki now spans twelve families.
+
+
 ## [0.04.000] - 2026-07-20
 
 Three new equation families, from a deep research pass over the image-as-equation landscape: every family is
