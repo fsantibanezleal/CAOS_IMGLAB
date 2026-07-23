@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="660" height="330" viewBox="0 0 660 330" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="au" markerWidth="8" markerHeight="8" refX="6" refY="2.5" orient="auto"><path d="M0,0 L6,2.5 L0,5 Z" fill="#4a5568"/></marker>
+    <style>
+      .ax{stroke:#4a5568;stroke-width:1.3;fill:none;marker-end:url(#au);}
+      .axl{fill:#2d3748;font-size:12px;} .u{fill:none;stroke:#2b6cb0;stroke-width:2.6;}
+      .fam{fill:#1a202c;font-size:10px;text-anchor:middle;} .pole{fill:#2f855a;font-size:11px;font-weight:bold;text-anchor:middle;}
+      .lo{fill:#c05621;font-size:11px;font-weight:bold;text-anchor:middle;} .dot{fill:#2b6cb0;}
+    </style>
+  </defs>
+  <text x="330" y="24" font-size="13" font-weight="bold" fill="#1a202c" text-anchor="middle">Editability is U-shaped across the abstraction spectrum</text>
+
+  <!-- axes -->
+  <path class="ax" d="M60,270 L620,270"/>
+  <path class="ax" d="M60,270 L60,60"/>
+  <text class="axl" x="330" y="298" text-anchor="middle">abstraction of the representation</text>
+  <text class="axl" x="24" y="165" transform="rotate(-90 24 165)" text-anchor="middle">editability (stable + meaningful)</text>
+
+  <!-- U curve: high left, dip middle, high right -->
+  <path class="u" d="M75,95 C130,120 175,215 250,235 C320,252 360,252 430,235 C505,215 550,120 605,95"/>
+
+  <!-- pole labels -->
+  <text class="pole" x="120" y="78">designed-structure pole</text>
+  <text class="pole" x="560" y="78">learned-manifold pole</text>
+  <text class="lo" x="340" y="278" dy="-2">entangled middle (collapses to noise)</text>
+
+  <!-- family dots + labels -->
+  <circle class="dot" cx="88" cy="103" r="4"/><text class="fam" x="88" y="120">primitives</text>
+  <circle class="dot" cx="150" cy="150" r="4"/><text class="fam" x="150" y="140">sparse atoms</text>
+  <circle class="dot" cx="205" cy="205" r="4"/><text class="fam" x="205" y="196">wavelet / KLT</text>
+  <text class="fam" x="205" y="222" fill="#2f855a">locality ~1.0</text>
+
+  <circle class="dot" cx="300" cy="248" r="4"/><text class="fam" x="300" y="266" fill="#c05621">Fourier / DCT</text>
+  <text class="fam" x="300" y="240" fill="#c05621">locality 0.16-0.23</text>
+  <circle class="dot" cx="365" cy="248" r="4"/><text class="fam" x="372" y="240">neural-field weights</text>
+  <circle class="dot" cx="430" cy="235" r="4"/><text class="fam" x="440" y="252">brittle symbolic</text>
+
+  <circle class="dot" cx="560" cy="118" r="4"/><text class="fam" x="560" y="135">generative latent</text>
+  <text class="fam" x="560" y="104" fill="#2f855a">disentangled dirs</text>
+
+  <text x="330" y="318" font-size="9.5" fill="#718096" text-anchor="middle">a parameter is stable AND meaningful only when it indexes a low-dimensional manifold with locally disentangled coordinates</text>
+</svg>

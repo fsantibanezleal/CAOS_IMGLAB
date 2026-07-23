@@ -3,6 +3,12 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/fsantibanezleal/CAOS_IMGLAB/ci.yml?branch=main&label=CI)](https://github.com/fsantibanezleal/CAOS_IMGLAB/actions)
 [![License](https://img.shields.io/github/license/fsantibanezleal/CAOS_IMGLAB)](LICENSE)
 [![Version](https://img.shields.io/github/v/tag/fsantibanezleal/CAOS_IMGLAB?label=version&sort=semver)](https://github.com/fsantibanezleal/CAOS_IMGLAB/tags)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21510992-blue)](https://doi.org/10.5281/zenodo.21510992)
+
+Preprint (CC-BY-4.0): *"One Image, Twelve Mathematics: A Cross-Family Benchmark and
+the U-Shaped Editability of Image Representations"*, concept DOI
+[10.5281/zenodo.21510992](https://doi.org/10.5281/zenodo.21510992) (source in
+[`manuscripts/image-representation-editability/`](manuscripts/image-representation-editability/)).
 
 > **Status: under active construction.** The repository is being built vertically, one representation at a
 > time (code + tests + deep docs per unit). It is instantiated from the CAOS product-repo archetype and
