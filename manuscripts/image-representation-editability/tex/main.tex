@@ -26,7 +26,7 @@ Editability of Image Representations}
     the author's own.}%
 }
 
-\markboth{Preprint, 2026 --- CAOS open-research programme}{Santib\'a\~nez-Leal:
+\markboth{Preprint, 2026 (v1.1) --- CAOS open-research programme}{Santib\'a\~nez-Leal:
 One Image, Twelve Mathematics}
 
 \IEEEtitleabstractindextext{%
@@ -37,9 +37,9 @@ handful of geometric primitives, as a small neural function of position, as an e
 formula, or as a code in the latent space of a generative model. We carry one image across twelve
 such families, on a common set of benchmark images and at a common parameter budget, and ask a
 question the fidelity literature does not: when you edit the parameters, what happens to the image?
-Two measured results and one finding follow. \emph{First}, at an equal parameter budget the twelve
-families reconstruct comparably (peak signal-to-noise ratio $27$--$35$\,dB); fidelity does not
-distinguish them. \emph{Second}, an editability-locality metric does: a single coefficient of a
+Two measured results and one finding follow. \emph{First}, at a comparable parameter budget the twelve
+families reconstruct within a similar fidelity band (peak signal-to-noise ratio roughly $27$--$35$\,dB,
+evaluated at each family's native resolution); fidelity does not sharply distinguish them. \emph{Second}, an editability-locality metric does: a single coefficient of a
 global transform is spatially spread (Fourier $0.16$, DCT $0.23$ concentration) while a coefficient
 of a space-localized transform is essentially local (wavelet $0.999$, KLT $1.0$). \emph{The finding}
 is that editability is \emph{U-shaped} across the abstraction spectrum: it is high at two poles, the
@@ -85,7 +85,7 @@ contributions are: (i) a single-image, twelve-family benchmark with each family'
 (iii) the U-shaped editability finding and its honest scope.
 
 % =====================================================================
-\section{Twelve representation families}
+\section{The representation families}
 \label{sec:families}
 % =====================================================================
 
@@ -157,18 +157,26 @@ coefficient of a space-localized transform is essentially local (wavelet $0.999$
 \end{figure*}
 
 We bake each representation of six benchmark images (a photograph, a painting, a mathematical-art
-image, an astronomical image, a texture, and a synthetic gradient) at a common $256\times256$
-resolution and evaluate two axes (Fig.~\ref{fig:bench}). \emph{Fixed-budget fidelity}: at an equal
-parameter budget (the top $5\%$ of transform coefficients, $\approx3300$ numbers, matched against
-$\approx90$ ellipses, $\approx2300$ neural weights, $250$ Gabor atoms, $300$ Gaussians, $225$
+image, an astronomical image, a texture, and a synthetic gradient) and evaluate two axes
+(Fig.~\ref{fig:bench}); two further families described above, overcomplete sparse dictionaries and
+Fourier-descriptor epicycles, appear in the interactive lab but are outside this fixed-budget
+twelve-family benchmark. Each family is fit at its native working resolution (symbolic, Gabor,
+Gaussian-mixture and thin-plate at $96$, the neural field and primitives at $128$, the four
+transforms and the VAE at $256$), so the fixed-budget PSNRs below are not resolution-matched across
+families and the fidelity comparison is qualitative rather than a strict ranking.
+\emph{Fixed-budget fidelity}: at a comparable per-unit budget (matched by representational unit, not
+scalar count: the top $5\%$ of transform coefficients, $\approx3300$ numbers, against $\approx1200$
+ellipses, $\approx2300$ neural weights, $250$ Gabor atoms, $300$ Gaussians, $225$
 thin-plate kernels, $512$ trigonometric terms, or a $4\times32\times32$ latent), the twelve families
-land within $27$--$35$\,dB (wavelet $34.8$, DCT $33.2$, neural field $33.0$, Fourier $32.3$, Gabor
+land within $26.8$--$34.8$\,dB (wavelet $34.8$, DCT $33.2$, neural field $33.0$, Fourier $32.3$, Gabor
 $32.1$, primitives $32.0$, Gaussian mixture $31.9$, thin-plate $29.4$, symbolic $29.4$, KLT $29.4$,
-Chebyshev $28.9$, VAE latent $26.8$). Fidelity does not separate the families. \emph{Rate-distortion}:
-over coefficient fractions from $0.5\%$ to $25\%$ the space-localized wavelet dominates (up to
-$49.4$\,dB at $25\%$), then DCT and Fourier, with the patch KLT lower, the classical energy-compaction
-ordering. \emph{Editability-locality}: we measure how spatially concentrated the effect of a single
-coefficient is; the global transforms are non-local (Fourier $0.156$, DCT $0.228$) while the
+Chebyshev $28.9$, VAE latent $26.8$). Fidelity does not sharply separate the families. \emph{Rate-distortion}:
+over coefficient fractions from about $2\%$ to $25\%$ the space-localized wavelet dominates (up to
+$49.4$\,dB at $25\%$; DCT leads at the lowest $0.5$--$1\%$ fractions), then DCT and Fourier, with the
+patch KLT lower, the classical energy-compaction ordering. \emph{Editability-locality}: we measure how spatially concentrated the effect of a single
+coefficient is, operationally the fraction of a single coefficient's impulse-response energy that
+falls within a fixed local neighbourhood ($1$ = perfectly local, $0$ = spread across the image; the
+exact estimator and support size are in the released benchmark code); the global transforms are non-local (Fourier $0.156$, DCT $0.228$) while the
 space-localized transforms are local-exact (wavelet $0.999$, KLT $1.0$). This is the axis on which the
 families genuinely differ.
 
@@ -239,9 +247,10 @@ code and committed artifacts are released so the benchmark and the figures are r
 Code, the committed benchmark artifacts, and the interactive lab are at
 \url{https://github.com/fsantibanezleal/CAOS_IMGLAB} under the MIT license. Benchmark images are
 public-domain or permissively licensed, plus procedurally generated license-clean images; each
-carries its citation in the repository. The figures are regenerated deterministically from the
+carries its citation in the repository. Figure~\ref{fig:bench} is regenerated deterministically from the
 committed \texttt{\_bench/index.json} by
-\texttt{manuscripts/image-representation-editability/figures/make\_figs.py}.
+\texttt{manuscripts/image-representation-editability/figures/make\_figs.py}; the U-shape schematic is
+hand-authored (\texttt{fig-ushape.svg}).
 
 \appendices
 \section{Fixed-budget fidelity table}
