@@ -9,6 +9,7 @@ re-imagine the picture. The live tab scrubs this per-image strip, so diffusion i
 
 Downloads SD-Turbo (~2.5 GB) to the HF cache on first run. CPU-feasible but slow (tens of seconds per frame).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -16,7 +17,6 @@ import json
 import os
 from pathlib import Path
 
-import numpy as np
 from PIL import Image
 
 os.environ.setdefault("HF_HOME", "E:/_Temp/hf")
@@ -58,7 +58,9 @@ def main() -> None:
         src.save(d / "00.png")  # frame 0 = the original
         for i, s in enumerate(STRENGTHS, start=1):
             gen = torch.Generator("cpu").manual_seed(0)
-            out = pipe(prompt="", image=src, strength=s, num_inference_steps=STEPS, guidance_scale=0.0, generator=gen)
+            out = pipe(
+                prompt="", image=src, strength=s, num_inference_steps=STEPS, guidance_scale=0.0, generator=gen
+            )
             out.images[0].save(d / f"{i:02d}.png")
         frames = 1 + len(STRENGTHS)
         done.append({"id": img_id, "frames": frames})
@@ -73,7 +75,10 @@ def main() -> None:
     for e in done:
         by_id[e["id"]] = e
     images = [by_id[i] for i in all_ids if i in by_id]
-    ip.write_text(json.dumps({"model": MODEL, "kind": "img2img", "strengths": STRENGTHS, "images": images}), encoding="utf-8")
+    ip.write_text(
+        json.dumps({"model": MODEL, "kind": "img2img", "strengths": STRENGTHS, "images": images}),
+        encoding="utf-8",
+    )
     print(f"baked img2img strips for {len(done)} images; {len(images)} total")
 
 

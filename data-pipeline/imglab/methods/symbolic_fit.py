@@ -14,6 +14,7 @@ written down as an equation). Perturbing the coefficients in the live tab morphs
 
 Env: IMGLAB_SYM_D (number of frequencies, default 512), IMGLAB_SYM_SIGMA (frequency spread, default 7.0).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -35,7 +36,6 @@ SEED = 0
 
 
 def fit_one(img: np.ndarray) -> tuple[dict, float]:
-    h = w = SIZE
     lin = np.linspace(-1, 1, SIZE, dtype=np.float64)
     yy, xx = np.meshgrid(lin, lin, indexing="ij")
     p = np.stack([xx.ravel(), yy.ravel()], axis=1)  # (N,2)
@@ -84,7 +84,10 @@ def main() -> None:
         f = IMAGES / f"{img_id}.png"
         if not f.exists():
             continue
-        img = np.asarray(Image.open(f).convert("RGB").resize((SIZE, SIZE), Image.LANCZOS), dtype=np.float32) / 255.0
+        img = (
+            np.asarray(Image.open(f).convert("RGB").resize((SIZE, SIZE), Image.LANCZOS), dtype=np.float32)
+            / 255.0
+        )
         doc, psnr = fit_one(img)
         (OUT / f"{img_id}.json").write_text(json.dumps(doc), encoding="utf-8")
         done.append(img_id)
