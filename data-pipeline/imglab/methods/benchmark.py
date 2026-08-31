@@ -16,6 +16,7 @@ Three real measurements, written to data/derived/_bench/index.json for the Exper
 
 Luma is used for the transform measurements (the standard for rate-distortion). Classical only, no torch.
 """
+
 from __future__ import annotations
 
 import json
@@ -34,12 +35,25 @@ DERIVED = ROOT / "data" / "derived"
 OUT = DERIVED / "_bench"
 SIZE = 256
 PATCH = 8
-SUBSET = ["photo_parrots", "art_greatwave", "mathart-julia", "astro_pillars", "tex_wood", "synthetic-gradient"]
+SUBSET = [
+    "photo_parrots",
+    "art_greatwave",
+    "mathart-julia",
+    "astro_pillars",
+    "tex_wood",
+    "synthetic-gradient",
+]
 FRACS = [0.005, 0.01, 0.02, 0.05, 0.1, 0.25]
 
 
 def load_luma(img_id: str) -> np.ndarray:
-    im = np.asarray(Image.open(IMAGES / f"{img_id}.png").convert("RGB").resize((SIZE, SIZE), Image.LANCZOS), np.float32) / 255
+    im = (
+        np.asarray(
+            Image.open(IMAGES / f"{img_id}.png").convert("RGB").resize((SIZE, SIZE), Image.LANCZOS),
+            np.float32,
+        )
+        / 255
+    )
     return (0.299 * im[..., 0] + 0.587 * im[..., 1] + 0.114 * im[..., 2]).astype(np.float32)
 
 
@@ -113,7 +127,9 @@ def rate_distortion(imgs: list[np.ndarray]) -> dict:
                 r = np.clip(fn(x, f), 0, 1).astype(np.float32)
                 ps.append(psnr(x, r))
                 ss.append(ssim(x, r))
-            curve.append({"frac": f, "psnr": round(float(np.mean(ps)), 2), "ssim": round(float(np.mean(ss)), 3)})
+            curve.append(
+                {"frac": f, "psnr": round(float(np.mean(ps)), 2), "ssim": round(float(np.mean(ss)), 3)}
+            )
         rd[name] = curve
     return rd
 
@@ -132,7 +148,7 @@ def locality(imgs: list[np.ndarray]) -> list[dict]:
 
     def perturb_transform(x, transform, itransform, one_hot_scale=0.15):
         c = transform(x)
-        idx = np.unravel_index(np.argmax(np.abs(c)[1:]) + 1, c.shape) if c.ndim == 2 else None
+        np.unravel_index(np.argmax(np.abs(c)[1:]) + 1, c.shape) if c.ndim == 2 else None
         c2 = c.copy()
         # nudge a mid-magnitude coefficient
         mags = np.abs(c).ravel()
@@ -156,7 +172,9 @@ def locality(imgs: list[np.ndarray]) -> list[dict]:
         a2 = arr.copy()
         mags = np.abs(arr).ravel()
         a2.ravel()[int(np.argsort(mags)[len(mags) // 2])] += 0.15 * (mags.max() + 1e-6)
-        rec = pywt.waverec2(pywt.array_to_coeffs(a2, sl, output_format="wavedec2"), "db4")[: x.shape[0], : x.shape[1]]
+        rec = pywt.waverec2(pywt.array_to_coeffs(a2, sl, output_format="wavedec2"), "db4")[
+            : x.shape[0], : x.shape[1]
+        ]
         wl.append(concentration(rec - x))
     rows.append({"family": "Wavelet", "concentration": round(float(np.mean(wl)), 3)})
     # KLT: perturb one patch's coefficient (local to that patch)
@@ -188,8 +206,16 @@ def main() -> None:
     at5 = {k: next(p for p in v if p["frac"] == 0.05) for k, v in rd.items()}
     names = {"fourier": "Fourier", "dct": "DCT", "wavelet": "Wavelet", "klt": "KLT (patch)"}
     for key, label in names.items():
-        budget.append({"family": label, "psnr": at5[key]["psnr"], "ssim": at5[key]["ssim"],
-                       "params": f"{int(0.05 * SIZE * SIZE)} coeffs", "note": "top 5% coefficients"})
+        budget.append(
+            {
+                "family": label,
+                "psnr": at5[key]["psnr"],
+                "ssim": at5[key]["ssim"],
+                "params": f"{int(0.05 * SIZE * SIZE)} coeffs",
+                "note": "top 5% coefficients",
+            }
+        )
+
     # primitives, neural field: mean of committed psnr over the subset
     def baked_mean(group, key="psnr"):
         vals = []
@@ -201,20 +227,43 @@ def main() -> None:
 
     prim = baked_mean("_prim")
     if prim is not None:
-        budget.append({"family": "Primitives", "psnr": prim, "ssim": None, "params": "~90 ellipses", "note": "greedy shape fit (committed)"})
+        budget.append(
+            {
+                "family": "Primitives",
+                "psnr": prim,
+                "ssim": None,
+                "params": "~90 ellipses",
+                "note": "greedy shape fit (committed)",
+            }
+        )
     inr = baked_mean("_inr")
     if inr is not None:
         li = json.loads((DERIVED / "_inr" / "photo_parrots.json").read_text())
         nweights = sum(len(np.ravel(w)) for layer in li["layers"] for w in (layer["w"], layer["b"]))
-        budget.append({"family": "Neural field (INR)", "psnr": inr, "ssim": None, "params": f"~{nweights} weights", "note": "SIREN per image (committed)"})
+        budget.append(
+            {
+                "family": "Neural field (INR)",
+                "psnr": inr,
+                "ssim": None,
+                "params": f"~{nweights} weights",
+                "note": "SIREN per image (committed)",
+            }
+        )
     # VAE reconstruction: the committed per-image recon PSNR (frame 0 = decode(encode(x)))
     vae_idx = DERIVED / "_vae" / "index.json"
     if vae_idx.exists():
         vidx = json.loads(vae_idx.read_text())
         vp = [e["psnr"] for e in vidx.get("images", []) if e["id"] in SUBSET and "psnr" in e]
         if vp:
-            budget.append({"family": "VAE latent", "psnr": round(float(np.mean(vp)), 2), "ssim": None,
-                           "params": "4x32x32 latent", "note": "encode-decode reconstruction (committed)"})
+            budget.append(
+                {
+                    "family": "VAE latent",
+                    "psnr": round(float(np.mean(vp)), 2),
+                    "ssim": None,
+                    "params": "4x32x32 latent",
+                    "note": "encode-decode reconstruction (committed)",
+                }
+            )
 
     # Symbolic equation: the committed per-image fit PSNR (closed-form trig, 512 terms)
     sp = []
@@ -223,8 +272,15 @@ def main() -> None:
         if sf.exists():
             sp.append(json.loads(sf.read_text())["psnr"])
     if sp:
-        budget.append({"family": "Symbolic equation", "psnr": round(float(np.mean(sp)), 2), "ssim": None,
-                       "params": "512 trig terms", "note": "random-Fourier ridge fit (committed)"})
+        budget.append(
+            {
+                "family": "Symbolic equation",
+                "psnr": round(float(np.mean(sp)), 2),
+                "ssim": None,
+                "params": "512 trig terms",
+                "note": "random-Fourier ridge fit (committed)",
+            }
+        )
 
     # Gabor atoms, the Gaussian mixture, and the thin-plate RBF: committed per-image fit PSNRs
     for group, label, params, note in (
@@ -238,8 +294,15 @@ def main() -> None:
             if f2_.exists():
                 vals.append(json.loads(f2_.read_text())["psnr"])
         if vals:
-            budget.append({"family": label, "psnr": round(float(np.mean(vals)), 2), "ssim": None,
-                           "params": params, "note": note})
+            budget.append(
+                {
+                    "family": label,
+                    "psnr": round(float(np.mean(vals)), 2),
+                    "ssim": None,
+                    "params": params,
+                    "note": note,
+                }
+            )
 
     # Chebyshev polynomial series: computed here directly (the live-lane algorithm, deg 24)
     def cheb_psnr(x: np.ndarray, deg: int = 24) -> float:
@@ -252,14 +315,26 @@ def main() -> None:
         return psnr(x, rec.astype(np.float32))
 
     cp = [float(cheb_psnr(x)) for x in imgs]
-    budget.append({"family": "Chebyshev series", "psnr": round(float(np.mean(cp)), 2), "ssim": None,
-                   "params": "625 poly terms", "note": "degree-24 tensor series (live-lane algorithm)"})
+    budget.append(
+        {
+            "family": "Chebyshev series",
+            "psnr": round(float(np.mean(cp)), 2),
+            "ssim": None,
+            "params": "625 poly terms",
+            "note": "degree-24 tensor series (live-lane algorithm)",
+        }
+    )
 
     (OUT / "index.json").write_text(
-        json.dumps({"images": SUBSET, "size": SIZE, "fracs": FRACS, "rd": rd, "budget": budget, "locality": loc}, indent=2),
+        json.dumps(
+            {"images": SUBSET, "size": SIZE, "fracs": FRACS, "rd": rd, "budget": budget, "locality": loc},
+            indent=2,
+        ),
         encoding="utf-8",
     )
-    print(f"baked benchmark: {len(SUBSET)} images, {len(rd)} R-D families, {len(budget)} budget rows, {len(loc)} locality rows")
+    print(
+        f"baked benchmark: {len(SUBSET)} images, {len(rd)} R-D families, {len(budget)} budget rows, {len(loc)} locality rows"
+    )
     for b in budget:
         print(f"  {b['family']:<22} PSNR={b['psnr']}  {b['note']}")
 

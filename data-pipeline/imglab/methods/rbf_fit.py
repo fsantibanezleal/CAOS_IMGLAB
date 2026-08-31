@@ -14,6 +14,7 @@ function centered on a lattice. Rendered live per pixel.
 
 Env: IMGLAB_RBF_GRID (default 15, so 225 centers), IMGLAB_RBF_RIDGE (default 1e-3).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -42,7 +43,6 @@ def _phi(r2: np.ndarray) -> np.ndarray:
 
 
 def fit_one(img: np.ndarray):
-    h = w = SIZE
     lin = np.linspace(-1, 1, SIZE)
     yy, xx = np.meshgrid(lin, lin, indexing="ij")
     P = np.stack([xx.ravel(), yy.ravel()], axis=1)  # (M,2)
@@ -85,7 +85,10 @@ def main() -> None:
         f = IMAGES / f"{img_id}.png"
         if not f.exists():
             continue
-        img = np.asarray(Image.open(f).convert("RGB").resize((SIZE, SIZE), Image.LANCZOS), dtype=np.float32) / 255.0
+        img = (
+            np.asarray(Image.open(f).convert("RGB").resize((SIZE, SIZE), Image.LANCZOS), dtype=np.float32)
+            / 255.0
+        )
         t0 = time.time()
         doc, psnr = fit_one(img)
         (OUT / f"{img_id}.json").write_text(json.dumps(doc), encoding="utf-8")
