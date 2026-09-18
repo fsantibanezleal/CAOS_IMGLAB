@@ -19,7 +19,9 @@ def fig_benchmark():
     fams = [b["family"] for b in budget]; psnr = [b["psnr"] for b in budget]
     # colour by pole: designed-structure (local) green, transforms/entangled middle gray, learned blue
     designed = {"Wavelet", "KLT (patch)", "Primitives", "Gabor atoms", "Gaussian mixture"}
-    learned = {"Neural field (INR)", "VAE latent"}
+    # Raw neural-field weights belong to the entangled middle (Sec. IV and Fig. 2), not to the
+    # learned-manifold pole, so the neural field is coloured global / entangled.
+    learned = {"VAE latent"}
     cols = [GREEN if f in designed else (BLUE if f in learned else GRAY) for f in fams]
 
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(7.1, 3.4), gridspec_kw={"width_ratios": [2.0, 1.0]})
