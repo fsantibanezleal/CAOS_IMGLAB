@@ -11,6 +11,42 @@
 \usepackage{orcidlink}
 \graphicspath{{../figures/}}
 
+% IEEEtran hard-codes an em-dash after the abstract and index-terms names; the CAOS
+% content standard (ADR-0067) excludes em-dashes, so the separator is a full stop.
+\makeatletter
+\def\abstract{\normalfont
+    \if@twocolumn
+      \@IEEEabskeysecsize\bfseries\textit{\abstractname}.\ \relax
+    \else
+      \bgroup\par\addvspace{0.5\baselineskip}\centering\vspace{-1.78ex}\@IEEEabskeysecsize\textbf{\abstractname}\par\addvspace{0.5\baselineskip}\egroup\quotation\@IEEEabskeysecsize
+    \fi\@IEEEgobbleleadPARNLSP}
+\def\IEEEkeywords{\normalfont
+    \if@twocolumn
+      \@IEEEabskeysecsize\bfseries\textit{\IEEEkeywordsname}.\ \relax
+    \else
+      \bgroup\par\addvspace{0.5\baselineskip}\centering\@IEEEabskeysecsize\textbf{\IEEEkeywordsname}\par\addvspace{0.5\baselineskip}\egroup\quotation\@IEEEabskeysecsize
+    \fi\@IEEEgobbleleadPARNLSP}
+\makeatother
+
+% Page-1 header block (conventions/manuscript-header-standard.md). The four document
+% macros are set by the publishing tool when the version DOI is reserved.
+\newcommand{\doctype}{Preprint}
+\newcommand{\docversion}{v1.2}
+\newcommand{\docdate}{18 September 2026}
+\newcommand{\versiondoi}{10.5281/zenodo.22822866}
+\newcommand{\conceptdoi}{10.5281/zenodo.21510992}
+\newcommand{\docrepo}{github.com/fsantibanezleal/CAOS\_IMGLAB}
+\newcommand{\headerblock}{%
+\begin{center}
+\fbox{\parbox{0.94\textwidth}{\small\raggedright
+\textbf{\doctype} \quad$\cdot$\quad \docversion, \docdate \quad$\cdot$\quad Licence CC BY 4.0\\[2pt]
+CAOS open-research programme \quad$\cdot$\quad CAOS\_IMGLAB, mathematical representations of images\\[2pt]
+Version DOI \href{https://doi.org/\versiondoi}{\texttt{\versiondoi}} \quad$\cdot$\quad
+concept DOI (always latest) \href{https://doi.org/\conceptdoi}{\texttt{\conceptdoi}}\\[2pt]
+Not peer reviewed. Source code, data and computational records: \href{https://\docrepo}{\texttt{\docrepo}}
+}}
+\end{center}}
+
 \begin{document}
 
 \title{One Image, Twelve Mathematics: A Cross-Family Benchmark and the U-Shaped
@@ -20,14 +56,15 @@ Editability of Image Representations}
   Felipe Santib\'a\~nez-Leal~\orcidlink{0000-0002-0150-3246},~\IEEEmembership{Independent Researcher}%
   \thanks{F.\ Santib\'a\~nez-Leal is with the CAOS open-research programme, Santiago, Chile
     (e-mail: \texttt{fsantibanezleal@ug.uchile.cl}; ORCID: 0000-0002-0150-3246).}%
-  \thanks{Preprint, 2026. Code, the committed derived artifacts, and the interactive lab are
-    released under MIT at \url{https://github.com/fsantibanezleal/CAOS_IMGLAB}. Every external
-    engine and reference carries its own license and citation; the explicit formulas shown are
-    the author's own.}%
+  \thanks{Code, the derived artifacts, and the interactive lab are released under MIT at
+    \url{https://github.com/fsantibanezleal/CAOS_IMGLAB}. Every external engine and reference
+    carries its own license and citation; the explicit formulas shown are the author's own.}%
 }
 
-\markboth{Preprint, 2026 (v1.1) --- CAOS open-research programme}{Santib\'a\~nez-Leal:
+\markboth{\doctype\ \docversion, 2026 \textperiodcentered\ CAOS open-research programme}{Santib\'a\~nez-Leal:
 One Image, Twelve Mathematics}
+
+\IEEEaftertitletext{\vspace{-0.6\baselineskip}\headerblock\vspace{0.2\baselineskip}}
 
 \IEEEtitleabstractindextext{%
 \begin{abstract}
@@ -48,10 +85,10 @@ humans built local meaningful coordinates) and the learned-manifold pole (disent
 directions), and it collapses toward noise in between, where perturbing a raw neural-field weight or
 a constant of a brittle fitted formula destroys the image. A parameter is both stable and meaningful
 only when it indexes a low-dimensional manifold of plausible images with locally disentangled
-coordinates. We give the twelve families with their governing equations, the cross-family benchmark
-on six images, and the honest scope: arbitrary photographs do not reduce to compact, faithful,
-human-readable equations, and the results say where a representation's parameters are, and are not, a
-usable handle.
+coordinates. We give the twelve families with their governing equations and the cross-family
+benchmark on six images. The scope is bounded: arbitrary photographs do not reduce to compact,
+faithful, human-readable equations, and the results say where a representation's parameters are, and
+are not, a usable handle.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -82,7 +119,7 @@ that fidelity is comparable across families and does not distinguish them, where
 and it is organized as a U-shape across the abstraction spectrum (Section~\ref{sec:finding}). The
 contributions are: (i) a single-image, twelve-family benchmark with each family's governing equation;
 (ii) the measured editability-locality contrast between global and space-localized representations;
-(iii) the U-shaped editability finding and its honest scope.
+(iii) the U-shaped editability finding and its scope.
 
 % =====================================================================
 \section{The representation families}
@@ -114,7 +151,7 @@ is a named handle.
 \textbf{Symbolic closed-form.} Each channel is fit as an explicit trigonometric formula by ridge
 regression on $D$ random Fourier features, $\text{ch}(x,y)=a_0+\sum_k[a_k\cos(\omega_k\!\cdot\!(x,y))
 +b_k\sin(\omega_k\!\cdot\!(x,y))]$, linear in known analytic basis functions so the picture literally
-is a readable equation~\cite{stanley2007}. Fidelity is honest and bounded: a smooth gradient reaches
+is a readable equation~\cite{stanley2007}. Fidelity is bounded: a smooth gradient reaches
 $\approx57$\,dB from $512$ terms, a hard-edged checkerboard only $\approx14$, because a finite
 trigonometric sum cannot render a discontinuity.
 
@@ -147,16 +184,16 @@ of high editability.
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=0.98\textwidth]{fig-benchmark.pdf}
-\caption{The benchmark, read from the committed \texttt{\_bench/index.json}. Left: peak
-signal-to-noise ratio at a fixed parameter budget across the twelve families; fidelity is comparable
-($27$--$35$\,dB) and does not distinguish them, coloured by pole (designed-structure local, global or
-entangled, learned manifold). Right: the editability-locality metric for the four transform families;
-a single coefficient of a global transform is spatially spread (Fourier $0.16$, DCT $0.23$) while a
-coefficient of a space-localized transform is essentially local (wavelet $0.999$, KLT $1.0$).}
+\caption{The benchmark. Left: peak signal-to-noise ratio at a fixed parameter budget across the
+twelve families; fidelity is comparable ($27$--$35$\,dB) and does not distinguish them, coloured by
+pole (designed-structure local, global or entangled, learned manifold). Right: the
+editability-locality metric for the four transform families; a single coefficient of a global
+transform is spatially spread (Fourier $0.16$, DCT $0.23$) while a coefficient of a space-localized
+transform is essentially local (wavelet $0.999$, KLT $1.0$). Data: \texttt{\_bench/index.json}.}
 \label{fig:bench}
 \end{figure*}
 
-We bake each representation of six benchmark images (a photograph, a painting, a mathematical-art
+We compute each representation of six benchmark images (a photograph, a painting, a mathematical-art
 image, an astronomical image, a texture, and a synthetic gradient) and evaluate two axes
 (Fig.~\ref{fig:bench}); two further families described above, overcomplete sparse dictionaries and
 Fourier-descriptor epicycles, appear in the interactive lab but are outside this fixed-budget
@@ -178,22 +215,22 @@ coefficient is, operationally the fraction of a single coefficient's impulse-res
 falls within a fixed local neighbourhood ($1$ = perfectly local, $0$ = spread across the image; the
 exact estimator and support size are in the released benchmark code); the global transforms are non-local (Fourier $0.156$, DCT $0.228$) while the
 space-localized transforms are local-exact (wavelet $0.999$, KLT $1.0$). This is the axis on which the
-families genuinely differ.
+families differ.
 
 % =====================================================================
 \section{The finding: U-shaped editability}
 \label{sec:finding}
 % =====================================================================
 
-\begin{figure}[!t]
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=\columnwidth]{fig-ushape.pdf}
+\includegraphics[width=0.9\textwidth]{fig-ushape.pdf}
 \caption{Editability is U-shaped across the abstraction spectrum: high at the designed-structure pole
 (primitives, sparse atoms, space-localized transforms) and the learned-manifold pole (disentangled
 generative directions), and low in the entangled middle (global transforms, raw neural-field weights,
 brittle fitted formulas).}
 \label{fig:ushape}
-\end{figure}
+\end{figure*}
 
 Putting the two axes together yields the finding (Fig.~\ref{fig:ushape}). Because fixed-budget
 fidelity is comparable, what distinguishes the families for a user who wants to \emph{edit} the image
@@ -212,7 +249,7 @@ low-dimensional manifold of plausible images with locally disentangled coordinat
 the learned poles achieve this by construction and by training, and the entangled middle does not.
 
 % =====================================================================
-\section{Discussion and honest scope}
+\section{Discussion and scope}
 % =====================================================================
 
 The quantitative editability-locality is measured for the four transform families, where the
@@ -221,10 +258,10 @@ organizing thesis, supported by that measurement, by the qualitative locality of
 parameters, and by the fixed-budget benchmark that rules out fidelity as the differentiator. The
 result is descriptive, not a new representation: it says where a representation's parameters are, and
 are not, a usable handle, which is the practical question behind interpretable and editable image
-models. The honest scope is explicit: arbitrary photographs do not reduce to compact, faithful,
-human-readable equations, the symbolic and formula families make genuine but bounded partial
-reconstructions (a smooth gradient fits to $\approx57$\,dB, a hard edge to $\approx14$), and the
-benchmark reports those partial results rather than overclaiming. The generative-latent pole is
+models. The scope is bounded: arbitrary photographs do not reduce to compact, faithful,
+human-readable equations, and the symbolic and formula families make bounded partial
+reconstructions (a smooth gradient fits to $\approx57$\,dB, a hard edge to $\approx14$), which the
+benchmark reports as partial results. The generative-latent pole is
 argued from the disentanglement literature and the family's construction rather than from a locality
 number, and is labelled as such.
 
@@ -238,19 +275,20 @@ and that editability is U-shaped across the abstraction spectrum, high at the de
 learned-manifold poles and low in the entangled middle, with the transform families' editability-locality
 measured directly (global $0.16$--$0.23$ versus local-exact $\approx1$). A parameter is a usable
 handle only when it indexes a low-dimensional manifold with locally disentangled coordinates. All
-code and committed artifacts are released so the benchmark and the figures are reproducible.
+code and artifacts are released, so the benchmark and the figures are reproducible.
 
 % =====================================================================
 \section*{Data and code availability}
 % =====================================================================
 
-Code, the committed benchmark artifacts, and the interactive lab are at
+{\raggedright
+Code, the benchmark artifacts, and the interactive lab are at
 \url{https://github.com/fsantibanezleal/CAOS_IMGLAB} under the MIT license. Benchmark images are
 public-domain or permissively licensed, plus procedurally generated license-clean images; each
-carries its citation in the repository. Figure~\ref{fig:bench} is regenerated deterministically from the
-committed \texttt{\_bench/index.json} by
-\texttt{manuscripts/image-representation-editability/figures/make\_figs.py}; the U-shape schematic is
-hand-authored (\texttt{fig-ushape.svg}).
+carries its citation in the repository. Figure~\ref{fig:bench} is regenerated deterministically
+from \path{_bench/index.json} by
+\path{manuscripts/image-representation-editability/figures/make_figs.py}; the U-shape schematic is
+hand-authored (\path{fig-ushape.svg}).\par}
 
 \appendices
 \section{Fixed-budget fidelity table}
@@ -259,7 +297,7 @@ At the matched budget the peak signal-to-noise ratios are: wavelet $34.8$, DCT $
 thin-plate RBF $29.4$, symbolic equation $29.4$, KLT (patch) $29.4$, Chebyshev series $28.9$, VAE
 latent $26.8$\,dB, over six benchmark images (photograph, painting, mathematical art, astronomy,
 texture, synthetic gradient). The full per-image rate-distortion curves and the editability-locality
-values are committed in \texttt{data/derived/\_bench/index.json}.
+values are stored in \path{data/derived/_bench/index.json}.
 
 % =====================================================================
 \begin{thebibliography}{99}
