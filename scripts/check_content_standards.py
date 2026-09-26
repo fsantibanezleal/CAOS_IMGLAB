@@ -34,6 +34,10 @@ def is_emoji(cp: int) -> bool:
     return 0x1F000 <= cp <= 0x1FAFF or cp == EMOJI_SELECTOR
 
 
+# Records are results, not content: the files under these prefixes keep the text their sources
+# and producers wrote (dataset titles, generated artifacts). Everything else is checked.
+RECORD_PREFIXES = ("data/",)
+
 TEXT_SUFFIXES = {
     ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".py", ".md", ".json",
     ".css", ".html", ".yml", ".yaml", ".toml", ".txt", ".cfg", ".ini", ".svg",
@@ -50,6 +54,8 @@ def tracked_files() -> list[str]:
 def main() -> int:
     hits: list[str] = []
     for rel in tracked_files():
+        if rel.startswith(RECORD_PREFIXES):
+            continue
         if rel == SELF or Path(rel).suffix.lower() not in TEXT_SUFFIXES:
             continue
         try:
