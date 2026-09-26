@@ -5,6 +5,14 @@ the lab is under construction. Tag every release.
 
 ## [Unreleased]
 
+## [0.05.001] - 2026-09-26
+
+### Changed
+- No em-dash in the product's content (ADR-0067); the archetype's content guard runs in CI with the `data/` records
+  excluded as results.
+- `VERSION` file added as the version source (ADR-0068); tags use the display form from this release (`v0.05.001`
+  after `v0.5.0`).
+
 ## [0.05.000] - 2026-07-21
 
 Two more equation families (verified from primary sources) and the Image-GS Gaussian upgrade; a CUDA pipeline.
